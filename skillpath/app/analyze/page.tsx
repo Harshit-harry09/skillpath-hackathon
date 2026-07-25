@@ -131,6 +131,13 @@ export default function AnalyzePage() {
         resume_text: data.resume_text || resumeText
       });
 
+      // Save full analysis payload to sessionStorage for instant 0ms result rendering
+      try {
+        sessionStorage.setItem(`analysis_${data.share_token}`, JSON.stringify(data));
+      } catch {
+        // quota fallback
+      }
+
       router.push(`/results/${data.share_token}?new=true`);
     } catch (err: any) {
       console.error('Analysis error:', err);

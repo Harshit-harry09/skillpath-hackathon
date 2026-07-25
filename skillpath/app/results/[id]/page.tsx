@@ -70,27 +70,43 @@ export default function ResultsPage({
 
   useEffect(() => {
     async function fetchResults(retries = 3) {
+      // 1. Instant 0ms load from sessionStorage cache (for fresh guest/session analyses)
+      try {
+        const cached = sessionStorage.getItem(`analysis_${id}`);
+        if (cached) {
+          const json = JSON.parse(cached);
+          console.log('[Results] Loaded instantly from sessionStorage cache:', id);
+          setData(json);
+          setLoading(false);
+          const hasExisting = Object.keys(json.assessments || {}).length > 0;
+          if (isNewAnalysis && !hasExisting) {
+            setShowAssessmentModal(true);
+          }
+          return;
+        }
+      } catch (e) {
+        console.warn('[Results] Session storage read issue:', e);
+      }
+
+      // 2. Fetch from database API with retries
       for (let i = 0; i < retries; i++) {
         try {
           const res = await fetch(`/api/results/${id}`);
           if (res.ok) {
             const json = await res.json();
-            console.log('[Results] Data loaded:', {
-              id,
-              role: json.role_category,
-              mvc_count: json.mvc_skills?.length,
-              resume_count: json.resume_skills?.length,
-              mvc_skills: json.mvc_skills
-            });
+            console.log('[Results] Data loaded from API:', id);
             setData(json);
             setLoading(false);
             
-            // Show assessment modal only for fresh analyses (not from history)
+            try {
+              sessionStorage.setItem(`analysis_${id}`, JSON.stringify(json));
+            } catch { /* ignore */ }
+
             const hasExisting = Object.keys(json.assessments || {}).length > 0;
             if (isNewAnalysis && !hasExisting) {
               setShowAssessmentModal(true);
             }
-            return; // Success!
+            return;
           }
 
           if (res.status === 404 && i < retries - 1) {
