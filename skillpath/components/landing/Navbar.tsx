@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
@@ -21,15 +22,16 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 h-[64px] bg-canvas/80 backdrop-blur-md border-b border-hairline shadow-sm z-[90] flex justify-center px-8 lg:px-24">
       <div className="max-w-[1280px] w-full flex items-center justify-between">
         {/* Brand Logo */}
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => router.push('/')}
+        <Link
+          href="/"
+          aria-label="SkillPath Home Page"
+          className="flex items-center gap-2 cursor-pointer group"
         >
           <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-            <div className="w-4 h-4 bg-brand-pink rounded-sm rotate-45" />
+            <div className="w-4 h-4 bg-brand-pink rounded-sm rotate-45 group-hover:rotate-90 transition-transform duration-300" />
           </div>
           <span className="font-display text-title-md text-ink tracking-tight">SkillPath</span>
-        </div>
+        </Link>
 
         {/* Right side Auth & Theme Actions */}
         <div className="flex items-center gap-md">

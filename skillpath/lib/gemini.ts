@@ -33,7 +33,9 @@ export async function callGemini(
     jsonMode?: boolean;
   }
 ): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const rawApiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || "";
+  const apiKey = rawApiKey.trim().replace(/^["']|["']$/g, '');
+
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not set in environment variables.");
   }
@@ -42,7 +44,7 @@ export async function callGemini(
   const authHeader: Record<string, string> = isAccessToken
     ? { Authorization: `Bearer ${apiKey}` }
     : {};
-  const keyQuery = isAccessToken ? "" : `?key=${apiKey}`;
+  const keyQuery = isAccessToken ? "" : `?key=${encodeURIComponent(apiKey)}`;
 
   const requestedModel: GeminiModel = options?.model ?? "gemini-2.5-flash";
   const temperature = options?.temperature ?? 0.2;

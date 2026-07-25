@@ -7,10 +7,10 @@ import { ArrowRight, Sparkles, HelpCircle, Target } from 'lucide-react';
 import { saveToHistory } from '@/lib/history';
 
 const LOADING_MESSAGES = [
-  "Parsing role requirements...",
-  "Mapping skill architecture...",
-  "Building learning path...",
-  "Almost there...",
+  "Parsing role requirements…",
+  "Mapping skill architecture…",
+  "Building learning path…",
+  "Almost there…",
 ];
 
 export default function JobTitleInput() {
@@ -122,7 +122,7 @@ export default function JobTitleInput() {
             type="text"
             value={jobTitle}
             onChange={(e) => { setJobTitle(e.target.value); setError(''); }}
-            placeholder="e.g. Senior Data Analyst, Lead Product Manager..."
+            placeholder="e.g. Senior Data Analyst, Lead Product Manager…"
             className="flex-1 bg-canvas py-6 px-8 text-lg md:text-xl font-sans text-ink border border-ink/15 rounded-lg focus:border-ink/40 focus:outline-none transition-all placeholder:text-ink/40 tactile-input"
             disabled={isExploring}
             autoFocus
