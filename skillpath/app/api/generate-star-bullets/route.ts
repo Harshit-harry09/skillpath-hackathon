@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { callGeminiJSON } from "@/lib/gemini";
 import { getAuthUserSafe } from "@/lib/auth-helpers";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     // Optional Auth — allow guest visitors to generate bullets

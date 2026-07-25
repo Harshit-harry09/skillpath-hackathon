@@ -6,6 +6,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        border: "var(--color-hairline)",
         primary: {
           DEFAULT: "var(--color-primary)",
           active: "var(--color-primary-active)",

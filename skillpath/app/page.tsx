@@ -5,12 +5,14 @@ import { Hero } from '@/components/landing/Hero';
 import { ExplorationEngine } from '@/components/landing/ExplorationEngine';
 import { LandingInputSection } from '@/components/landing/LandingInputSection';
 import { HowItWorks } from '@/components/landing/HowItWorks';
+import { TimeMachineSection } from '@/components/landing/TimeMachineSection';
 import { CtaSection, Footer } from '@/components/landing/CtaSection';
 import { FeatureAutoSlider } from '@/components/ui/feature-auto-slider';
+import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { GenerativeArtScene } from '@/components/ui/anomalous-matter-hero';
 
+const GenerativeArtScene = dynamic(() => import('@/components/ui/anomalous-matter-hero').then(mod => ({ default: mod.GenerativeArtScene })), { ssr: false });
 const CalibrationTable = dynamic(() => import('@/components/landing/CalibrationTable').then(mod => ({ default: mod.CalibrationTable })), { ssr: false });
 
 export default function Home() {
@@ -44,10 +46,19 @@ export default function Home() {
         </motion.div>
       </div>
 
+      {/* Floating Progressive Blur Overlay at Bottom */}
+      <ProgressiveBlur
+        direction="bottom"
+        blurLayers={8}
+        maxBlur={20}
+        className="fixed bottom-0 left-0 right-0 h-28 pointer-events-none z-30"
+      />
+
       <div className="relative z-10 flex flex-col w-full">
         <Hero />
         <LandingInputSection />
         <HowItWorks />
+        <TimeMachineSection />
         <ExplorationEngine />
         <FeatureAutoSlider />
         <CalibrationTable />

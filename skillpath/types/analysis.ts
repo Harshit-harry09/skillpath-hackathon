@@ -8,6 +8,7 @@ export interface SkillGap {
   weeks_to_learn: number;
   reason: string;
   in_mvc: boolean;
+  category?: string;
   premium?: number;
   trend?: Record<string, number>;
   // Confidence self-assessment (optional — only set after user rates)

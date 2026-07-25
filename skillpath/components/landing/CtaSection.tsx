@@ -120,15 +120,11 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a href="https://www.instagram.com/shaurya__pratap_07/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-brand-pink transition-all duration-300">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-brand-pink transition-all duration-300">
                 <InstagramIcon size={18} />
               </a>
             </li>
           </ul>
-          <div className="flex gap-4 text-[10px] text-muted/50 font-sans uppercase tracking-widest font-bold ml-2">
-            <a href="#" className="hover:text-ink transition-colors">Privacy</a>
-            <a href="#" className="hover:text-ink transition-colors">Terms</a>
-          </div>
         </div>
       </div>
     </footer>

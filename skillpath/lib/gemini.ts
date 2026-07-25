@@ -6,15 +6,17 @@
 export type GeminiModel =
   | "gemini-3.6-flash"
   | "gemini-3.5-flash"
+  | "gemini-2.5-flash"
   | "gemini-2.0-flash"
   | "gemini-1.5-flash";
 
 // Map custom user/internal aliases to active Google Gemini REST API endpoints
 const MODEL_ENDPOINTS: Record<string, string> = {
-  "gemini-3.6-flash": "gemini-2.0-flash",
-  "gemini-3.5-flash": "gemini-2.0-flash",
-  "gemini-2.0-flash": "gemini-2.0-flash",
-  "gemini-1.5-flash": "gemini-1.5-flash",
+  "gemini-3.6-flash": "gemini-3.6-flash",
+  "gemini-3.5-flash": "gemini-3.5-flash",
+  "gemini-2.5-flash": "gemini-2.5-flash",
+  "gemini-2.0-flash": "gemini-2.5-flash",
+  "gemini-1.5-flash": "gemini-2.5-flash",
 };
 
 /**
@@ -36,21 +38,23 @@ export async function callGemini(
     throw new Error("GEMINI_API_KEY is not set in environment variables.");
   }
 
-  const isAccessToken = apiKey.startsWith("AQ.");
+  const isAccessToken = apiKey.startsWith("ya29.");
   const authHeader: Record<string, string> = isAccessToken
     ? { Authorization: `Bearer ${apiKey}` }
     : {};
   const keyQuery = isAccessToken ? "" : `?key=${apiKey}`;
 
-  const requestedModel: GeminiModel = options?.model ?? "gemini-2.0-flash";
+  const requestedModel: GeminiModel = options?.model ?? "gemini-2.5-flash";
   const temperature = options?.temperature ?? 0.2;
   const maxTokens = options?.maxTokens ?? 2048;
 
   // Fallback models in priority order
   const rawModelsToTry: string[] = [
-    MODEL_ENDPOINTS[requestedModel] || "gemini-2.0-flash",
+    MODEL_ENDPOINTS[requestedModel] || "gemini-2.5-flash",
+    "gemini-2.5-flash",
+    "gemini-3.6-flash",
+    "gemini-3.5-flash",
     "gemini-2.0-flash",
-    "gemini-1.5-flash",
   ];
 
   // Deduplicate fallback list
@@ -76,7 +80,7 @@ export async function callGemini(
         method: "POST",
         headers: { "Content-Type": "application/json", ...authHeader },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(12000),
+        signal: AbortSignal.timeout(30000),
       });
 
       if (!res.ok) {

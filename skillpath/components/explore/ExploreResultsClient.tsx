@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import SkillMap from '@/components/explore/SkillMap';
 import ExploreStats from '@/components/explore/ExploreStats';
 import ExploreCTA from '@/components/explore/ExploreCTA';
+import MarketCompensation from '@/components/explore/MarketCompensation';
+import TargetEmployers from '@/components/explore/TargetEmployers';
 import { Footer } from '@/components/landing/CtaSection';
 
 import Link from 'next/link';
@@ -135,11 +137,16 @@ export default function ExploreResultsClient({
               Every technical competency and analytical requirement identified from thousands of market-active job descriptions.
             </p>
           </header>
-
           {data.skill_map?.categories && (
             <SkillMap categories={data.skill_map.categories} />
           )}
         </section>
+
+        {/* Feature 1: Market Compensation Matrix */}
+        <MarketCompensation roleName={data.role} salaryRange={data.salary_range} />
+
+        {/* Feature 2: Top Target Employers */}
+        <TargetEmployers roleName={data.role} employers={data.top_employers} />
 
         {/* Conversion CTA */}
         <ExploreCTA explorationData={data as any} />
