@@ -52,6 +52,14 @@ export default function JobTitleInput() {
           created_at: new Date().toISOString(),
           jd_preview: data.job_title_raw || jobTitle,
         });
+
+        // Cache full exploration payload for instant 0ms page load
+        try {
+          sessionStorage.setItem(`explore_${data.share_token}`, JSON.stringify(data));
+        } catch {
+          // quota fallback
+        }
+
         router.push(`/explore/${data.share_token}`);
       } else {
         setError(data.message || 'Something went wrong. Please try again.');
