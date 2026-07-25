@@ -8,7 +8,7 @@ import type { ActiveJob, TrackedSkill, SkillState } from '@/types/active-job';
 export async function GET(req: NextRequest) {
   try {
     const user = await getAuthUserSafe(req);
-    if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+    if (!user) return NextResponse.json({ active_job: null });
 
     let db;
     try { db = getDb(); } catch {

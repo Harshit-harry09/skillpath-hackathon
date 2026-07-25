@@ -4,11 +4,8 @@ import { getAuthUserSafe } from "@/lib/auth-helpers";
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth Check
+    // Optional Auth — allow guest visitors to generate bullets
     const user = await getAuthUserSafe(req);
-    if (!user) {
-      return NextResponse.json({ error: 'unauthorized', message: 'Authentication token required.' }, { status: 401 });
-    }
 
     let skill = 'Engineering';
     let role = 'Software Engineer';

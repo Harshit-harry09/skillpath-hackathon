@@ -154,14 +154,13 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    // ---- Step 4: Save to Firestore (Await to prevent 404 race condition) ----
+    // ---- Step 4: Save to Firestore (Graceful Save) ----
     try {
       const db = getDb();
       await db.collection("explorations").doc(shareToken).set(explorationDoc);
       console.log(`[Explore] ✓ Saved: ${shareToken}`);
     } catch (dbError: any) {
-      console.error("[Explore] Firestore save failed:", dbError.message);
-      throw new Error("Failed to save exploration data to database. Please check Firebase configuration.");
+      console.warn("[Explore] Firestore save skipped or unavailable:", dbError?.message || dbError);
     }
 
     const duration = Date.now() - startTime;

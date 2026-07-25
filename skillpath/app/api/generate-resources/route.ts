@@ -44,13 +44,8 @@ import { getAuthUserSafe } from "@/lib/auth-helpers";
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
 
+  // Optional Auth — allow guest visitors to generate resources
   const user = await getAuthUserSafe(req);
-  if (!user) {
-    return NextResponse.json(
-      { error: "unauthorized", message: "Authentication required to generate learning resources." },
-      { status: 401 }
-    );
-  }
 
   // ── Parse body ─────────────────────────────────────────────────────────────
   let body: Partial<GenerateResourcesBody>;

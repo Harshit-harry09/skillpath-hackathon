@@ -29,10 +29,10 @@ export async function GET(
     try {
       db = getDb();
     } catch (e) {
-      console.error("[Results] Firebase unavailable:", e instanceof Error ? e.message : e);
+      console.warn("[Results] Firebase unavailable, returning 404 fallback:", e instanceof Error ? e.message : e);
       return NextResponse.json(
-        { error: "database_unavailable", message: "Database temporarily unavailable. Please try again." },
-        { status: 503 }
+        { error: "not_found", message: "Analysis not found or database unconfigured." },
+        { status: 404 }
       );
     }
 
@@ -55,8 +55,8 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching result:", error);
     return NextResponse.json(
-      { error: "fetch_failed", message: "Failed to fetch analysis." },
-      { status: 500 }
+      { error: "not_found", message: "Analysis not found." },
+      { status: 404 }
     );
   }
 }
