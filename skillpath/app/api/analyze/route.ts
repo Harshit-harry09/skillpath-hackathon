@@ -26,29 +26,16 @@ import { detectCompanyType } from "@/lib/company-detector";
 import { cleanSkillsWithAI } from "@/lib/ai-skill-cleaner";
 import { getDb } from "@/lib/firebase-admin";
 import { extractTextFromPDF } from "@/lib/pdf-extract";
-import { getAuthUser, AuthError } from "@/lib/auth-helpers";
+import { getAuthUser, getAuthUserSafe, AuthError } from "@/lib/auth-helpers";
 import { ANALYZE_SUMMARY_SYSTEM, buildAnalyzeSummaryPrompt } from "@/prompts/analyze-summary";
 import crypto from "crypto";
 import { callGemini, callGeminiJSON } from "@/lib/gemini";
 
 export async function POST(req: NextRequest) {
   try {
-    // ---- Auth Check (typed errors) ----
-    let user;
-    try {
-      user = await getAuthUser(req);
-    } catch (e) {
-      if (e instanceof AuthError) {
-        return NextResponse.json(
-          { error: e.code.toLowerCase(), message: e.message },
-          { status: e.statusCode }
-        );
-      }
-      return NextResponse.json(
-        { error: "auth_failed", message: "Authentication failed." },
-        { status: 401 }
-      );
-    }
+    // ---- Auth Check (Optional for guest analysis) ----
+    const user = await getAuthUserSafe(req);
+
 
     let jd_text = "";
     let resume_text = "";
@@ -136,7 +123,7 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    console.log(`[Analyze] Starting for user ${user.uid} | JD: ${jd_text.length} chars | Resume: ${resume_text.length} chars`);
+    console.log(`[Analyze] Starting for user ${user?.uid || 'guest'} | JD: ${jd_text.length} chars | Resume: ${resume_text.length} chars`);
 
     // ---- Step 1: Detect company type (local, or override from dream context) ----
     const DREAM_COMPANY_MAP: Record<string, string> = {
@@ -282,16 +269,16 @@ export async function POST(req: NextRequest) {
       } : {}),
     };
 
-    // ---- Step 8: Save to Firestore (fire-and-forget) ----
-    // Don't await — return results to client immediately
-    // ---- Step 8: Save to Firestore (Synchronous to ensure persistence) ----
+    // ---- Step 8: Save to Firestore (Graceful Save) ----
     try {
       const db = getDb();
-      await db.collection("analyses").doc(shareToken).set(analysisDoc);
+      await db.collection("analyses").doc(shareToken).set({
+        ...analysisDoc,
+        user_id: user?.uid || null,
+      });
       console.log(`[Analyze] ✓ Saved to Firestore: ${shareToken}`);
     } catch (dbError) {
-      console.error("[Analyze] Firestore save failed:", dbError instanceof Error ? dbError.message : dbError);
-      throw new Error("Database temporarily unavailable. Could not save results.");
+      console.warn("[Analyze] Firestore save skipped or unavailable:", dbError instanceof Error ? dbError.message : dbError);
     }
 
     console.log(`[Analyze] ✓ Complete | Gap: ${gapResult.gapScore}% | Weeks: ${countdown.weeksRequired} | Token: ${shareToken}`);
