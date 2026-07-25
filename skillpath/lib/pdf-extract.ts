@@ -1,6 +1,14 @@
 // lib/pdf-extract.ts
 import PDFParser from 'pdf2json';
 
+function safeDecode(encoded: string): string {
+  try {
+    return decodeURIComponent(encoded);
+  } catch {
+    return encoded;
+  }
+}
+
 // Strategy 1 — pdf2json structured parse
 async function extractWithPdf2json(buffer: ArrayBuffer): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -17,7 +25,7 @@ async function extractWithPdf2json(buffer: ArrayBuffer): Promise<string> {
         const text = (data.Pages ?? [])
           .flatMap((page: any) => page.Texts ?? [])
           .map((t: any) =>
-            decodeURIComponent(
+            safeDecode(
               (t.R ?? []).map((r: any) => r.T ?? '').join('')
             )
           )

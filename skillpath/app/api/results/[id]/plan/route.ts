@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { callGroqJSON } from "@/lib/groq";
+import { callGeminiJSON } from "@/lib/gemini";
 import { getDb } from "@/lib/firebase-admin";
 import {
   PLAN_GENERATION_SYSTEM,
@@ -48,10 +48,10 @@ export async function POST(
 
     // 2. Generate plan using the most powerful model
     console.log(`[On-Demand Plan] Generating plan for ${id}...`);
-    const learningPlan = await callGroqJSON<LearningPlan>(
+    const learningPlan = await callGeminiJSON<LearningPlan>(
       PLAN_GENERATION_SYSTEM,
       buildPlanGenerationPrompt(data?.skill_gaps || [], data?.company_type || "enterprise"),
-      { model: "llama-3.3-70b-versatile", temperature: 0.2, maxTokens: 3000 }
+      { model: "gemini-2.0-flash", temperature: 0.2, maxTokens: 4096 }
     );
 
     // 3. Save it back to Firestore

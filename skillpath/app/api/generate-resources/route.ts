@@ -24,8 +24,8 @@ function validateBody(body: Partial<GenerateResourcesBody>): string | null {
   }
 
   if (body.click_count !== undefined) {
-    if (typeof body.click_count !== "number" || body.click_count < 0 || body.click_count > 10) {
-      return "click_count must be a number between 0 and 10.";
+    if (typeof body.click_count !== "number" || body.click_count < 0 || body.click_count > 3) {
+      return "click_count must be a number between 0 and 3.";
     }
   }
 
@@ -38,9 +38,19 @@ function sanitizeString(val: string, maxLen = 100): string {
   return val.trim().slice(0, maxLen);
 }
 
+import { getAuthUserSafe } from "@/lib/auth-helpers";
+
 // ─── Route ────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
+
+  const user = await getAuthUserSafe(req);
+  if (!user) {
+    return NextResponse.json(
+      { error: "unauthorized", message: "Authentication required to generate learning resources." },
+      { status: 401 }
+    );
+  }
 
   // ── Parse body ─────────────────────────────────────────────────────────────
   let body: Partial<GenerateResourcesBody>;

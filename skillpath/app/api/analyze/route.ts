@@ -29,9 +29,7 @@ import { extractTextFromPDF } from "@/lib/pdf-extract";
 import { getAuthUser, AuthError } from "@/lib/auth-helpers";
 import { ANALYZE_SUMMARY_SYSTEM, buildAnalyzeSummaryPrompt } from "@/prompts/analyze-summary";
 import crypto from "crypto";
-import Groq from "groq-sdk";
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "fallback_key_not_set" });
+import { callGemini, callGeminiJSON } from "@/lib/gemini";
 
 export async function POST(req: NextRequest) {
   try {
@@ -58,6 +56,14 @@ export async function POST(req: NextRequest) {
     let currentRole = "";
     let experienceLevel = "";
     let targetCompany = "";
+    const contentLength = req.headers.get("content-length");
+    if (contentLength && parseInt(contentLength, 10) > 5 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "payload_too_large", message: "Request payload exceeds maximum allowed size of 5MB." },
+        { status: 413 }
+      );
+    }
+
     const contentType = req.headers.get("content-type") || "";
 
     if (contentType.includes("multipart/form-data")) {
@@ -147,10 +153,11 @@ export async function POST(req: NextRequest) {
 
     // ---- Step 2: Extract skills via keyword matching (local, instant) ----
     const rawJdSkills = extractSkills(jd_text);
+    const detectedRoleCategory = detectRoleCategory(jd_text);
+    const roleTitleContext = getRoleLabel(detectedRoleCategory);
 
-    // Hybrid Brain: Clean the local list using fast AI (Llama 3 8B)
-    // We pass the first 200 chars of the JD as context for the role title
-    const { cleaned: jdKeywordSkills, metrics: aiMetrics } = await cleanSkillsWithAI(rawJdSkills, jd_text.slice(0, 200));
+    // Hybrid Brain: Clean the local list using fast AI / Local Expert
+    const { cleaned: jdKeywordSkills, metrics: aiMetrics } = await cleanSkillsWithAI(rawJdSkills, roleTitleContext);
     console.log(`[Analyze] AI Cleaning: ${aiMetrics.status} | Latency: ${Math.round(aiMetrics.latency)}ms | Cached: ${aiMetrics.cached}`);
 
     const modelSkills = getRoleStandardSkills(jd_text);
@@ -176,78 +183,52 @@ export async function POST(req: NextRequest) {
     // ---- Step 6: Calculate ready-by date (local) ----
     const countdown = calculateCountdown(rankedGaps);
 
-    // ---- Step 7: AI Summary (optional, 10s timeout, graceful fallback) ----
+    // ---- Step 7: AI Calls (run in parallel for ~50% latency reduction) ----
+    const [aiSummaryResult, foundationalPrerequisitesResult] = await Promise.allSettled([
+      // 7a: AI Summary (10s timeout)
+      Promise.race([
+        callGemini(
+          ANALYZE_SUMMARY_SYSTEM,
+          buildAnalyzeSummaryPrompt(
+            gapResult.gapScore,
+            rankedGaps.filter(g => g.in_mvc).map(g => g.skill),
+            countdown.readyByDate,
+            companyType,
+            getRoleLabel(roleCategory)
+          ),
+          { model: "gemini-2.0-flash", temperature: 0.3, maxTokens: 150 }
+        ),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Summary generation timed out")), 10_000)
+        ),
+      ]),
+      // 7b: Foundational Prerequisites
+      callGeminiJSON<any>(
+        "You are a Technical Architect. Identify 3 SPECIFIC TECHNICAL foundational concepts the user is MISSING from their resume that are required to master their advanced gaps. Focus on Logic & Fundamentals (e.g., 'Memory Management', 'Asynchronous Flow', 'Relational Logic'). Return ONLY a JSON array of 3 strings.",
+        `Target Role: ${roleCategory}\nUser's Current Skills: ${resumeSkills.join(", ")}\nMissing Advanced Skills: ${rankedGaps.slice(0, 5).map(g => g.skill).join(", ")}`,
+        { model: "gemini-2.0-flash", temperature: 0.1, maxTokens: 256 }
+      ),
+    ]);
+
+    // Resolve summary
     let aiSummary = "";
-    try {
-      const summaryPromise = groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
-        messages: [
-          { role: "system", content: ANALYZE_SUMMARY_SYSTEM },
-          {
-            role: "user", content: buildAnalyzeSummaryPrompt(
-              gapResult.gapScore,
-              rankedGaps.filter(g => g.in_mvc).map(g => g.skill),
-              countdown.readyByDate,
-              companyType,
-              getRoleLabel(roleCategory)
-            )
-          }
-        ],
-        temperature: 0.3,
-        max_tokens: 150,
-      });
-
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Summary generation timed out")), 10_000)
-      );
-
-      const summaryResponse = await Promise.race([summaryPromise, timeoutPromise]);
-      aiSummary = summaryResponse.choices[0]?.message?.content?.trim() || "";
+    if (aiSummaryResult.status === "fulfilled" && aiSummaryResult.value) {
+      aiSummary = aiSummaryResult.value.trim();
       console.log("[Analyze] ✓ AI summary generated");
-    } catch (aiError) {
-      console.warn("[Analyze] AI summary skipped (non-critical):", aiError instanceof Error ? aiError.message : aiError);
+    } else {
+      console.warn("[Analyze] AI summary skipped (non-critical):", aiSummaryResult.status === "rejected" ? aiSummaryResult.reason?.message : "empty");
       aiSummary = `You are ${countdown.weeksRequired} weeks away from being a competitive candidate for this ${getRoleLabel(roleCategory)} role.`;
     }
 
-    // ---- Step 7.5: Foundational Prerequisites (Simple & Fast) ----
+    // Resolve prerequisites
     let foundationalPrerequisites: string[] = [];
-    try {
-      const prereqResponse = await groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
-        messages: [
-          { 
-            role: "system", 
-            content: "You are a Technical Architect. Identify 3 SPECIFIC TECHNICAL foundational concepts the user is MISSING from their resume that are required to master their advanced gaps. Focus on Logic & Fundamentals (e.g., 'Memory Management', 'Asynchronous Flow', 'Relational Logic'). Return ONLY a JSON array of 3 strings." 
-          },
-          {
-            role: "user",
-            content: `Target Role: ${roleCategory}\nUser's Current Skills: ${resumeSkills.join(", ")}\nMissing Advanced Skills: ${rankedGaps.slice(0, 5).map(g => g.skill).join(", ")}`
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 60,
-        response_format: { type: "json_object" }
-      });
-
-      const content = prereqResponse.choices[0]?.message?.content || "[]";
-      const parsed = JSON.parse(content);
-      
-      // Defensive Parsing: Find the first array in the JSON object
-      if (Array.isArray(parsed)) {
-        foundationalPrerequisites = parsed;
-      } else {
-        const firstArray = Object.values(parsed).find(v => Array.isArray(v));
-        foundationalPrerequisites = Array.isArray(firstArray) ? firstArray : [];
-      }
-      
-      foundationalPrerequisites = foundationalPrerequisites
-        .filter(s => typeof s === 'string' && s.length > 2)
-        .slice(0, 3);
-        
+    if (foundationalPrerequisitesResult.status === "fulfilled") {
+      const parsed = foundationalPrerequisitesResult.value;
+      const arr = Array.isArray(parsed) ? parsed : (Object.values(parsed).find(v => Array.isArray(v)) as any[] ?? []);
+      foundationalPrerequisites = (arr as any[]).filter(s => typeof s === 'string' && s.length > 2).slice(0, 3);
       console.log("[Analyze] ✓ Foundational prerequisites generated");
-    } catch (prereqError) {
-      console.warn("[Analyze] Prerequisites generation failed:", prereqError instanceof Error ? prereqError.message : prereqError);
-      // Technical Fallback (No fluff)
+    } else {
+      console.warn("[Analyze] Prerequisites generation failed:", foundationalPrerequisitesResult.reason?.message);
       foundationalPrerequisites = ["Version Control (Git)", "Data Structures", "Command Line Basics"];
     }
 

@@ -47,22 +47,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'missing_fields' }, { status: 400 });
     }
 
-    // Archive the existing active job first
-    const existing = await db.collection('active_jobs').doc(user.uid).get();
-    if (existing.exists) {
-      const prev = existing.data() as ActiveJob;
-      await db
-        .collection('job_history')
-        .doc(user.uid)
-        .collection('jobs')
-        .doc(prev.id)
-        .set({
-          ...prev,
-          archived_at: new Date().toISOString(),
-          final_score: prev.readiness_score
-        });
-    }
-
     // Get history to pick a fresh color
     const historySnap = await db
       .collection('job_history').doc(user.uid).collection('jobs')
@@ -88,7 +72,28 @@ export async function POST(req: NextRequest) {
       readiness_score: computeReadiness(skills),
     };
 
-    await db.collection('active_jobs').doc(user.uid).set(activeJob);
+    // Execute archive and write atomically inside a transaction
+    await db.runTransaction(async (transaction) => {
+      const activeJobRef = db.collection('active_jobs').doc(user.uid);
+      const existingDoc = await transaction.get(activeJobRef);
+
+      if (existingDoc.exists) {
+        const prev = existingDoc.data() as ActiveJob;
+        const historyRef = db
+          .collection('job_history')
+          .doc(user.uid)
+          .collection('jobs')
+          .doc(prev.id);
+
+        transaction.set(historyRef, {
+          ...prev,
+          archived_at: new Date().toISOString(),
+          final_score: prev.readiness_score
+        });
+      }
+
+      transaction.set(activeJobRef, activeJob);
+    });
 
     return NextResponse.json({ active_job: activeJob }, { status: 201 });
   } catch (e: any) {
@@ -141,21 +146,19 @@ export async function PATCH(req: NextRequest) {
     const updatedSkills = job.skills.map(s => {
       if (s.skill !== body.skill) return s;
 
-      const updated: TrackedSkill = {
-        ...s,
-        state: body.state,
-      };
-
-      // Firestore safety: Never pass undefined. Use explicit null or omit.
       if (body.state === 'learned') {
-        updated.learned_at = new Date().toISOString();
-      } else {
-        // Remove learned_at if it's no longer learned, or keep old one if it exists
-        // Actually, let's keep the object clean
-        delete updated.learned_at;
+        return {
+          ...s,
+          state: body.state,
+          learned_at: new Date().toISOString(),
+        };
       }
 
-      return updated;
+      const { learned_at: _, ...rest } = s;
+      return {
+        ...rest,
+        state: body.state,
+      };
     });
 
     const newScore = computeReadiness(updatedSkills);

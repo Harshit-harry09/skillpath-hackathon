@@ -1,6 +1,6 @@
 # SkillPath: The Elite Career Architect 🚀
 
-![SkillPath Banner](https://github.com/shauryap9006/Skillpath/raw/main/public/banner.png) <!-- Note: This is a placeholder, adjust path if needed -->
+![SkillPath Banner](https://github.com/shauryap9006/Skillpath/raw/main/public/banner.png)
 
 SkillPath is a high-performance AI platform designed to eliminate the guesswork from career progression in tech. By leveraging deep-learning and data-driven analysis, it bridges the gap between a developer's current skill set and their target role.
 
@@ -30,18 +30,18 @@ SkillPath provides a **precision-engineered roadmap** for career transitions. It
 | :--- | :--- |
 | **Frontend** | Next.js 15 (App Router), TypeScript, Tailwind CSS |
 | **Animations** | Framer Motion, GSAP |
-| **Visuals** | Three.js, React Three Fiber (3D Wireframes) |
-| **Backend** | Firebase (Real-time Orchestration) |
-| **AI Engine** | Groq / Llama 3 (High-speed Inference) |
+| **Visuals** | Three.js, React Three Fiber |
+| **Backend** | Firebase (Real-time Orchestration & Auth) |
+| **AI Engine** | Gemini API (`gemini-2.0-flash` / `gemini-2.5-flash`) |
 | **Scrolling** | Lenis (Cinematic Smooth Scroll) |
 
 ---
 
 ## 🎨 Design Philosophy: "Cinematic Engineering"
-SkillPath is built to feel like a premium tool for elite talent. Every interaction—from the "limelight" navigation spotlight to the staggered history list—is designed to provide satisfying, tactile feedback. 
+SkillPath is built to feel like a premium tool for elite talent. Every interaction—from the navigation spotlight to the staggered history list—is designed to provide satisfying, tactile feedback. 
 
 - **Glassmorphism**: Subtle blurs, border-glows, and deep-space color palettes.
-- **Typography**: `Instrument Serif` (Bold Display) & `Geist Mono` (Technical Precision).
+- **Typography**: Inter (Technical Precision) & Irish Grover.
 
 ---
 
@@ -49,8 +49,8 @@ SkillPath is built to feel like a premium tool for elite talent. Every interacti
 SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis with creative synthesis:
 
 1. **MVC Data Model**: Curated dataset of 70+ role categories with weighted skills.
-2. **Deterministic Pipeline**: Local extraction and scoring via `pdf-parse` and regex-based synthesis.
-3. **AI Synthesis**: Strategic use of Llama 3 for contextual resource generation and semantic reasoning.
+2. **Deterministic Pipeline**: Local extraction and scoring via `pdf2json` and regex-based synthesis.
+3. **AI Synthesis**: Strategic use of Gemini for contextual resource generation and semantic reasoning.
 
 ---
 
@@ -59,7 +59,7 @@ SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis wi
 ### Prerequisites
 - Node.js (Latest LTS)
 - Firebase Account
-- Groq API Key
+- Gemini API Key
 
 ### Installation
 
@@ -72,9 +72,9 @@ SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis wi
 2. **Install Dependencies**
    ```bash
    # Root dependencies (ML & Tools)
-   pip install -r requirements-ml.txt
+   pip install -r scripts/requirements-ml.txt
 
-   # Frontend dependencies
+   # Application dependencies
    cd skillpath
    npm install
    ```
@@ -83,7 +83,7 @@ SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis wi
    Create a `.env.local` in the `skillpath` directory:
    ```env
    NEXT_PUBLIC_FIREBASE_API_KEY=...
-   GROQ_API_KEY=...
+   GEMINI_API_KEY=...
    ```
 
 4. **Run the Development Server**
@@ -98,12 +98,11 @@ SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis wi
 ```text
 ├── skillpath/              # Main Next.js Application
 │   ├── app/                # App Router (Pages & API)
-│   ├── components/         # Premium UI Components
+│   ├── components/         # UI Components
 │   ├── context/            # Auth & Global State
-│   └── lib/                # Shared Utilities
-├── data/                   # MVC Models & JSON Datasets
-├── auth-system/            # Authentication Logic
-└── jobs/                   # Job Description Scrapers/Analyzers
+│   └── lib/                # Shared Utilities & Datasets
+├── scripts/                # Model Training & Evaluation Scripts
+└── README.md               # Documentation
 ```
 
 ---

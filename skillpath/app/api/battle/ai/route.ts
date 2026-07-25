@@ -1,19 +1,14 @@
-import { NextResponse } from 'next/server';
-import { Groq } from 'groq-sdk';
-
+import { NextRequest, NextResponse } from 'next/server';
+import { callGemini } from '@/lib/gemini';
 import { getAuthUser } from '@/lib/auth-helpers';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    // ---- Auth Check ----
+    // Optional auth check — allow guest visitors to enjoy AI verdicts
     try {
-      await getAuthUser(req as any); // NextRequest vs Request cast
-    } catch (e) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      await getAuthUser(req);
+    } catch {
+      // Guest visitor
     }
 
     const body = await req.json();
@@ -24,7 +19,6 @@ export async function POST(req: Request) {
     }
 
     const prompt = `
-      You are a senior tech architect and career strategist. 
       Battle: ${optionA.name} vs ${optionB.name}
       Winner: ${winner === 'A' ? optionA.name : (winner === 'B' ? optionB.name : 'Tie')}
       Data Context:
@@ -37,18 +31,15 @@ export async function POST(req: Request) {
       Keep it professional, persuasive, and under 25 words. Do not use hashtags.
     `;
 
-    const completion = await groq.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
-      model: 'llama-3.1-8b-instant', // Low power, high speed
-      temperature: 0.8,
-      max_tokens: 60,
-    });
+    const aiVerdict = await callGemini(
+      "You are a senior tech architect and career strategist.",
+      prompt,
+      { model: "gemini-2.0-flash", temperature: 0.8, maxTokens: 60 }
+    );
 
-    const aiVerdict = completion.choices[0]?.message?.content?.trim() || "The data has spoken, but the AI is speechless.";
-
-    return NextResponse.json({ aiVerdict });
+    return NextResponse.json({ aiVerdict: aiVerdict.trim() || "The data has spoken clearly. Focus on mastering core engineering paradigms." });
   } catch (error) {
     console.error('AI Battle Error:', error);
-    return NextResponse.json({ aiVerdict: "Error consulting the AI oracle. Stick to the hard data." }, { status: 500 });
+    return NextResponse.json({ aiVerdict: "Both technologies offer immense value. Choose based on your target ecosystem." });
   }
 }

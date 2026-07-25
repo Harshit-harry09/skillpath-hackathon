@@ -2,13 +2,11 @@
 import { PIN_COLORS } from './readiness';
 
 export function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .map(w => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
+  const segmenter = new Intl.Segmenter('en', { granularity: 'word' });
+  const words = [...segmenter.segment(name)]
+    .filter(s => s.isWordLike)
+    .map(s => s.segment[0]);
+  return words.slice(0, 2).join('').toUpperCase();
 }
 
 export function nameToColor(name: string): string {
@@ -20,7 +18,7 @@ export function nameToColor(name: string): string {
 }
 
 export function todayISO(): string {
-  return new Date().toISOString().split('T')[0];
+  return new Date().toISOString().slice(0, 10);
 }
 
 export function computeWeeksRemaining(

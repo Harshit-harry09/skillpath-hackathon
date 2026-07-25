@@ -36,20 +36,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
 
         setUser(userData);
-
-        // Store for SSR hydration fallback only
-        try {
-          const idToken = await firebaseUser.getIdToken();
-          localStorage.setItem('token', idToken);
-          localStorage.setItem('user', JSON.stringify(userData));
-        } catch {
-          // Ignore localStorage errors
-        }
       } else {
         firebaseUserRef.current = null;
         setUser(null);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
       }
       setLoading(false);
     });
@@ -67,10 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!fbUser) return null;
 
     try {
-      const token = await fbUser.getIdToken(/* forceRefresh */ true);
-      // Update localStorage as a side-effect for hydration
-      localStorage.setItem('token', token);
-      return token;
+      return await fbUser.getIdToken(/* forceRefresh */ true);
     } catch (error) {
       console.error('[AuthContext] Failed to refresh token:', error);
       return null;

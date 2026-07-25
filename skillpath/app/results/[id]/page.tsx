@@ -35,6 +35,18 @@ import { useAuth } from '@/context/AuthContext';
 import { ConfidenceStrip } from '@/components/results/ConfidenceStrip';
 import { SelfAssessmentModal } from '@/components/results/SelfAssessmentModal';
 import { computeFreshnessScore } from '@/lib/skill-expiry';
+import { SalaryRoiCard } from '@/components/results/SalaryRoiCard';
+import { StarBulletModal } from '@/components/results/StarBulletModal';
+import { AtsAuditorCard } from '@/components/analyze/AtsAuditorCard';
+import { BuzzwordEraserCard } from '@/components/results/BuzzwordEraserCard';
+import { CompanyAlignmentMatrix } from '@/components/results/CompanyAlignmentMatrix';
+import { SkillConfidenceHeatMap } from '@/components/results/SkillConfidenceHeatMap';
+import { TimeToReadyEstimator } from '@/components/results/TimeToReadyEstimator';
+import { CoverLetterGenerator } from '@/components/results/CoverLetterGenerator';
+import { QuantificationScanner } from '@/components/results/QuantificationScanner';
+import { KeywordDensityChecker } from '@/components/results/KeywordDensityChecker';
+import { LinkedInHeadlineOptimizer } from '@/components/results/LinkedInHeadlineOptimizer';
+import { CompetitiveBenchmarkScore } from '@/components/results/CompetitiveBenchmarkScore';
 
 export default function ResultsPage({
   params,
@@ -53,6 +65,8 @@ export default function ResultsPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAssessmentModal, setShowAssessmentModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'gaps' | 'insights' | 'trajectory'>('gaps');
+  const [starModalSkill, setStarModalSkill] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchResults(retries = 3) {
@@ -417,315 +431,239 @@ export default function ResultsPage({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7">
-            {/* Resume Freshness Score */}
-            {freshnessResult && (
-              <div className="mb-16">
-                <FreshnessScoreCard data={freshnessResult} />
-              </div>
-            )}
+        {/* STAR Bullet Modal */}
+        <StarBulletModal
+          isOpen={!!starModalSkill}
+          onClose={() => setStarModalSkill(null)}
+          skill={starModalSkill || ''}
+          role={data.role_label || 'Software Engineer'}
+        />
 
-            {/* Gap & Readiness Score */}
-            <div className="mb-16">
-              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10">
-                {activeJob && (
-                  <div className="shrink-0">
-                    <ReadinessRing score={currentScore} color={activeJob.color} size={120} strokeWidth={8} />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em]">
-                      {activeJob ? 'Current Readiness' : 'Gap Score'}
-                    </span>
-                    {activeJob && (
-                      <span className="px-2 py-0.5 rounded-full bg-surface-strong border border-hairline text-[10px] text-muted font-bold uppercase tracking-widest">
-                        Match: {data.gap_score}%
+        {/* Tabbed Navigation Bar */}
+        <div className="flex items-center gap-2 mb-10 border-b border-hairline pb-4 overflow-x-auto no-scrollbar">
+          <button
+            onClick={() => setActiveTab('gaps')}
+            className={`px-6 py-3 rounded-xl font-sans font-semibold text-body-sm transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'gaps'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-muted hover:text-ink hover:bg-surface-soft'
+            }`}
+          >
+            <Target size={16} />
+            🎯 Skill Gaps & Roadmap
+          </button>
+          <button
+            onClick={() => setActiveTab('insights')}
+            className={`px-6 py-3 rounded-xl font-sans font-semibold text-body-sm transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'insights'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-muted hover:text-ink hover:bg-surface-soft'
+            }`}
+          >
+            <Sparkles size={16} />
+            📊 Deep Insights & ATS
+          </button>
+          <button
+            onClick={() => setActiveTab('trajectory')}
+            className={`px-6 py-3 rounded-xl font-sans font-semibold text-body-sm transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'trajectory'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-muted hover:text-ink hover:bg-surface-soft'
+            }`}
+          >
+            <Zap size={16} />
+            🚀 Career Trajectory
+          </button>
+        </div>
+
+        {/* TAB 1: SKILL GAPS & ROADMAP */}
+        {activeTab === 'gaps' && (
+          <div className="space-y-8">
+
+            {/* Row 1: Salary ROI — full width hero */}
+            <SalaryRoiCard
+              roleCategory={data.role_category || ''}
+              roleLabel={data.role_label || 'Software Engineer'}
+              gapCount={activeGaps.length}
+              mvcSkills={data.mvc_skills || []}
+            />
+
+            {/* Row 2: Skill Heat Map (left 7) + Time-to-Ready (right 5) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              <div className="lg:col-span-7 h-full">
+                <SkillConfidenceHeatMap
+                  mvcSkills={data.mvc_skills || []}
+                  gapSkills={activeGaps.map(g => g.skill)}
+                  assessments={assessments}
+                  onConfidenceChange={handleConfidenceChange}
+                />
+              </div>
+              <div className="lg:col-span-5 h-full">
+                <TimeToReadyEstimator
+                  gapCount={activeGaps.length}
+                  criticalCount={activeGaps.filter(g => g.in_mvc).length}
+                />
+              </div>
+            </div>
+
+            {/* Row 3: Main gap list (left 7) + sticky roadmap (right 5) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+              <div className="lg:col-span-7 space-y-12">
+
+                {/* Gap & Readiness Score */}
+                <div>
+                <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10">
+                  {activeJob && (
+                    <div className="shrink-0">
+                      <ReadinessRing score={currentScore} color={activeJob.color} size={120} strokeWidth={8} />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em]">
+                        {activeJob ? 'Current Readiness' : 'Gap Score'}
                       </span>
-                    )}
-                  </div>
-                  <div className="flex items-baseline justify-center md:justify-start gap-2 mb-6 md:mb-8">
-                    <span className="font-display text-[64px] md:text-[96px] leading-none tracking-tight">{currentScore}</span>
-                    <span className="font-sans text-display-sm text-muted">/ 100</span>
-                  </div>
-                  <ProgressBar progress={currentScore} className="h-4" />
-                  <div className="flex justify-between mt-4">
-                    <span className="font-sans text-body-md font-medium">
-                      {activeJob ? `${currentScore}% prepared for this role` : `${currentScore}% resume match`}
-                    </span>
-                    <span className="font-sans text-body-sm text-muted">
-                      {activeJob ? 'Target: 80% to apply' : `${100 - data.gap_score}% gap to close`}
-                    </span>
+                      {activeJob && (
+                        <span className="px-2 py-0.5 rounded-full bg-surface-strong border border-hairline text-[10px] text-muted font-bold uppercase tracking-widest">
+                          Match: {data.gap_score}%
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-baseline justify-center md:justify-start gap-2 mb-6 md:mb-8">
+                      <span className="font-display text-[64px] md:text-[96px] leading-none tracking-tight">{currentScore}</span>
+                      <span className="font-sans text-display-sm text-muted">/ 100</span>
+                    </div>
+                    <ProgressBar progress={currentScore} className="h-4" />
+                    <div className="flex justify-between mt-4">
+                      <span className="font-sans text-body-md font-medium">
+                        {activeJob ? `${currentScore}% prepared for this role` : `${currentScore}% resume match`}
+                      </span>
+                      <span className="font-sans text-body-sm text-muted">
+                        {activeJob ? 'Target: 80% to apply' : `${100 - data.gap_score}% gap to close`}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* MVC Profile */}
-            <div className="mb-16 pt-10 border-t border-hairline">
-              <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em] mb-6 block">
-                The {data.mvc_skills.length} core essentials
-              </span>
-              <div className="flex flex-wrap gap-3 mb-8">
-                {data.mvc_skills.map((skill) => (
-                  <Chip key={skill} variant="filled">{skill}</Chip>
-                ))}
-              </div>
-              <p className="font-sans text-body-md text-muted max-w-md">
-                These appear in 80%+ of similar job descriptions. Mastering these creates the strongest ROI for your career.
-              </p>
-            </div>
-
-            {/* Skill Gap List */}
-            <div className="mb-16 pt-10 border-t border-hairline">
-              <div className="flex items-center justify-between mb-8">
-                <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em]">
-                  Prioritized Skill Gaps
+              {/* MVC Profile */}
+              <div className="pt-8 border-t border-hairline">
+                <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em] mb-6 block">
+                  The {data.mvc_skills.length} core essentials
                 </span>
-              </div>
-
-              <GenerateAllButton
-                isVisible={
-                  (activeGaps.filter(g => !data.generated_resources?.[g.skill]).length > 2) &&
-                  !batchGenerating
-                }
-                isGenerating={batchGenerating}
-                currentCount={batchProgress.current}
-                totalCount={batchProgress.total}
-                onGenerateAll={handleGenerateAll}
-              />
-
-              {dynamicLimit > 5 && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  onClick={() => {
-                    const targetSkillObj = activeGaps[5] || activeGaps[activeGaps.length - 1];
-                    if (targetSkillObj) {
-                      const id = `skill-${targetSkillObj.skill.toLowerCase().replace(/\s+/g, '-')}`;
-                      const el = document.getElementById(id);
-                      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                  }}
-                  className="mb-6 p-3 rounded-xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-between gap-3 cursor-pointer hover:bg-brand-teal/15 transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <Sparkles size={16} className="text-brand-teal" />
-                    <span className="text-[11px] font-bold text-brand-teal uppercase tracking-widest">
-                      Milestone Reached! Unlocked {dynamicLimit - 5} Advanced Skills
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 text-brand-teal font-sans text-[10px] font-bold uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">
-                    View <ArrowRight size={12} />
-                  </div>
-                </motion.div>
-              )}
-
-              <div className="flex flex-col divide-y divide-hairline">
-                <AnimatePresence initial={false}>
-                  {(isListExpanded ? activeGaps : activeGaps.slice(0, dynamicLimit)).map((gap, i) => {
-                    const variants: Array<'pink' | 'teal' | 'lavender' | 'peach' | 'ochre' | 'cream'> = [
-                      'pink', 'teal', 'lavender', 'peach', 'ochre', 'cream'
-                    ];
-                    const colorVariant = variants[i % variants.length];
-
-                    return (
-                      <motion.div
-                        key={gap.skill}
-                        id={`skill-${gap.skill.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="py-8 tactile-row scroll-mt-32"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        transition={{
-                          duration: 0.6,
-                          delay: (i % 5) * 0.1,
-                          ease: [0.16, 1, 0.3, 1] as any
-                        }}
-                        layout
-                      >
-                        <SkillCard
-                          gap={gap}
-                          index={i}
-                          analysisId={data.share_token}
-                          role={data.role_label || 'Software Engineer'}
-                          seniority="entry"
-                          companyType={data.company_type}
-                          initialResources={data.generated_resources?.[gap.skill]}
-                          autoGenerate={(i === 0 && gap.in_mvc) || gap.skill === targetSkill}
-                          colorVariant={colorVariant}
-                          trackingState={activeJob?.skills?.find((s: any) => s.skill === gap.skill)?.state}
-                          onTrackingChange={handleTrackingChange}
-                          trackingColor={activeJob?.color}
-                          confidenceLevel={assessments[gap.skill]}
-                          onConfidenceChange={handleConfidenceChange}
-                        />
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
-
-              {activeGaps.length > 5 && (
-                <div className="flex justify-center mt-12">
-                  <button
-                    onClick={() => setIsListExpanded(!isListExpanded)}
-                    className="font-sans text-button text-muted hover:text-ink transition-colors px-6 py-2 border border-hairline rounded-md hover:bg-surface-soft"
-                  >
-                    {isListExpanded ? 'View less' : `View ${activeGaps.length - 5} more skills`}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Already Strong — skills the user has mastered */}
-            {masteredSkills.length > 0 && (
-              <div className="mb-16 pt-10 border-t border-hairline">
-                <div className="flex items-center gap-2 mb-6">
-                  <CheckCircle2 size={16} className="text-brand-teal" />
-                  <span className="font-sans text-nav-link text-brand-teal uppercase tracking-[0.06em]">
-                    Already Strong ({masteredSkills.length})
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  {masteredSkills.map(gap => (
-                    <motion.button
-                      key={gap.skill}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      onClick={() => handleConfidenceChange(gap.skill, 'never_used')}
-                      className="px-4 py-2 rounded-md bg-brand-teal/5 border border-brand-teal/15 text-brand-teal font-sans text-body-sm font-semibold line-through opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-                      title="Click to move back to gaps"
-                    >
-                      {gap.skill}
-                    </motion.button>
+                <div className="flex flex-wrap gap-3 mb-6">
+                  {data.mvc_skills.map((skill) => (
+                    <Chip key={skill} variant="filled">{skill}</Chip>
                   ))}
                 </div>
-                <p className="font-sans text-body-xs text-muted mt-4">
-                  Click any skill above to move it back to the gap list.
+                <p className="font-sans text-body-md text-muted max-w-md">
+                  These appear in 80%+ of similar job descriptions. Mastering these creates the strongest ROI for your career.
                 </p>
               </div>
-            )}
 
-            {/* Skills from your resume — final summary section */}
-            {((data.matched_skills || data.mvc_skills)?.length ?? 0) > 0 && (
-              <div className="mt-16 pt-10 border-t border-hairline">
-                <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-muted mb-6">
-                  Skills from your resume
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {(data.user_skills || data.resume_skills)?.map((skill: string) => {
-                    const isMatched = data.matched_skills 
-                      ? data.matched_skills.includes(skill)
-                      : data.mvc_skills?.some((m: string) => m.toLowerCase() === skill.toLowerCase());
-                    return (
-                      <span
-                        key={skill}
-                        className={[
-                          'px-3 py-1.5 rounded-full text-[12px] font-semibold border transition-all',
-                          isMatched
-                            ? 'bg-brand-teal/10 border-brand-teal/30 text-brand-teal'
-                            : 'bg-surface-soft border-hairline text-muted',
-                        ].join(' ')}
-                      >
-                        {isMatched && <span className="mr-1">✓</span>}
-                        {skill}
-                      </span>
-                    );
-                  })}
-                </div>
-
-                <div className="flex items-center gap-4 mt-4">
-                  <span className="flex items-center gap-1.5 text-[11px] text-brand-teal font-semibold">
-                    <span className="w-2 h-2 rounded-full bg-brand-teal" />
-                    {data.matched_skills?.length ?? data.mvc_skills?.filter((m: string) => data.resume_skills?.some((s: string) => s.toLowerCase() === m.toLowerCase())).length ?? 0} matched this role
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[11px] text-muted font-semibold">
-                    <span className="w-2 h-2 rounded-full bg-surface-strong border border-hairline" />
-                    {((data.user_skills || data.resume_skills)?.length ?? 0) - (data.matched_skills?.length ?? 0)} not required for this role
+              {/* Skill Gap List */}
+              <div className="pt-8 border-t border-hairline">
+                <div className="flex items-center justify-between mb-8">
+                  <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em]">
+                    Prioritized Skill Gaps
                   </span>
                 </div>
-              </div>
-            )}
-          </div>
 
-          <div className="lg:col-span-5 space-y-8">
-            {/* Role Switch Comparison */}
-            {data.role_category && (
-              <RoleSwitchPanel
-                resumeSkills={data.resume_skills || []}
-                resumeText={data.resume_text || ''}
-                currentRoleSlug={data.role_category}
-                currentRoleLabel={data.role_label || 'Software Engineer'}
-              />
-            )}
+                <GenerateAllButton
+                  isVisible={
+                    (activeGaps.filter(g => !data.generated_resources?.[g.skill]).length > 2) &&
+                    !batchGenerating
+                  }
+                  isGenerating={batchGenerating}
+                  currentCount={batchProgress.current}
+                  totalCount={batchProgress.total}
+                  onGenerateAll={handleGenerateAll}
+                />
 
-            <AnalysisInsights
-              data={data}
-              adjustedScore={adjustedReadiness}
-              adjustedWeeks={adjustedWeeks}
-              adjustedCriticalCount={adjustedCritical}
-              masteredCount={masteredSkills.length}
-            />
-
-            {/* Foundational Prerequisites (Now on the Right) */}
-            <FoundationalPillars 
-              pillars={data.foundational_prerequisites || (data as any).pillars || []} 
-              roleCategory={data.role_category}
-            />
-
-            <div className="sticky top-32 p-10 rounded-3xl border border-hairline bg-surface-card dark:bg-surface-soft shadow-[0_8px_32px_rgba(0,0,0,0.06)] overflow-hidden">
-                {!data.learning_plan?.weeks?.length ? (
-                  <div className="text-center py-8">
-                    <h3 className="font-display text-title-lg mb-6">Build your roadmap</h3>
-                    <p className="font-sans text-body-md text-muted mb-10">
-                      Generate a custom 12-week blueprint with curated resources.
-                    </p>
-                  <button
-                    onClick={handleGeneratePlan}
-                    disabled={generatingPlan}
-                    className="w-full bg-primary text-on-primary font-sans font-semibold text-button py-4 rounded-md hover:bg-primary-active transition-all disabled:opacity-50"
-                  >
-                    {generatingPlan ? 'Generating...' : 'Create Learning Plan'}
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em] mb-10 block">Weekly Roadmap</span>
-                  <div className="space-y-2">
-                    {(isPlanExpanded ? data.learning_plan.weeks : data.learning_plan.weeks.slice(0, 8)).map((week: any, wi: number) => {
-                      const resources = week.resources || [{
-                        title: week.title || week.resource_title || week.skill,
-                        url: week.url || week.resource_url || '',
-                        start_at: week.start_at,
-                        skip_note: week.skip_note,
-                        project: week.project,
-                        why: week.why || week.project_why,
-                      }];
+                <div className="flex flex-col divide-y divide-hairline">
+                  <AnimatePresence initial={false}>
+                    {(isListExpanded ? activeGaps : activeGaps.slice(0, dynamicLimit)).map((gap, i) => {
+                      const variants: Array<'pink' | 'teal' | 'lavender' | 'peach' | 'ochre' | 'cream'> = [
+                        'pink', 'teal', 'lavender', 'peach', 'ochre', 'cream'
+                      ];
+                      const colorVariant = variants[i % variants.length];
 
                       return (
-                        <motion.div
-                          key={`week-${wi}`}
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: wi * 0.05 }}
-                        >
+                        <div key={gap.skill} className="py-6">
+                          <SkillCard
+                            gap={gap}
+                            index={i}
+                            analysisId={data.share_token}
+                            role={data.role_label || 'Software Engineer'}
+                            seniority="entry"
+                            companyType={data.company_type}
+                            initialResources={data.generated_resources?.[gap.skill]}
+                            autoGenerate={(i === 0 && gap.in_mvc) || gap.skill === targetSkill}
+                            colorVariant={colorVariant}
+                            trackingState={activeJob?.skills?.find((s: any) => s.skill === gap.skill)?.state}
+                            onTrackingChange={handleTrackingChange}
+                            trackingColor={activeJob?.color}
+                            confidenceLevel={assessments[gap.skill]}
+                            onConfidenceChange={handleConfidenceChange}
+                          />
+                          <div className="mt-3 flex justify-end">
+                            <button
+                              onClick={() => setStarModalSkill(gap.skill)}
+                              className="inline-flex items-center gap-2 text-[11px] font-bold text-brand-teal hover:underline uppercase tracking-wider"
+                            >
+                              <FileText size={12} />
+                              Generate STAR Resume Bullets 🪄
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
+
+                {activeGaps.length > 5 && (
+                  <div className="flex justify-center mt-8">
+                    <button
+                      onClick={() => setIsListExpanded(!isListExpanded)}
+                      className="font-sans text-button text-muted hover:text-ink transition-colors px-6 py-2 border border-hairline rounded-md hover:bg-surface-soft"
+                    >
+                      {isListExpanded ? 'View less' : `View ${activeGaps.length - 5} more skills`}
+                    </button>
+                  </div>
+                )}
+              </div>
+              </div>
+              {/* /left column lg:col-span-7 */}
+
+              {/* Right Column: Weekly Roadmap */}
+              <div className="lg:col-span-5">
+                <div className="sticky top-32 p-8 rounded-3xl border border-hairline bg-surface-card shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
+                  {!data.learning_plan?.weeks?.length ? (
+                    <div className="text-center py-8">
+                      <h3 className="font-display text-title-lg mb-4">Build your roadmap</h3>
+                      <p className="font-sans text-body-md text-muted mb-8">
+                        Generate a custom blueprint with curated resources.
+                      </p>
+                      <button
+                        onClick={handleGeneratePlan}
+                        disabled={generatingPlan}
+                        className="w-full bg-primary text-on-primary font-sans font-semibold text-button py-4 rounded-md hover:bg-primary-active transition-all disabled:opacity-50"
+                      >
+                        {generatingPlan ? 'Generating...' : 'Create Learning Plan'}
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <span className="font-sans text-nav-link text-muted uppercase tracking-[0.06em] mb-8 block">Weekly Roadmap</span>
+                      <div className="space-y-2">
+                        {(isPlanExpanded ? data.learning_plan.weeks : data.learning_plan.weeks.slice(0, 8)).map((week: any, wi: number) => (
                           <Accordion
-                            title={
-                              <div className="flex items-center justify-between w-full pr-4">
-                                <span>Week {week.week}: {week.skill}</span>
-                                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-soft border border-hairline text-[10px] text-muted font-bold">
-                                  <Clock size={10} className="text-brand-teal" />
-                                  <span>1w</span>
-                                </div>
-                              </div>
-                            }
+                            key={`week-${wi}`}
+                            title={`Week ${week.week}: ${week.skill}`}
                           >
-                            <div className="space-y-6 pt-4">
-                              {resources.map((resource: any, ri: number) => (
-                                <div key={ri} className="space-y-3">
+                            <div className="space-y-4 pt-3">
+                              {(week.resources || []).map((resource: any, ri: number) => (
+                                <div key={ri} className="space-y-2">
                                   <div className="flex items-center justify-between">
                                     <h5 className="font-sans font-semibold text-body-md">{resource.title}</h5>
                                     {resource.url && (
@@ -734,35 +672,152 @@ export default function ResultsPage({
                                       </a>
                                     )}
                                   </div>
-
-                                  {resource.project && (
-                                    <div className="p-4 bg-surface-strong rounded-md border border-hairline">
-                                      <span className="font-sans text-nav-link text-muted uppercase text-[10px] block mb-1">Build</span>
-                                      <p className="font-sans text-body-sm">{resource.project}</p>
-                                    </div>
-                                  )}
                                 </div>
                               ))}
                             </div>
                           </Accordion>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-
-                  {data.learning_plan.weeks.length > 8 && (
-                    <button
-                      onClick={() => setIsPlanExpanded(!isPlanExpanded)}
-                      className="w-full mt-8 font-sans text-button text-muted hover:text-ink text-center"
-                    >
-                      {isPlanExpanded ? 'Show less' : 'View full 12-week roadmap'}
-                    </button>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* TAB 2: DEEP INSIGHTS & ATS */}
+        {activeTab === 'insights' && (
+          <div className="space-y-8">
+
+            {/* Row 1: ATS Auditor — full width hero */}
+            <AtsAuditorCard resumeText={data.resume_text || ''} />
+
+            {/* Row 2: Buzzword Eraser (left 7) + Quantification Scanner (right 5) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              <div className="lg:col-span-7 h-full">
+                <BuzzwordEraserCard resumeText={data.resume_text || ''} />
+              </div>
+              <div className="lg:col-span-5 h-full">
+                <QuantificationScanner resumeText={data.resume_text || ''} />
+              </div>
+            </div>
+
+            {/* Row 3: Keyword Density (left 5) + Company Alignment Matrix (right 7) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              <div className="lg:col-span-5 h-full">
+                <KeywordDensityChecker
+                  resumeText={data.resume_text || ''}
+                  mvcSkills={data.mvc_skills || []}
+                />
+              </div>
+              <div className="lg:col-span-7 h-full">
+                <CompanyAlignmentMatrix resumeText={data.resume_text || ''} />
+              </div>
+            </div>
+
+            {/* Row 4: Freshness (left 6) + Role Switch (right 6) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {freshnessResult && (
+                <FreshnessScoreCard data={freshnessResult} />
+              )}
+              {data.role_category && (
+                <RoleSwitchPanel
+                  resumeSkills={data.resume_skills || []}
+                  resumeText={data.resume_text || ''}
+                  currentRoleSlug={data.role_category}
+                  currentRoleLabel={data.role_label || 'Software Engineer'}
+                />
+              )}
+            </div>
+
+            {/* Row 5: Cover Letter Generator — full width */}
+            <CoverLetterGenerator
+              roleLabel={data.role_label || 'Software Engineer'}
+              topSkills={(data.matched_skills || data.mvc_skills || []).slice(0, 5)}
+            />
+
+            {/* Row 6: Resume Skills Breakdown — full width */}
+            <div className="p-8 rounded-3xl border border-hairline bg-surface-card">
+              <h3 className="font-display text-title-lg mb-6">Resume Skills Breakdown</h3>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {(data.user_skills || data.resume_skills)?.map((skill: string) => {
+                  const isMatched = data.matched_skills
+                    ? data.matched_skills.includes(skill)
+                    : data.mvc_skills?.some((m: string) => m.toLowerCase() === skill.toLowerCase());
+                  return (
+                    <span
+                      key={skill}
+                      className={`px-3 py-1.5 rounded-full text-[12px] font-semibold border ${
+                        isMatched
+                          ? 'bg-brand-teal/10 border-brand-teal/30 text-brand-teal'
+                          : 'bg-surface-soft border-hairline text-muted'
+                      }`}
+                    >
+                      {isMatched && <span className="mr-1">✓</span>}
+                      {skill}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: CAREER TRAJECTORY */}
+        {activeTab === 'trajectory' && (
+          <div className="space-y-8">
+
+            {/* Row 1: Benchmark (left 5) + LinkedIn Optimizer (right 7) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              <div className="lg:col-span-5 h-full">
+                <CompetitiveBenchmarkScore
+                  matchPct={adjustedReadiness || 0}
+                  freshnessScore={freshnessResult?.score}
+                  gapCount={activeGaps.length}
+                  criticalCount={activeGaps.filter(g => g.in_mvc).length}
+                />
+              </div>
+              <div className="lg:col-span-7 h-full">
+                <LinkedInHeadlineOptimizer
+                  roleLabel={data.role_label || 'Software Engineer'}
+                  topSkills={(data.matched_skills || data.mvc_skills || []).slice(0, 6)}
+                />
+              </div>
+            </div>
+
+            {/* Row 2: Foundational Pillars (left 6) + Analysis Insights (right 6) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FoundationalPillars
+                pillars={data.foundational_prerequisites || (data as any).pillars || []}
+                roleCategory={data.role_category}
+              />
+              <AnalysisInsights
+                data={data}
+                adjustedScore={adjustedReadiness}
+                adjustedWeeks={adjustedWeeks}
+                adjustedCriticalCount={adjustedCritical}
+                masteredCount={masteredSkills.length}
+              />
+            </div>
+
+            {/* Row 3: Next Seniority Jump — full width accent banner */}
+            {data.trajectory && (
+              <div className="p-8 rounded-3xl border border-brand-teal/20 bg-gradient-to-r from-brand-teal/5 to-primary/5">
+                <p className="text-[11px] font-bold text-brand-teal uppercase tracking-widest mb-3">Next Seniority Jump</p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <p className="text-body-md text-muted">
+                    Moving from <strong className="text-ink">{data.trajectory.current_role_label}</strong> to{' '}
+                    <strong className="text-brand-teal">{data.trajectory.next_role_label}</strong>
+                  </p>
+                  <span className="px-5 py-2.5 rounded-xl bg-brand-teal text-white font-display font-bold text-title-md shrink-0">
+                    +${data.trajectory.salary_jump?.toLocaleString()}/yr
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );

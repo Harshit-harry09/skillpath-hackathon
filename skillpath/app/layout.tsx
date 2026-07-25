@@ -4,6 +4,7 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--font-inter",
   display: "swap"
 });
@@ -12,14 +13,6 @@ const irishGrover = Irish_Grover({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-irish-grover",
-  display: "swap"
-});
-
-// Mock Plain Black by substituting with Inter weight 500
-const plainBlack = Inter({
-  weight: ["500", "600"],
-  subsets: ["latin"],
-  variable: "--font-plain-black",
   display: "swap"
 });
 
@@ -44,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${plainBlack.variable} ${irishGrover.variable} antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${irishGrover.variable} antialiased`} suppressHydrationWarning>
       <body className="font-sans flex flex-col min-h-screen bg-canvas text-ink selection:bg-brand-pink selection:text-white">
         <ThemeProvider
           attribute="class"
@@ -58,9 +51,9 @@ export default function RootLayout({
               <ThemeTransition>
                 <Preloader />
                 <AppWrapper>
+                  <Navbar />
+                  <AuthModal />
                   <SmoothScrolling>
-                    <Navbar />
-                    <AuthModal />
                     {children}
                   </SmoothScrolling>
                 </AppWrapper>

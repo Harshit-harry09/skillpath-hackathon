@@ -15,13 +15,15 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getAuth, type Auth } from 'firebase-admin/auth';
 
 let _app: App | null = null;
-let _initAttempted = false;
 let _initError: string | null = null;
 
 function initAdmin(): App | null {
   // If already initialized by us or another module, reuse it
-  if (getApps().length > 0) {
-    _app = getApps()[0];
+  if (_app) return _app;
+  
+  const existingApps = getApps();
+  if (existingApps.length > 0) {
+    _app = existingApps[0];
     return _app;
   }
 
@@ -32,10 +34,12 @@ function initAdmin(): App | null {
       const json = Buffer.from(b64, 'base64').toString('utf-8');
       const sa = JSON.parse(json);
       if (sa.private_key) {
+        // Normalize escaped newlines (common in env vars)
         sa.private_key = sa.private_key.replace(/\\n/g, '\n');
-        console.log(`[Firebase Admin] Strategy: Base64 | Key length: ${sa.private_key.length}`);
+        console.log('[Firebase Admin] Strategy: Base64 Service Account');
       }
-      _app = initializeApp({ credential: cert(sa) }, 'base64');
+      _app = initializeApp({ credential: cert(sa) });
+      _initError = null;
       console.log('[Firebase Admin] ✓ Initialized via Base64 service account');
       return _app;
     } catch (e: any) {
@@ -54,7 +58,6 @@ function initAdmin(): App | null {
 
   if (projectId && clientEmail && privateKey) {
     try {
-      // Replace literal \n with actual newlines (common in env vars)
       let formattedKey = privateKey.replace(/\\n/g, '\n');
       
       // Remove surrounding quotes if they exist (common Vercel issue)
@@ -68,6 +71,7 @@ function initAdmin(): App | null {
       _app = initializeApp({
         credential: cert({ projectId, clientEmail, privateKey: formattedKey }),
       });
+      _initError = null;
       console.log('[Firebase Admin] ✓ Initialized via individual env vars');
       return _app;
     } catch (e: any) {
@@ -93,15 +97,16 @@ let _db: Firestore | null = null;
 export function getDb(): Firestore {
   if (_db) return _db;
 
-  if (!_app) {
-    _app = initAdmin();
-    _initAttempted = true;
-  }
-  if (!_app) {
+  const app = initAdmin();
+  if (!app) {
     throw new Error(`Firebase Admin not initialized: ${_initError || 'Unknown error'}`);
   }
-  _db = getFirestore(_app);
-  _db.settings({ ignoreUndefinedProperties: true });
+  _db = getFirestore(app);
+  try {
+    _db.settings({ ignoreUndefinedProperties: true });
+  } catch {
+    // Already configured on existing app instance
+  }
   return _db;
 }
 
@@ -110,14 +115,11 @@ export function getDb(): Firestore {
  * Retries initialization on every call if previous attempt failed.
  */
 export function getAdminAuth(): Auth {
-  if (!_app) {
-    _app = initAdmin();
-    _initAttempted = true;
-  }
-  if (!_app) {
+  const app = initAdmin();
+  if (!app) {
     throw new Error(`Firebase Admin not initialized: ${_initError || 'Unknown error'}`);
   }
-  return getAuth(_app);
+  return getAuth(app);
 }
 
 /**
@@ -126,19 +128,10 @@ export function getAdminAuth(): Auth {
 export function isFirebaseReady(): boolean {
   if (_app) return true;
   try {
-    _app = initAdmin();
-    return _app !== null;
+    const app = initAdmin();
+    return app !== null;
   } catch {
     return false;
   }
 }
 
-// Legacy exports for backward compatibility during migration
-// These use the lazy getter pattern internally
-export const adminDb = (() => {
-  try { return getDb(); } catch { return null; }
-})();
-
-export const adminAuth = (() => {
-  try { return getAdminAuth(); } catch { return null; }
-})();

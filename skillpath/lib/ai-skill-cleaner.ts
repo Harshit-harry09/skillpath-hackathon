@@ -14,7 +14,8 @@ const cleanerCache = new LRUCache<string, string[]>({
 });
 
 
-import { getLevenshteinDistance } from "./utils/fuzzy";
+import { getLevenshteinDistance } from "./fuzzy";
+
 
 /**
  * Fuzzy Matcher

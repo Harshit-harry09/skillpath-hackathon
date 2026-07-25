@@ -1,16 +1,7 @@
 import { getDb } from './firebase-admin';
-import Groq from 'groq-sdk';
+import { callGeminiJSON } from './gemini';
 import { generateResourcesPrompt } from '../prompts/generate-resources';
 import type { Resource, SkillResources } from '../types/analysis';
-
-let groqClient: Groq | null = null;
-function getGroqClient() {
-  if (groqClient) return groqClient;
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) return null;
-  groqClient = new Groq({ apiKey });
-  return groqClient;
-}
 
 const globalCache = new Map<string, { data: SkillResources; expiresAt: number }>();
 
@@ -194,37 +185,24 @@ export async function generateResources(
   );
 
   try {
-    const client = getGroqClient();
-    if (!client) {
-      console.warn('[Generator] GROQ_API_KEY is missing, using curated fallbacks.');
+    if (!process.env.GEMINI_API_KEY) {
+      console.warn('[Generator] GEMINI_API_KEY is missing, using curated fallbacks.');
       return { skill_resources: buildFallbackResources(skill), from_cache: false };
     }
 
-    const completion = await client.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
-      // Using llama-3.3-70b for maximum reasoning quality and career insights.
-      model: 'llama-3.3-70b-versatile',
-      temperature: 0.1, // lower = more rule-following
-      max_tokens: 1000, // Reduced as we only generate 1 resource now
-    });
-
-    const responseText = completion.choices[0]?.message?.content ?? '';
-    console.log(`[Generator] Raw response (first 300): ${responseText.substring(0, 300)}`);
-
-    // ── Parse JSON ─────────────────────────────────────────────────────────
     let parsed: SkillResources;
     try {
-      const jsonStart = responseText.indexOf('{');
-      const jsonEnd = responseText.lastIndexOf('}');
-      if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON found in response');
-
-      parsed = JSON.parse(responseText.substring(jsonStart, jsonEnd + 1));
+      parsed = await callGeminiJSON<SkillResources>(
+        "",
+        prompt,
+        { model: 'gemini-2.0-flash', temperature: 0.1, maxTokens: 1000 }
+      );
 
       if (!parsed.resources || !Array.isArray(parsed.resources) || parsed.resources.length === 0) {
         throw new Error('Missing or empty resources array');
       }
     } catch (err) {
-      console.warn('[Generator] JSON parse failed, using fallback resources:', err);
+      console.warn('[Generator] Gemini JSON generation/parse failed, using fallback resources:', err);
       parsed = buildFallbackResources(skill);
     }
 
@@ -262,7 +240,7 @@ export async function generateResources(
 
     return { skill_resources: parsed, from_cache: false };
   } catch (error) {
-    console.error('[Generator] Groq error:', error);
+    console.error('[Generator] Gemini error:', error);
     // Return a usable fallback instead of throwing, so the UI never breaks
     return { skill_resources: buildFallbackResources(skill), from_cache: false };
   }

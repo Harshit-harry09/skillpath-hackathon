@@ -13,6 +13,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (prevent re-initialization in hot reload)
+if (!firebaseConfig.apiKey && typeof window !== "undefined") {
+  console.warn("Firebase config is missing NEXT_PUBLIC_FIREBASE_API_KEY! Client auth calls will fail.");
+}
+
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const db = getFirestore(app);

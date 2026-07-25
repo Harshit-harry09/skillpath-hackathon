@@ -7,7 +7,8 @@
 import type { MVCProfiles, SkillGap } from "@/types/analysis";
 import mvcData from "./data/mvc_model.json";
 import skillTrends from "./data/skill_trends.json";
-import { findFuzzyMatch } from "./utils/fuzzy";
+import { findFuzzyMatch } from "./fuzzy";
+
 
 // Mapping of internal role slugs to user-friendly labels for UI display
 const ROLE_LABELS: Record<string, string> = {
@@ -286,59 +287,55 @@ export function getRoleStandardSkills(jdText: string): string[] {
  * Uses word boundary regex for accuracy.
  * Dynamically builds the skill list from the MVC dataset.
  */
-export function extractSkills(text: string): string[] {
-  const lower = text.toLowerCase();
+// ---------------------------------------------------------------------------
+// Module-level: build skill dictionary ONCE at startup, not per request.
+// ---------------------------------------------------------------------------
+const UNIVERSAL_TECH = [
+  "python", "javascript", "typescript", "java", "c#", "c++", "ruby", "php", "swift", "kotlin", "go", "rust", "scala", "clojure", "dart",
+  "react", "angular", "vue", "next.js", "nuxt", "svelte", "jquery", "bootstrap", "tailwind", "sass", "less", "webpack", "vite",
+  "node.js", "express", "django", "flask", "spring boot", "asp.net", "laravel", "ruby on rails", "fastapi", "nestjs",
+  "sql", "postgresql", "mysql", "mongodb", "redis", "elasticsearch", "cassandra", "dynamodb", "firebase", "supabase", "snowflake", "bigquery",
+  "aws", "azure", "gcp", "google cloud", "docker", "kubernetes", "terraform", "ansible", "jenkins", "gitlab ci", "github actions", "ci/cd",
+  "machine learning", "deep learning", "nlp", "computer vision", "tensorflow", "pytorch", "scikit-learn", "keras", "pandas", "numpy", "matplotlib",
+  "git", "linux", "bash", "powershell", "microservices", "rest api", "graphql", "grpc", "websockets", "agile", "scrum", "kanban", "jira",
+  "unit testing", "jest", "cypress", "selenium", "playwright", "figma", "sketch", "adobe xd", "ui design", "ux design",
+  "blockchain", "solidity", "web3", "smart contracts", "cybersecurity", "penetration testing", "firewalls", "siem",
+  "tableau", "power bi", "looker", "etl", "data pipeline", "airflow", "kafka", "spark", "hadoop", "dbt", "llm", "openai", "gpt", "rag", "langchain"
+];
 
-  // 1. Build a unique list of all skills we track in our model
-  const allKnownSkills = new Set<string>();
+/** Compiled once at module load — never rebuilt per request. */
+const ALL_KNOWN_SKILLS: Map<string, RegExp> = (() => {
+  const map = new Map<string, RegExp>();
+
+  const addSkill = (skill: string) => {
+    const s = skill.toLowerCase();
+    if (s.length < 2 || map.has(s)) return;
+    const escaped = s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = (s.includes(" ") || s.includes(".") || s.includes("-") || s.includes("#") || s.includes("+"))
+      ? new RegExp(`(?<=\\s|^|[\\(\\),;])${escaped}(?=\\s|$|[\\(\\),;])`, 'i')
+      : new RegExp(`\\b${escaped}\\b`, 'i');
+    map.set(s, regex);
+  };
+
   Object.values(mvcProfiles).forEach(roleData => {
     const skills = Array.isArray(roleData) ? roleData : (roleData?.skills ?? []);
-    skills.forEach(s => allKnownSkills.add(s.skill.toLowerCase()));
+    skills.forEach((s: any) => addSkill(s.skill));
   });
 
-  // 2. UNIVERSAL TECH DICTIONARY (Expanded for high-precision extraction)
-  const universalTech = [
-    "python", "javascript", "typescript", "java", "c#", "c++", "ruby", "php", "swift", "kotlin", "go", "rust", "scala", "clojure", "dart",
-    "react", "angular", "vue", "next.js", "nuxt", "svelte", "jquery", "bootstrap", "tailwind", "sass", "less", "webpack", "vite",
-    "node.js", "express", "django", "flask", "spring boot", "asp.net", "laravel", "ruby on rails", "fastapi", "nestjs",
-    "sql", "postgresql", "mysql", "mongodb", "redis", "elasticsearch", "cassandra", "dynamodb", "firebase", "supabase", "snowflake", "bigquery",
-    "aws", "azure", "gcp", "google cloud", "docker", "kubernetes", "terraform", "ansible", "jenkins", "gitlab ci", "github actions", "ci/cd",
-    "machine learning", "deep learning", "nlp", "computer vision", "tensorflow", "pytorch", "scikit-learn", "keras", "pandas", "numpy", "matplotlib",
-    "git", "linux", "bash", "powershell", "microservices", "rest api", "graphql", "grpc", "websockets", "agile", "scrum", "kanban", "jira",
-    "unit testing", "jest", "cypress", "selenium", "playwright", "figma", "sketch", "adobe xd", "ui design", "ux design",
-    "blockchain", "solidity", "web3", "smart contracts", "cybersecurity", "penetration testing", "firewalls", "siem",
-    "tableau", "power bi", "looker", "etl", "data pipeline", "airflow", "kafka", "spark", "hadoop", "dbt", "llm", "openai", "gpt", "rag", "langchain"
-  ];
-  universalTech.forEach(s => allKnownSkills.add(s.toLowerCase()));
+  UNIVERSAL_TECH.forEach(addSkill);
 
-  // 3. Add skills from trends model
   const trendSkills = (skillTrends as any).skills || {};
-  Object.keys(trendSkills).forEach(skillKey => {
-    allKnownSkills.add(skillKey.toLowerCase());
-  });
+  Object.keys(trendSkills).forEach(addSkill);
 
+  return map;
+})();
+
+export function extractSkills(text: string): string[] {
   const found: string[] = [];
-  const textLower = text.toLowerCase();
-
-  for (const skill of allKnownSkills) {
-    if (skill.length < 2) continue;
-    
-    // Use word boundaries for single words, direct includes for multi-word
-    if (skill.includes(" ") || skill.includes(".") || skill.includes("-") || skill.includes("#") || skill.includes("+")) {
-       const escaped = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-       // Handle special chars like .js, c++, c#
-       const regex = new RegExp(`(?<=\\s|^|[\\(\\),;])${escaped}(?=\\s|$|[\\(\\),;])`, 'gi');
-       if (regex.test(textLower)) {
-         found.push(skill);
-       }
-    } else {
-      const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-      if (regex.test(textLower)) {
-        found.push(skill);
-      }
-    }
+  for (const [skill, regex] of ALL_KNOWN_SKILLS) {
+    if (regex.test(text)) found.push(skill);
   }
-  return Array.from(new Set(found));
+  return found;
 }
 
 /**

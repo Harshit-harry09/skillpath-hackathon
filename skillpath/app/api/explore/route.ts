@@ -10,15 +10,17 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from "next/server";
-import { callGroqJSON } from "@/lib/groq";
+import { callGeminiJSON } from "@/lib/gemini";
 import { getDb } from "@/lib/firebase-admin";
+import { detectRoleCategory, getRoleLabel, getRoleStandardSkills } from "@/lib/mvc-profiler";
+import { detectCompanyType } from "@/lib/company-detector";
 import crypto from "crypto";
 import {
   EXPLORE_PARSE_SYSTEM,
   buildExploreParsePrompt,
   EXPLORE_SKILL_MAP_SYSTEM,
-  buildExploreSkillMapPrompt,
-  EXPLORE_LEARNING_PATH_SYSTEM,
+  buildExploreSkillMapPrompt,        
+  EXPLORE_LEARNING_PATH_SYSTEM,   
   buildExploreLearningPathPrompt,
 } from "@/prompts/explore-role";
 
@@ -61,60 +63,71 @@ export async function POST(req: NextRequest) {
     let parsed: { role: string; seniority: string; company_type: string };
     try {
       parsed = await withTimeout(
-        callGroqJSON<{ role: string; seniority: string; company_type: string }>(
+        callGeminiJSON<{ role: string; seniority: string; company_type: string }>(
           EXPLORE_PARSE_SYSTEM,
           buildExploreParsePrompt(sanitizedTitle),
-          { model: "llama-3.1-8b-instant", temperature: 0 }
+          { model: "gemini-2.0-flash", temperature: 0 }
         ),
         15_000,
         "Role parsing"
       );
 
-      // Validate parsed output
       if (!parsed.role) {
-        parsed = { role: sanitizedTitle, seniority: "entry", company_type: "unknown" };
+        const cat = detectRoleCategory(sanitizedTitle);
+        parsed = { role: getRoleLabel(cat), seniority: "mid", company_type: detectCompanyType(sanitizedTitle) };
       }
       console.log(`[Explore] ✓ Parsed: ${parsed.role} (${parsed.seniority}, ${parsed.company_type})`);
     } catch (e) {
-      console.warn("[Explore] Role parsing failed, using raw input:", e instanceof Error ? e.message : e);
-      parsed = { role: sanitizedTitle, seniority: "entry", company_type: "unknown" };
+      console.warn("[Explore] Role parsing failed, using local detection:", e instanceof Error ? e.message : e);
+      const cat = detectRoleCategory(sanitizedTitle);
+      parsed = { role: getRoleLabel(cat), seniority: "mid", company_type: detectCompanyType(sanitizedTitle) };
     }
 
-    // ---- Step 2: Generate skill map (20s timeout) ----
+    // ---- Step 2: Generate skill map (25s timeout with local fallback) ----
     let skillMap: any;
     try {
       skillMap = await withTimeout(
-        callGroqJSON(
+        callGeminiJSON(
           EXPLORE_SKILL_MAP_SYSTEM,
           buildExploreSkillMapPrompt(parsed.role, parsed.seniority, parsed.company_type),
-          { model: "llama-3.3-70b-versatile", temperature: 0, maxTokens: 2048 }
+          { model: "gemini-2.0-flash", temperature: 0, maxTokens: 4096 }
         ),
-        20_000,
+        25_000,
         "Skill map generation"
       );
 
-      // Validate skill map
       if (!skillMap.categories || !skillMap.mvc_skills) {
         throw new Error("Invalid skill map format");
       }
-      console.log("[Explore] ✓ Skill map generated");
+      console.log("[Explore] ✓ Skill map generated via LLM");
     } catch (e) {
-      console.error("[Explore] Skill map generation failed:", e instanceof Error ? e.message : e);
-      return NextResponse.json({
-        error: "generation_failed",
-        message: "Failed to generate skill map. If you are the owner, please check your GROQ_API_KEY. Otherwise, the service might be overloaded.",
-        stage: "skill_map",
-      }, { status: 502 });
+      console.warn("[Explore] LLM Skill map failed, engaging local model fallback:", e instanceof Error ? e.message : e);
+      const localSkills = getRoleStandardSkills(sanitizedTitle);
+      skillMap = {
+        role: parsed.role,
+        seniority: parsed.seniority,
+        company_type: parsed.company_type,
+        mvc_skills: localSkills.slice(0, 5),
+        categories: {
+          technical_core: localSkills.slice(0, 5).map(name => ({ name, importance: "essential", weeks_to_learn: 3, frequency_pct: 85 })),
+          technical_tools: localSkills.slice(5, 10).map(name => ({ name, importance: "high", weeks_to_learn: 2, frequency_pct: 70 })),
+          analytical: localSkills.slice(10, 14).map(name => ({ name, importance: "medium", weeks_to_learn: 2, frequency_pct: 55 })),
+          soft_skills: ["System Architecture", "Technical Communication", "Agile Execution"].map(name => ({ name, importance: "medium", weeks_to_learn: 1, frequency_pct: 60 }))
+        },
+        total_weeks_from_zero: 16,
+        fastest_growing_skill: localSkills[0] || "Architecture",
+        most_demanded_skill: localSkills[1] || "Core Competency"
+      };
     }
 
     // ---- Step 3: Generate learning path (20s timeout) ----
     let learningPath: any = { weeks: [] };
     try {
       learningPath = await withTimeout(
-        callGroqJSON(
+        callGeminiJSON(
           EXPLORE_LEARNING_PATH_SYSTEM,
           buildExploreLearningPathPrompt(parsed.role, parsed.seniority, parsed.company_type, skillMap),
-          { model: "llama-3.3-70b-versatile", temperature: 0, maxTokens: 2048 }
+          { model: "gemini-2.0-flash", temperature: 0, maxTokens: 8192 }
         ),
         20_000,
         "Learning path generation"

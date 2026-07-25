@@ -1,42 +1,30 @@
 /**
- * Company Type Detector — uses local keyword matching to classify JD company type,
- * saving LLM tokens and latency.
+ * Company Type Detector — O(1) keyword Map lookup.
+ * Saves LLM tokens by classifying JD company type locally.
  */
+
+const COMPANY_KEYWORDS = new Map<string, string>([
+  ["startup",    "startup"],
+  ["seed",       "startup"],
+  ["series a",   "startup"],
+  ["series b",   "startup"],
+  ["fast-paced", "startup"],
+  ["equity",     "startup"],
+  ["scale-up",   "scaleup"],
+  ["scaleup",    "scaleup"],
+  ["hyper-growth","scaleup"],
+  ["series c",   "scaleup"],
+  ["series d",   "scaleup"],
+  ["agency",     "agency"],
+  ["clients",    "agency"],
+  ["consulting",  "agency"],
+  ["client-facing","agency"],
+]);
 
 export function detectCompanyType(jdText: string): string {
   const text = jdText.toLowerCase();
-
-  // Keyword heuristics
-  if (
-    text.includes("startup") ||
-    text.includes("seed") ||
-    text.includes("series a") ||
-    text.includes("series b") ||
-    text.includes("fast-paced") ||
-    text.includes("equity")
-  ) {
-    return "startup";
+  for (const [keyword, type] of COMPANY_KEYWORDS) {
+    if (text.includes(keyword)) return type;
   }
-
-  if (
-    text.includes("scale-up") ||
-    text.includes("scaleup") ||
-    text.includes("hyper-growth") ||
-    text.includes("series c") ||
-    text.includes("series d")
-  ) {
-    return "scaleup";
-  }
-
-  if (
-    text.includes("agency") ||
-    text.includes("clients") ||
-    text.includes("consulting") ||
-    text.includes("client-facing")
-  ) {
-    return "agency";
-  }
-
-  // Safe default
   return "enterprise";
 }

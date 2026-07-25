@@ -14,9 +14,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'database_unavailable' }, { status: 503 });
   }
 
-  const { searchParams } = new URL(req.url);
-  const nameHint = searchParams.get('name') || user.name || 'Skill Explorer';
-  const emailHint = searchParams.get('email') || user.email || '';
+  const nameHint = user.name || 'Skill Explorer';
+  const emailHint = user.email || '';
 
   try {
     const ref = db.collection('profiles').doc(user.uid);
@@ -24,11 +23,6 @@ export async function GET(req: NextRequest) {
 
     if (snap.exists) {
       const data = snap.data() as UserProfile;
-      // If the stored email is missing or looks like a UID, update it with the hint
-      if (emailHint && (!data.email || !data.email.includes('@'))) {
-        await ref.update({ email: emailHint });
-        data.email = emailHint;
-      }
       return NextResponse.json({ profile: data });
     }
 
