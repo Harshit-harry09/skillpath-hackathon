@@ -6,6 +6,8 @@ import ExploreStats from '@/components/explore/ExploreStats';
 import ExploreCTA from '@/components/explore/ExploreCTA';
 import { Footer } from '@/components/landing/CtaSection';
 
+import Link from 'next/link';
+
 export default function ExploreResultsClient({
   shareToken,
   initialData,
@@ -74,9 +76,9 @@ export default function ExploreResultsClient({
         <p className="font-sans text-muted mb-8 max-w-md">
           We couldn't find a skill map for this role. Try searching for a new role.
         </p>
-        <a href="/explore" className="px-6 py-3 bg-brand-pink text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
+        <Link href="/explore" className="px-6 py-3 bg-brand-pink text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
           Explore Roles
-        </a>
+        </Link>
       </div>
     );
   }
