@@ -1,8 +1,7 @@
-'use client';
-
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, ArrowRight, DollarSign, Target, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import { TrendingUp, ArrowRight, DollarSign, Target, Sparkles, CheckCircle2, ChevronRight, MapPin } from 'lucide-react';
+import { useUI } from '@/context/UIContext';
 
 interface CareerCompassProps {
   trajectory: {
@@ -13,10 +12,15 @@ interface CareerCompassProps {
     delta_skills: string[];
     current_salary: number;
     next_salary: number;
+    currency?: string;
+    unit?: string;
+    top_locations?: string[];
     full_path: Array<{
       level: string;
       label: string;
       salary: number;
+      currency?: string;
+      unit?: string;
       skills: string[];
     }>;
   } | null;
@@ -24,8 +28,10 @@ interface CareerCompassProps {
 }
 
 export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
+  const { market } = useUI();
   if (!trajectory || !trajectory.full_path || trajectory.full_path.length === 0) return null;
 
+  const isIndia = market === 'india' || trajectory.currency === 'INR';
   const { full_path, current_level } = trajectory;
 
   // Calculate overall progress towards the NEXT milestone
@@ -34,12 +40,21 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
   const gapProgress = totalGapsCount > 0 ? (masteredGapsCount / totalGapsCount) * 100 : 100;
 
   // Determine current position on the 3-tier scale
-  const levelOrder = ['junior', 'mid', 'senior', 'executive'];
   const currentIdx = full_path.findIndex(p => p.level === current_level);
   
   // Total mastery bonus
   const masteryBonus = gaps.reduce((sum, gap) => sum + (gap.premium || 0), 0);
-  const bonusK = Math.round(masteryBonus / 1000);
+  const bonusDisplay = isIndia ? `+₹${Math.round(masteryBonus / 100000)} LPA` : `+$${Math.round(masteryBonus / 1000)}k`;
+
+  const formatSalary = (val: number) => {
+    if (isIndia) {
+      const lpa = val > 1000 ? (val / 100000).toFixed(1) : val;
+      return `₹${lpa} LPA`;
+    }
+    return `$${Math.round(val / 1000)}k`;
+  };
+
+  const locations = trajectory.top_locations || ["Bengaluru", "Hyderabad", "Pune", "Gurugram", "Noida"];
 
   return (
     <div className="w-full bg-surface-card border border-hairline rounded-[2.5rem] overflow-hidden shadow-xl shadow-ink/5 mb-12">
@@ -51,11 +66,16 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
               <TrendingUp size={24} />
             </div>
             <div>
-              <h2 className="font-display text-title-md text-ink uppercase tracking-wider">
-                Professional Trajectory
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="font-display text-title-md text-ink uppercase tracking-wider">
+                  Professional Trajectory
+                </h2>
+                <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                  {isIndia ? '🇮🇳 India Market' : '🌐 Global Market'}
+                </span>
+              </div>
               <p className="font-sans text-body-sm text-muted">
-                Career lifecycle mapping & financial benchmarks
+                Career lifecycle mapping & financial benchmarks ({isIndia ? '₹ LPA' : '$ USD'})
               </p>
             </div>
           </div>
@@ -75,7 +95,7 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
           {/* Connector Line */}
           <div className="absolute top-1/2 left-0 w-full h-1 bg-hairline/50 -translate-y-1/2" />
           
-          {/* Active Progress Line (Current Level -> Next Level) */}
+          {/* Active Progress Line */}
           {currentIdx < full_path.length - 1 && (
              <motion.div 
                 className="absolute top-1/2 h-1 bg-primary -translate-y-1/2 z-10"
@@ -115,7 +135,7 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
                       {path.label}
                     </span>
                     <span className="font-mono text-[11px] font-bold text-muted">
-                      ${Math.round(path.salary / 1000)}k
+                      {formatSalary(path.salary)}
                     </span>
                   </div>
                 </div>
@@ -128,14 +148,16 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8 border-t border-hairline/50">
           {/* Next Level Focus */}
           <div>
-            <div className="flex items-center gap-2 mb-6">
-              <ChevronRight size={18} className="text-primary" />
-              <h3 className="font-display text-nav-link text-ink uppercase tracking-widest">
-                Target: {trajectory.next_role_label || 'Executive Excellence'}
-              </h3>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <ChevronRight size={18} className="text-primary" />
+                <h3 className="font-display text-nav-link text-ink uppercase tracking-widest">
+                  Target: {trajectory.next_role_label || 'Executive Excellence'}
+                </h3>
+              </div>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 mb-6">
               {trajectory.delta_skills.map((skill, i) => (
                 <div key={skill} className="flex items-center justify-between p-4 rounded-2xl bg-surface-soft/30 border border-hairline/50 hover:border-primary/20 transition-colors">
                   <div className="flex items-center gap-3">
@@ -150,6 +172,21 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
                 </div>
               ))}
             </div>
+
+            {/* Location Hotspots Badge */}
+            {locations.length > 0 && (
+              <div className="p-4 rounded-2xl bg-surface-soft/40 border border-hairline flex items-center gap-3">
+                <MapPin size={16} className="text-primary shrink-0" />
+                <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-ink">
+                  <span className="text-muted font-bold">Top Job Hubs:</span>
+                  {locations.slice(0, 4).map(loc => (
+                    <span key={loc} className="px-2 py-0.5 rounded bg-canvas border border-hairline text-[11px] font-semibold">
+                      {loc.split(',')[0]}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Value Stats */}
@@ -159,12 +196,15 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-on-primary/60 block mb-2">Estimated Growth Impact</span>
                 <div className="flex items-end gap-2 mb-4">
                   <span className="font-mono text-title-lg font-black tracking-tighter">
-                    +${trajectory.salary_jump.toLocaleString()}
+                    +{isIndia 
+                      ? (trajectory.salary_jump > 1000 ? `₹${(trajectory.salary_jump / 100000).toFixed(1)} LPA` : `₹${trajectory.salary_jump} LPA`)
+                      : `$${trajectory.salary_jump.toLocaleString()}`
+                    }
                   </span>
-                  <span className="text-body-sm text-on-primary/60 mb-2">/yr jump</span>
+                  <span className="text-body-sm text-on-primary/60 mb-2">{isIndia ? 'promotional jump' : '/yr jump'}</span>
                 </div>
                 <p className="text-[11px] leading-relaxed text-on-primary/70 italic">
-                  * Projected annual increase upon transitioning to the next seniority tier based on current market saturation data.
+                  * Projected {isIndia ? 'LPA' : 'annual'} increase upon transitioning to the next seniority tier based on trained market data.
                 </p>
              </div>
 
@@ -176,7 +216,7 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
                   <span className="text-[11px] font-bold text-brand-lavender uppercase tracking-widest">Mastery Multiplier</span>
                 </div>
                 <div className="font-mono text-title-md text-ink mb-1">
-                   +${bonusK}k Market Value
+                   {bonusDisplay} Market Value
                 </div>
                 <p className="text-[10px] text-muted">
                    Cumulative premium value of all identified gaps in your roadmap.
@@ -203,9 +243,10 @@ export function CareerCompass({ trajectory, gaps }: CareerCompassProps) {
         
         <div className="flex items-center gap-2 text-[10px] text-muted font-bold uppercase tracking-widest">
           <DollarSign size={12} className="text-brand-teal" />
-          Benchmark: ${trajectory.current_salary.toLocaleString()} → ${trajectory.next_salary.toLocaleString()}
+          Benchmark: {formatSalary(trajectory.current_salary)} → {formatSalary(trajectory.next_salary)}
         </div>
       </div>
     </div>
   );
 }
+

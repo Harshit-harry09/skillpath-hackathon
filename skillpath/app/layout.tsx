@@ -41,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("antialiased", inter.variable, irishGrover.variable, "font-sans", geist.variable)} suppressHydrationWarning>
-      <body className="font-sans flex flex-col min-h-screen bg-canvas text-ink selection:bg-brand-pink selection:text-white pb-20">
+      <body className="font-sans flex flex-col min-h-screen bg-canvas text-ink selection:bg-brand-pink selection:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

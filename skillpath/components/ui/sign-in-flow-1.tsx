@@ -336,67 +336,6 @@ const Shader: React.FC<ShaderProps> = ({ source, uniforms }) => {
   );
 };
 
-const AnimatedNavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
-  return (
-    <a href={href} className="group relative inline-block overflow-hidden h-5 flex items-center text-sm">
-      <div className="flex flex-col transition-transform duration-400 ease-out transform group-hover:-translate-y-1/2">
-        <span className="text-gray-300">{children}</span>
-        <span className="text-white">{children}</span>
-      </div>
-    </a>
-  );
-};
-
-function MiniNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [headerShapeClass, setHeaderShapeClass] = useState('rounded-full');
-  const shapeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    if (shapeTimeoutRef.current) clearTimeout(shapeTimeoutRef.current);
-    if (isOpen) {
-      setHeaderShapeClass('rounded-xl');
-    } else {
-      shapeTimeoutRef.current = setTimeout(() => setHeaderShapeClass('rounded-full'), 300);
-    }
-    return () => { if (shapeTimeoutRef.current) clearTimeout(shapeTimeoutRef.current); };
-  }, [isOpen]);
-
-  const navLinksData = [
-    { label: 'Manifesto', href: '#' },
-    { label: 'Careers', href: '#' },
-    { label: 'Discover', href: '#' },
-  ];
-
-  return (
-    <header className={cn(
-      "fixed top-6 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center pl-6 pr-6 py-3 backdrop-blur-sm border border-[#333] bg-[#1f1f1f57] w-[calc(100%-2rem)] sm:w-auto transition-[border-radius] duration-0 ease-in-out",
-      headerShapeClass
-    )}>
-      <div className="flex items-center justify-between w-full gap-x-6 sm:gap-x-8">
-        <div className="flex items-center">
-          <div className="relative w-5 h-5 flex items-center justify-center">
-            <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 top-0 left-1/2 transform -translate-x-1/2 opacity-80" />
-            <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 left-0 top-1/2 transform -translate-y-1/2 opacity-80" />
-            <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 right-0 top-1/2 transform -translate-y-1/2 opacity-80" />
-            <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 bottom-0 left-1/2 transform -translate-x-1/2 opacity-80" />
-          </div>
-        </div>
-        <nav className="hidden sm:flex items-center space-x-4 sm:space-x-6 text-sm">
-          {navLinksData.map((link, idx) => (
-            <AnimatedNavLink key={idx} href={link.href}>{link.label}</AnimatedNavLink>
-          ))}
-        </nav>
-        <button className="sm:hidden text-gray-300" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X /> : <div className="w-6 h-6 flex flex-col justify-between p-1"><div className="h-0.5 bg-white" /><div className="h-0.5 bg-white" /><div className="h-0.5 bg-white" /></div>}
-        </button>
-      </div>
-    </header>
-  );
-}
-
-
-
 export const SignInPage = ({ className, onSuccess }: SignInPageProps) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -482,40 +421,61 @@ export const SignInPage = ({ className, onSuccess }: SignInPageProps) => {
                   <h1 className="text-4xl font-bold text-white">{mode === "login" ? "Welcome Back" : "Create Account"}</h1>
                   <form onSubmit={handleAuthSubmit} className="space-y-4">
                     {mode === "signup" && (
-                      <input
-                        type="text"
-                        placeholder="Your Name"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus:border-white/30"
-                        required
-                      />
+                      <div>
+                        <label htmlFor="auth-name" className="sr-only">Full Name</label>
+                        <input
+                          id="auth-name"
+                          type="text"
+                          placeholder="Your Name"
+                          value={name}
+                          onChange={e => setName(e.target.value)}
+                          className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                          autoComplete="name"
+                          required
+                        />
+                      </div>
                     )}
-                    <input
-                      type="email"
-                      placeholder="email@example.com"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus:border-white/30"
-                      required
-                    />
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus:border-white/30"
-                      required
-                    />
-                    {mode === "signup" && (
+                    <div>
+                      <label htmlFor="auth-email" className="sr-only">Email address</label>
                       <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus:border-white/30"
+                        id="auth-email"
+                        type="email"
+                        placeholder="email@example.com"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                        autoComplete="email"
+                        spellCheck={false}
                         required
                       />
+                    </div>
+                    <div>
+                      <label htmlFor="auth-password" className="sr-only">Password</label>
+                      <input
+                        id="auth-password"
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                        autoComplete={mode === "login" ? "current-password" : "new-password"}
+                        required
+                      />
+                    </div>
+                    {mode === "signup" && (
+                      <div>
+                        <label htmlFor="auth-confirm-password" className="sr-only">Confirm Password</label>
+                        <input
+                          id="auth-confirm-password"
+                          type="password"
+                          placeholder="Confirm Password"
+                          value={confirmPassword}
+                          onChange={e => setConfirmPassword(e.target.value)}
+                          className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                          autoComplete="new-password"
+                          required
+                        />
+                      </div>
                     )}
                     <button type="submit" className="w-full bg-white text-black font-bold py-3 rounded-full hover:bg-white/90 transition-colors mt-2">
                       {mode === "login" ? "Log In" : "Sign Up"}

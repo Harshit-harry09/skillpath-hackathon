@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import dynamic from 'next/dynamic';
 
-const SignInPage = dynamic(() => import('@/components/ui/sign-in-flow-1').then(mod => mod.SignInPage), { ssr: false });
+const SignInPage = dynamic(() => import('@/components/ui/sign-in-flow-1').then(mod => ({ default: mod.SignInPage })), { ssr: false });
 
 export function AuthModal() {
   const { isAuthModalOpen, closeAuthModal } = useAuth();

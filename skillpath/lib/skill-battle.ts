@@ -156,7 +156,7 @@ export function conductSkillBattle(skillA: string, skillB: string): BattleResult
     }
 
     // Winner celebration highlights
-    if (winData.votes > loseData.votes) {
+    if (winData.votes >= loseData.votes * 1.1) {
       highlights.push(`🚀 ${voteRatio}× More Job Postings (${winData.votes.toLocaleString()} vs ${loseData.votes.toLocaleString()})`);
     }
     if (winData.premium > loseData.premium) {

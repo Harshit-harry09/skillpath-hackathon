@@ -83,7 +83,7 @@ export default function HistoryPage() {
 
           {/* History List */}
           {entries.length > 0 && (
-            <motion.div 
+            <motion.div
               className="flex flex-col gap-6"
               initial="hidden"
               animate="show"
@@ -105,9 +105,9 @@ export default function HistoryPage() {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                   className="group relative bg-surface-card border border-hairline rounded-[24px] p-8 hover:border-primary/50 transition-all duration-300 shadow-sm"
                 >
-                  <Link 
-                    href={entry.type === 'explore' ? `/explore/${entry.share_token}` : `/results/${entry.share_token}`} 
-                    className="absolute inset-0 z-10 rounded-[24px]" 
+                  <Link
+                    href={entry.type === 'explore' ? `/explore/${entry.share_token}` : `/results/${entry.share_token}`}
+                    className="absolute inset-0 z-10 rounded-[24px]"
                   />
 
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -115,15 +115,15 @@ export default function HistoryPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-4 mb-4">
                         {entry.type === 'explore' ? (
-                           <div className="flex items-center gap-1 text-brand-pink">
-                             <Compass size={14} />
-                             <span className="font-sans font-bold text-[10px] tracking-widest uppercase">Explore</span>
-                           </div>
+                          <div className="flex items-center gap-1 text-brand-pink">
+                            <Compass size={14} />
+                            <span className="font-sans font-bold text-[10px] tracking-widest uppercase">Explore</span>
+                          </div>
                         ) : (
-                           <div className="flex items-center gap-1 text-primary">
-                             <Target size={14} />
-                             <span className="font-sans font-bold text-[10px] tracking-widest uppercase">Analyze</span>
-                           </div>
+                          <div className="flex items-center gap-1 text-primary">
+                            <Target size={14} />
+                            <span className="font-sans font-bold text-[10px] tracking-widest uppercase">Analyze</span>
+                          </div>
                         )}
                         <span className="w-1 h-1 rounded-full bg-hairline" />
                         <span className="font-sans font-bold text-[11px] text-muted tracking-widest uppercase">

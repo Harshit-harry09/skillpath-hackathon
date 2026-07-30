@@ -37,25 +37,31 @@ const nextState: Record<SkillState, SkillState> = {
 
 export function SkillTrackRow({ skill, accentColor, onStateChange }: SkillTrackRowProps) {
   const [loading, setLoading] = useState(false);
-  const cfg = stateConfig[skill.state];
+  const [optimisticState, setOptimisticState] = useState<SkillState | null>(null);
+  const currentSkillState = optimisticState ?? skill.state;
+  const cfg = stateConfig[currentSkillState];
   const Icon = cfg.icon;
 
   const handleToggle = async () => {
     if (loading) return;
+    const targetState = nextState[currentSkillState];
+    setOptimisticState(targetState);
     setLoading(true);
     try {
-      await onStateChange(skill.skill, nextState[skill.state]);
+      await onStateChange(skill.skill, targetState);
     } catch (error) {
       console.error("Failed to update skill state:", error);
+      setOptimisticState(null); // Rollback on failure
     } finally {
       setLoading(false);
+      setOptimisticState(null);
     }
   };
 
   return (
     <div className={[
       'flex items-center gap-4 px-4 py-3.5 rounded-lg border transition-all duration-200',
-      skill.state === 'learned' ? 'bg-brand-teal/5 border-brand-teal/15' : 'bg-surface-card border-hairline',
+      currentSkillState === 'learned' ? 'bg-brand-teal/5 border-brand-teal/15' : 'bg-surface-card border-hairline',
     ].join(' ')}>
 
       {/* Toggle button */}
@@ -69,7 +75,7 @@ export function SkillTrackRow({ skill, accentColor, onStateChange }: SkillTrackR
       >
         {loading
           ? <Loader2 size={13} className="animate-spin" />
-          : <Icon size={13} className={skill.state === 'learned' ? 'stroke-[2.5]' : ''} />
+          : <Icon size={13} className={currentSkillState === 'learned' ? 'stroke-[2.5]' : ''} />
         }
       </button>
 
@@ -77,7 +83,7 @@ export function SkillTrackRow({ skill, accentColor, onStateChange }: SkillTrackR
       <div className="flex-1 min-w-0">
         <span className={[
           'font-sans text-body-sm font-semibold block truncate transition-colors',
-          skill.state === 'learned' ? 'line-through text-muted' : 'text-ink',
+          currentSkillState === 'learned' ? 'line-through text-muted' : 'text-ink',
         ].join(' ')}>
           {skill.skill}
         </span>

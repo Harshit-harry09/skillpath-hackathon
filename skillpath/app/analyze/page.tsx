@@ -7,10 +7,15 @@ import { DropZone } from '@/components/ui/DropZone';
 import { saveToHistory } from '@/lib/history';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, FileText, Upload, ChevronRight, Target, Star, HelpCircle } from 'lucide-react';
-import { GenerativeArtScene } from '@/components/ui/anomalous-matter-hero';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/AuthContext';
 import { DreamOnboarding, type DreamContext } from '@/components/analyze/DreamOnboarding';
 import { Button } from '@/components/ui/Button';
+
+const GenerativeArtScene = dynamic(
+  () => import('@/components/ui/anomalous-matter-hero').then((m) => m.GenerativeArtScene),
+  { ssr: false, loading: () => <div className="absolute inset-0 bg-canvas" /> }
+);
 
 
 const MOTIVATIONAL_QUOTES = [
@@ -50,12 +55,12 @@ export default function AnalyzePage() {
   useEffect(() => {
     const pendingJd = sessionStorage.getItem('pending_jd');
     const pendingResume = sessionStorage.getItem('pending_resume');
-    
+
     if (pendingJd && pendingResume) {
       setJd(pendingJd);
       setResumeText(pendingResume);
       setAutoTrigger(true);
-      
+
       // Clean up storage immediately
       sessionStorage.removeItem('pending_jd');
       sessionStorage.removeItem('pending_resume');
@@ -238,20 +243,20 @@ export default function AnalyzePage() {
                       <span className="relative z-20">Dream</span>
                     </button>
                   </div>
-                  
+
                   <div className="relative group/help">
                     <button className="p-2 rounded-full hover:bg-black/5 transition-colors">
                       <HelpCircle size={14} className="text-ink/30 group-hover/help:text-brand-teal transition-colors" />
                     </button>
-                    
+
                     <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-4 bg-white dark:bg-zinc-900 rounded-xl border border-black/10 dark:border-white/10 shadow-2xl opacity-0 invisible group-hover/help:opacity-100 group-hover/help:visible transition-all z-50 pointer-events-none">
                       <div className="flex items-center gap-2 mb-2">
                         <Target size={12} className="text-brand-teal" />
                         <span className="text-[10px] font-bold uppercase tracking-widest text-ink/40">Precision Tip</span>
                       </div>
                       <p className="text-[11px] leading-relaxed text-ink/70 dark:text-white/70">
-                        Include the <span className="text-ink dark:text-white font-bold">Job Title</span> clearly at the start. 
-                        <br/><br/>
+                        Include the <span className="text-ink dark:text-white font-bold">Job Title</span> clearly at the start.
+                        <br /><br />
                         <span className="text-brand-teal font-bold">Pro Tip:</span> Add "Junior" or "Senior" for specific mapping, otherwise we default to <span className="italic font-bold">Mid-level</span> baseline.
                       </p>
                       <div className="absolute left-1/2 -translate-x-1/2 top-full border-8 border-transparent border-t-white dark:border-t-zinc-900" />
@@ -447,7 +452,7 @@ export default function AnalyzePage() {
                 {/* Decorative gradients */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-pink/5 blur-[80px] rounded-full -mr-32 -mt-32" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-teal/5 blur-[80px] rounded-full -ml-32 -mb-32" />
-                
+
                 <div className="relative z-10">
                   <DreamOnboarding
                     onComplete={(desc, ctx) => {

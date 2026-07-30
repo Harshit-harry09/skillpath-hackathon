@@ -90,9 +90,13 @@ export default function ResultsPage({
       }
 
       // 2. Fetch from database API with retries
+      const token = await getToken();
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       for (let i = 0; i < retries; i++) {
         try {
-          const res = await fetch(`/api/results/${id}`);
+          const res = await fetch(`/api/results/${id}`, { headers });
           if (res.ok) {
             const json = await res.json();
             console.log('[Results] Data loaded from API:', id);
@@ -248,6 +252,22 @@ export default function ResultsPage({
   }, [id]);
 
   const handleTrackingChange = async (skill: string, state: string) => {
+    // 1. Optimistic instant local state update (0ms perceived interaction delay)
+    setActiveJob((prev: any) => {
+      if (!prev) return prev;
+      const updatedSkills = (prev.skills || []).map((s: any) =>
+        s.skill === skill ? { ...s, state } : s
+      );
+      const learnedCount = updatedSkills.filter((s: any) => s.state === 'learned').length;
+      const totalCount = updatedSkills.length || 1;
+      const newReadiness = Math.round((learnedCount / totalCount) * 100);
+      return {
+        ...prev,
+        skills: updatedSkills,
+        readiness_score: newReadiness,
+      };
+    });
+
     const token = await getToken();
     if (!token) return;
     try {
@@ -316,9 +336,13 @@ export default function ResultsPage({
       setBatchProgress(prev => ({ ...prev, current: i + 1 }));
 
       try {
+        const token = await getToken();
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
         const res = await fetch('/api/generate-resources', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({
             analysis_id: data.share_token,
             skill: gap.skill,

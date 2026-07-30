@@ -1,19 +1,9 @@
 'use client';
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useUI } from '@/context/UIContext';
 
+// Children render immediately — individual sections handle their own entrance animations.
+// Removing the global opacity gate was the primary LCP fix (5.9s → <1s).
 export function AppWrapper({ children }: { children: React.ReactNode }) {
-  const { loaded } = useUI();
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: loaded ? 1 : 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <>{children}</>;
 }

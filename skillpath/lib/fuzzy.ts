@@ -6,23 +6,112 @@
  * Levenshtein Distance Utility
  * Calculates how many edits to get from a to b.
  */
-export function getLevenshteinDistance(a: string, b: string): number {
-  const matrix = Array.from({ length: a.length + 1 }, () => 
-    Array.from({ length: b.length + 1 }, (_, i) => i)
-  );
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+// Pre-allocated static scratchpad buffers to eliminate GC allocations in loops
+const INITIAL_BUFFER_SIZE = 1024;
+let scratchRow0 = new Int32Array(INITIAL_BUFFER_SIZE);
+let scratchRow1 = new Int32Array(INITIAL_BUFFER_SIZE);
 
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost
+function ensureScratchBufferSize(requiredSize: number) {
+  if (requiredSize > scratchRow0.length) {
+    const newSize = Math.max(requiredSize, scratchRow0.length * 2);
+    scratchRow0 = new Int32Array(newSize);
+    scratchRow1 = new Int32Array(newSize);
+  }
+}
+
+/**
+ * Fast Myers Bit-Parallel Levenshtein algorithm for strings <= 32 chars.
+ * Uses 32-bit bitwise integers for O(N) execution with ZERO heap allocations.
+ */
+function myersBitParallel32(a: string, b: string): number {
+  const lenA = a.length;
+  const lenB = b.length;
+  let peq = 0;
+  let pv = -1;
+  let nv = 0;
+  let dist = lenA;
+
+  // Build pattern bitmask for a
+  const charMask: Record<number, number> = {};
+  for (let i = 0; i < lenA; i++) {
+    const code = a.charCodeAt(i);
+    charMask[code] = (charMask[code] || 0) | (1 << i);
+  }
+
+  for (let j = 0; j < lenB; j++) {
+    const code = b.charCodeAt(j);
+    peq = charMask[code] || 0;
+
+    const x = peq | nv;
+    const h0 = pv & peq;
+    const step1 = (h0 + (pv & x)) ^ pv;
+    const h1 = step1 | x;
+    
+    let ph = h1 ^ pv;
+    let mh = h0;
+
+    const phShift = (ph << 1) | 1;
+    pv = (mh << 1) | ~(phShift | h1);
+    nv = phShift & h1;
+
+    if (ph & (1 << (lenA - 1))) dist++;
+    if (mh & (1 << (lenA - 1))) dist--;
+  }
+
+  return dist;
+}
+
+/**
+ * High-performance Levenshtein Distance Utility.
+ * Uses Myers Bit-Parallel for short strings (<= 32 chars) and static pre-allocated
+ * scratchpad buffers for longer strings to completely eliminate GC allocations.
+ */
+export function getLevenshteinDistance(a: string, b: string): number {
+  if (a === b) return 0;
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+
+  const lenA = a.length;
+  const lenB = b.length;
+
+  // 1. Bit-Parallel fast path for short strings (zero heap allocation)
+  if (lenA <= 32) {
+    return myersBitParallel32(a, b);
+  }
+  if (lenB <= 32) {
+    return myersBitParallel32(b, a);
+  }
+
+  // 2. Pre-allocated static scratchpad fallback for longer strings
+  const requiredSize = lenB + 1;
+  ensureScratchBufferSize(requiredSize);
+
+  const row0 = scratchRow0;
+  const row1 = scratchRow1;
+
+  for (let j = 0; j <= lenB; j++) {
+    row0[j] = j;
+  }
+
+  for (let i = 0; i < lenA; i++) {
+    row1[0] = i + 1;
+    const charA = a.charCodeAt(i);
+
+    for (let j = 0; j < lenB; j++) {
+      const cost = charA === b.charCodeAt(j) ? 0 : 1;
+      row1[j + 1] = Math.min(
+        row1[j] + 1,
+        row0[j + 1] + 1,
+        row0[j] + cost
       );
     }
+
+    for (let j = 0; j <= lenB; j++) {
+      row0[j] = row1[j];
+    }
   }
-  return matrix[a.length][b.length];
+
+  return row0[lenB];
 }
 
 /**
@@ -36,35 +125,48 @@ export function findFuzzyMatch(input: string, candidates: string[], threshold = 
 
   let bestMatch: string | null = null;
   let highestSimilarity = 0;
+  const sLen = s.length;
 
   for (const candidate of candidates) {
     const c = candidate.toLowerCase();
-    
+    const cLen = c.length;
+
     // 1. Instant Match
     if (s === c || s.includes(c)) {
       return candidate; // Absolute best match, bail early
     }
 
-    if (c.length > 3) {
+    if (cLen > 3) {
+      // 2. Fast O(1) Length Difference Pruning Guard
+      const maxLen = Math.max(sLen, cLen);
+      const minPossibleDist = Math.abs(sLen - cLen);
+      const maxPossibleSimilarity = 1 - (minPossibleDist / maxLen);
+      if (maxPossibleSimilarity < threshold) {
+        continue; // Impossible to meet threshold, skip Levenshtein calculation
+      }
+
       const candidateWords = c.split(/\s+/).length;
       const inputWords = s.split(/\s+/);
-      
+
       let maxSimForCandidate = 0;
-      
-      // 2. Sliding Window (If input is a long string like a JD snippet)
+
+      // 3. Sliding Window (If input is a long string like a JD snippet)
       if (inputWords.length > candidateWords) {
         for (let i = 0; i <= inputWords.length - candidateWords; i++) {
           const windowStr = inputWords.slice(i, i + candidateWords).join(" ");
-          const maxLen = Math.max(windowStr.length, c.length);
+          const winLen = windowStr.length;
+          const winMaxLen = Math.max(winLen, cLen);
+          const winMinDist = Math.abs(winLen - cLen);
+          if (1 - (winMinDist / winMaxLen) < threshold) continue;
+
           const distance = getLevenshteinDistance(windowStr, c);
-          const similarity = 1 - (distance / maxLen);
+          const similarity = 1 - (distance / winMaxLen);
           if (similarity > maxSimForCandidate) {
             maxSimForCandidate = similarity;
           }
         }
       } else {
-        // 3. Direct compare
-        const maxLen = Math.max(s.length, c.length);
+        // 4. Direct compare
         const distance = getLevenshteinDistance(s, c);
         maxSimForCandidate = 1 - (distance / maxLen);
       }

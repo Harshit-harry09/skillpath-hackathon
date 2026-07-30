@@ -6,26 +6,26 @@ import { useUI } from "@/context/UIContext";
 import { usePathname } from "next/navigation";
 
 const MOTIVATIONAL_LINES = [
-  "Forging new neural connections...",
-  "Sharpening your cognitive edge...",
-  "Calibrating synaptic pathways...",
-  "Loading brilliance, one byte at a time...",
-  "Preparing your mental gymnasium...",
-  "Assembling the building blocks of mastery...",
-  "Dusting off the compendium of knowledge...",
-  "Brewing a fresh pot of intellect...",
-  "Synchronizing ambitions with actions...",
-  "Unlocking the potential vault...",
-  "Structuring concepts for maximal impact...",
-  "Waking up the dormant brain cells...",
-  "Synthesizing your next big breakthrough...",
-  "Aligning theory with practice...",
-  "Curating an elite curriculum for you...",
-  "Polishing the stepping stones to success...",
-  "Gathering the raw materials of genius...",
-  "Fine-tuning your learning trajectory...",
-  "Igniting the spark of curiosity...",
-  "Preparing the canvas for your next masterpiece..."
+  "Forging new neural connections…",
+  "Sharpening your cognitive edge…",
+  "Calibrating synaptic pathways…",
+  "Loading brilliance, one byte at a time…",
+  "Preparing your mental gymnasium…",
+  "Assembling the building blocks of mastery…",
+  "Dusting off the compendium of knowledge…",
+  "Brewing a fresh pot of intellect…",
+  "Synchronizing ambitions with actions…",
+  "Unlocking the potential vault…",
+  "Structuring concepts for maximal impact…",
+  "Waking up the dormant brain cells…",
+  "Synthesizing your next big breakthrough…",
+  "Aligning theory with practice…",
+  "Curating an elite curriculum for you…",
+  "Polishing the stepping stones to success…",
+  "Gathering the raw materials of genius…",
+  "Fine-tuning your learning trajectory…",
+  "Igniting the spark of curiosity…",
+  "Preparing the canvas for your next masterpiece…"
 ];
 
 interface PreloaderProps {
@@ -45,7 +45,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
   useEffect(() => {
     setHasMounted(true);
-    
+
     // If not on home page, set loaded immediately and don't show preloader
     if (!isHomePage) {
       setLoaded(true);
@@ -56,22 +56,19 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
     const handleLoad = () => {
       setProgress(100);
-      setTimeout(() => {
-        setIsVisible(false);
-        setLoaded(true);
-        if (onComplete) onComplete();
-      }, 400); // Brief pause for the exit animation to feel natural
+      setIsVisible(false);
+      setLoaded(true);
+      if (onComplete) onComplete();
     };
 
-    if (document.readyState === 'complete') {
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
       handleLoad();
     } else {
-      window.addEventListener('load', handleLoad);
-      // Fallback: If assets take too long (>2s), proceed anyway for better UX
-      const fallback = setTimeout(handleLoad, 2000);
-      
+      window.addEventListener('DOMContentLoaded', handleLoad);
+      const fallback = setTimeout(handleLoad, 300);
+
       return () => {
-        window.removeEventListener('load', handleLoad);
+        window.removeEventListener('DOMContentLoaded', handleLoad);
         clearTimeout(fallback);
       };
     }
@@ -95,9 +92,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
             }
           }}
         >
-          {/* Noise Texture */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-          
+          {/* Noise Texture — inline SVG to avoid external network request */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")", backgroundRepeat: 'repeat', backgroundSize: '128px 128px' }} />
+
           <motion.div
             key="preloader-content"
             initial={{ opacity: 0, scale: 0.98 }}
@@ -130,14 +127,14 @@ export function Preloader({ onComplete }: PreloaderProps) {
             </div>
 
             <div className="text-center space-y-6 max-w-md">
-              <motion.span 
+              <motion.span
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-pink"
               >
                 Initializing Engine
               </motion.span>
-              <h1 className="text-4xl font-black text-ink leading-tight tracking-tight">{quote}</h1>
+              <p className="text-4xl font-black text-ink leading-tight tracking-tight">{quote}</p>
             </div>
 
             <div className="mt-20 w-full max-w-sm">

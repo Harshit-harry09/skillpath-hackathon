@@ -144,18 +144,18 @@ export async function POST(req: NextRequest) {
     const roleTitleContext = getRoleLabel(detectedRoleCategory);
 
     // Hybrid Brain: Clean the local list using fast AI / Local Expert
-    const { cleaned: jdKeywordSkills, metrics: aiMetrics } = await cleanSkillsWithAI(rawJdSkills, roleTitleContext);
-    console.log(`[Analyze] AI Cleaning: ${aiMetrics.status} | Latency: ${Math.round(aiMetrics.latency)}ms | Cached: ${aiMetrics.cached}`);
+    const rawResumeSkills = extractSkills(resume_text);
+    const [{ cleaned: jdKeywordSkills, metrics: jdMetrics }, { cleaned: resumeSkills, metrics: resumeMetrics }] = await Promise.all([
+      cleanSkillsWithAI(rawJdSkills, roleTitleContext),
+      cleanSkillsWithAI(rawResumeSkills, "resume")
+    ]);
+    console.log(`[Analyze] JD AI Cleaning: ${jdMetrics.status} | Latency: ${Math.round(jdMetrics.latency)}ms | Cached: ${jdMetrics.cached}`);
+    console.log(`[Analyze] Resume AI Cleaning: ${resumeMetrics.status} | Latency: ${Math.round(resumeMetrics.latency)}ms | Cached: ${resumeMetrics.cached}`);
 
     const modelSkills = getRoleStandardSkills(jd_text);
     // Use cleaned JD skills. Only fallback to model skills if extraction fails.
     const jdSkills = jdKeywordSkills.length > 0 ? jdKeywordSkills : modelSkills.slice(0, 15);
     
-    // Also clean resume skills through the Local Expert refiner
-    // NEW: We now do an aggressive AI extraction pass for the resume to ensure 100% accuracy
-    const rawResumeSkills = extractSkills(resume_text);
-    const { cleaned: resumeSkills } = await cleanSkillsWithAI(rawResumeSkills, "resume");
-
     console.log(`[Analyze] JD skills: ${jdSkills.length} | Resume skills: ${resumeSkills.length}`);
 
     // ---- Step 3: Diff and score (local) ----
@@ -254,9 +254,9 @@ export async function POST(req: NextRequest) {
       resume_skills: resumeSkills,
       skill_gaps: rankedGaps,
       foundational_prerequisites: foundationalPrerequisites,
-      jd_preview: jd_text.slice(0, 100),
-      jd_text,
-      resume_text,
+      jd_preview: jd_text.slice(0, 200),
+      jd_text: jd_text.length > 4000 ? jd_text.slice(0, 4000) + "..." : jd_text,
+      resume_text: resume_text.length > 4000 ? resume_text.slice(0, 4000) + "..." : resume_text,
       created_at: new Date().toISOString(),
       // Dream context metadata (if present)
       ...(typeof dreamRole === 'string' && dreamRole ? {
@@ -269,16 +269,22 @@ export async function POST(req: NextRequest) {
       } : {}),
     };
 
-    // ---- Step 8: Save to Firestore (Graceful Save) ----
-    try {
-      const db = getDb();
-      await db.collection("analyses").doc(shareToken).set({
-        ...analysisDoc,
-        user_id: user?.uid || null,
-      });
-      console.log(`[Analyze] ✓ Saved to Firestore: ${shareToken}`);
-    } catch (dbError) {
-      console.warn("[Analyze] Firestore save skipped or unavailable:", dbError instanceof Error ? dbError.message : dbError);
+    // ---- Step 8: Save to Firestore (Non-blocking background save for instant response) ----
+    const savePromise = (async () => {
+      try {
+        const db = getDb();
+        await db.collection("analyses").doc(shareToken).set({
+          ...analysisDoc,
+          user_id: user?.uid || null,
+        });
+        console.log(`[Analyze] ✓ Saved to Firestore: ${shareToken}`);
+      } catch (dbError) {
+        console.warn("[Analyze] Firestore save skipped or unavailable:", dbError instanceof Error ? dbError.message : dbError);
+      }
+    })();
+    // Allow serverless function to register background completion without blocking client HTTP response
+    if (typeof (req as any).waitUntil === 'function') {
+      (req as any).waitUntil(savePromise);
     }
 
     console.log(`[Analyze] ✓ Complete | Gap: ${gapResult.gapScore}% | Weeks: ${countdown.weeksRequired} | Token: ${shareToken}`);

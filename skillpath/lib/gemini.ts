@@ -33,7 +33,7 @@ export async function callGemini(
     jsonMode?: boolean;
   }
 ): Promise<string> {
-  const rawApiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || "";
+  const rawApiKey = process.env.GEMINI_API_KEY || "";
   const apiKey = rawApiKey.trim().replace(/^["']|["']$/g, '');
 
   if (!apiKey) {
@@ -94,7 +94,7 @@ export async function callGemini(
       const data = await res.json();
       const candidate = data.candidates?.[0];
       const text = candidate?.content?.parts?.[0]?.text;
-      
+
       if (text === undefined || text === null || text === "") {
         const reason = candidate?.finishReason ?? "UNKNOWN";
         console.warn(`[Gemini] Model ${currentModel} returned empty content (finishReason: ${reason}). Trying next model.`);

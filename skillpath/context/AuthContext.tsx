@@ -56,7 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!fbUser) return null;
 
     try {
-      return await fbUser.getIdToken(/* forceRefresh */ true);
+      // Let the SDK return a cached token when valid; it auto-refreshes ~5 min before expiry
+      return await fbUser.getIdToken(/* forceRefresh */ false);
     } catch (error) {
       console.error('[AuthContext] Failed to refresh token:', error);
       return null;
@@ -85,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       logout,
       getToken,
     }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }

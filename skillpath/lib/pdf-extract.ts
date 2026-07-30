@@ -12,33 +12,35 @@ function safeDecode(encoded: string): string {
 // Strategy 1 — pdf2json structured parse
 async function extractWithPdf2json(buffer: ArrayBuffer): Promise<string> {
   return new Promise((resolve, reject) => {
-    // Cast to any for the constructor
     const parser = new (PDFParser as any)(null, true);
 
     const timeout = setTimeout(() => {
       reject(new Error('PDF parsing timed out'));
-    }, 15000);
+    }, 5000); // 5s timeout for fast response
 
     parser.on('pdfParser_dataReady', (data: any) => {
       clearTimeout(timeout);
-      try {
-        const text = (data.Pages ?? [])
-          .flatMap((page: any) => page.Texts ?? [])
-          .map((t: any) =>
-            safeDecode(
-              (t.R ?? []).map((r: any) => r.T ?? '').join('')
+      // Yield to event loop before text aggregation
+      setImmediate(() => {
+        try {
+          const text = (data.Pages ?? [])
+            .flatMap((page: any) => page.Texts ?? [])
+            .map((t: any) =>
+              safeDecode(
+                (t.R ?? []).map((r: any) => r.T ?? '').join('')
+              )
             )
-          )
-          .filter(Boolean)
-          .join(' ')
-          .replace(/\s+/g, ' ')
-          .trim();
+            .filter(Boolean)
+            .join(' ')
+            .replace(/\s+/g, ' ')
+            .trim();
 
-        if (!text) reject(new Error('empty'));
-        else resolve(text);
-      } catch (e) {
-        reject(e);
-      }
+          if (!text) reject(new Error('empty'));
+          else resolve(text);
+        } catch (e) {
+          reject(e);
+        }
+      });
     });
 
     parser.on('pdfParser_dataError', (err: any) => {
@@ -55,32 +57,30 @@ async function extractWithPdf2json(buffer: ArrayBuffer): Promise<string> {
   });
 }
 
-// Strategy 2 — raw text extraction by scanning for readable ASCII strings
-// Works on PDFs that pdf2json can't structure-parse
+// Strategy 2 — fast non-blocking raw text extraction by scanning ASCII strings
 function extractRawText(buffer: ArrayBuffer): string {
-  const bytes  = Buffer.from(buffer);
+  const bytes = Buffer.from(buffer);
   const source = bytes.toString('latin1');
 
   // Extract text between BT (begin text) and ET (end text) PDF operators
-  const btEtMatches = [...source.matchAll(/BT([\s\S]*?)ET/g)]
-    .map(m => m[1]);
-
+  const btEtMatches = source.split(/BT/);
   const texts: string[] = [];
 
-  for (const block of btEtMatches) {
-    // Match strings inside parentheses — PDF text encoding
-    const parenMatches = [...block.matchAll(/\(([^)]{1,300})\)/g)]
-      .map(m => m[1]
-        .replace(/\\(\d{3})/g, (_, oct) =>
-          String.fromCharCode(parseInt(oct, 8))
-        )
-        .replace(/\\n/g, ' ')
-        .replace(/\\r/g, ' ')
-        .replace(/\\/g, '')
-      )
-      .filter(s => /[a-zA-Z]{2,}/.test(s)); // must have real words
+  for (let i = 1; i < Math.min(btEtMatches.length, 50); i++) {
+    const block = btEtMatches[i].split(/ET/)[0];
+    if (!block) continue;
 
-    texts.push(...parenMatches);
+    const parenMatches = block.match(/\(([^)]{1,300})\)/g);
+    if (!parenMatches) continue;
+
+    for (const rawMatch of parenMatches) {
+      const inner = rawMatch.slice(1, -1)
+        .replace(/\\(\d{3})/g, (_, oct) => String.fromCharCode(parseInt(oct, 8)))
+        .replace(/\\n|\\r|\\/g, ' ');
+      if (/[a-zA-Z]{2,}/.test(inner)) {
+        texts.push(inner);
+      }
+    }
   }
 
   return texts.join(' ').replace(/\s+/g, ' ').trim();

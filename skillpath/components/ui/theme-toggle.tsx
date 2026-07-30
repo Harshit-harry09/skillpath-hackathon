@@ -4,11 +4,8 @@ import * as ReactDOM from "react-dom";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-// Premium cubic-bezier easing: [0.16, 1, 0.3, 1] as any
+// Standard cubic ease-out calculation
 function cubicBezier(t: number) {
-  const x1 = 0.16, y1 = 1, x2 = 0.3, y2 = 1;
-  // Simplified for this specific ease (since x2=0.3 and y1=y2=1, it's very fast then slow)
-  // But a standard power easing is often smoother for canvas loops
   return 1 - Math.pow(1 - t, 3);
 }
 

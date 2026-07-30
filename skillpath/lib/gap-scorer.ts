@@ -50,14 +50,15 @@ export function scoreGap(
 
   const extra = resumeSkills.filter(s => !matchedClean.has(normalize(s)));
 
-  // Loophole Fix: Ensure 100% isn't given for empty JDs
-  const totalWeight = Math.max(jdSkills.length, 5); 
-  let gapScore = Math.round((matched.length / totalWeight) * 100);
+  // Mathematically Sound Gap Scoring:
+  // If no JD skills required, gapScore is 0.
+  // Otherwise, score is (matched.length / jdSkills.length) * 100 + optional extra skills bonus.
+  const totalWeight = jdSkills.length;
+  let gapScore = totalWeight === 0 ? 0 : Math.round((matched.length / totalWeight) * 100);
 
-  // Loophole Fix: Strategic Bonus for high-value extra skills
-  // (We limit the bonus to 10% max to prevent over-inflation)
-  if (extra.length > 0) {
-      gapScore = Math.min(100, gapScore + Math.min(10, extra.length * 2));
+  // Strategic Bonus for relevant extra skills (up to 10% bonus, capped at 100%)
+  if (extra.length > 0 && totalWeight > 0) {
+    gapScore = Math.min(100, gapScore + Math.min(10, Math.ceil(extra.length * 1.5)));
   }
 
   return {

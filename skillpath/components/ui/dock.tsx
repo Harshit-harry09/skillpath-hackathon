@@ -29,7 +29,7 @@ const DEFAULT_DISTANCE = 140
 const DEFAULT_DISABLEMAGNIFICATION = false
 
 const dockVariants = cva(
-  "supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto mt-8 flex h-[58px] w-max items-center justify-center gap-2 rounded-2xl border p-2 backdrop-blur-md"
+  "supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto mt-8 flex h-[54px] sm:h-[58px] max-w-full items-center justify-center gap-1 sm:gap-2 rounded-2xl border p-1.5 sm:p-2 backdrop-blur-md overflow-x-auto no-scrollbar"
 )
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(
@@ -134,12 +134,21 @@ const DockIcon = ({
     damping: 12,
   })
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      props.onClick?.(e as any);
+    }
+  };
+
   return (
     <motion.div
       ref={ref}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
       style={{ width: scaleSize, height: scaleSize, padding }}
       className={cn(
-        "flex aspect-square cursor-pointer items-center justify-center rounded-full",
+        "flex aspect-square cursor-pointer items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink",
         disableMagnification && "hover:bg-muted-foreground transition-colors",
         className
       )}

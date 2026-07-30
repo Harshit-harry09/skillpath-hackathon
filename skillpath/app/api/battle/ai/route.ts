@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callGemini } from '@/lib/gemini';
 import { getAuthUser } from '@/lib/auth-helpers';
+import { checkGuestRateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   try {
-    // Optional auth check — allow guest visitors to enjoy AI verdicts
+    let isGuest = false;
     try {
       await getAuthUser(req);
     } catch {
-      // Guest visitor
+      isGuest = true;
+    }
+
+    if (isGuest) {
+      const rateCheck = checkGuestRateLimit(req, 10);
+      if (!rateCheck.success) {
+        return NextResponse.json(
+          { error: 'too_many_requests', message: 'Guest rate limit exceeded. Please sign in or try again in a minute.' },
+          { status: 429 }
+        );
+      }
     }
 
     const body = await req.json();

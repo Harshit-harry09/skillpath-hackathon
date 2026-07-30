@@ -5,46 +5,23 @@ import { cn } from "@/lib/utils";
 
 interface NeuralBackgroundProps {
   className?: string;
-  /**
-   * Color of the particles. 
-   * Defaults to a cyan/indigo mix if not specified.
-   */
   color?: string;
-  /**
-   * The opacity of the trails (0.0 to 1.0).
-   * Lower = longer trails. Higher = shorter trails.
-   * Default: 0.1
-   */
   trailOpacity?: number;
-  /**
-   * Number of particles. Default: 800
-   */
   particleCount?: number;
-  /**
-   * Speed multiplier. Default: 1
-   */
   speed?: number;
-  /**
-   * Background color of the canvas. Defaults to transparent.
-   */
   backgroundColor?: string;
-  /**
-   * Color of the trails. Should match the background color for best effect.
-   * Default: rgba(10, 10, 10)
-   */
   trailColor?: string;
 }
 
 export default function NeuralBackground({
   className,
-  color = "#6366f1", // Default Indigo
+  color = "#6366f1",
   trailOpacity = 0.45,
-  particleCount = 2000,
+  particleCount = 300,
   speed = 1,
   backgroundColor = "transparent",
-  trailColor = "10, 10, 10", // RGB values
+  trailColor = "10, 10, 10",
 }: NeuralBackgroundProps) {
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -53,174 +30,135 @@ export default function NeuralBackground({
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    let animationFrameId = 0;
+    let cleanupFn: (() => void) | null = null;
+    // Use a ref-like object so the idle callback closure can read latest value
+    const state = { isInView: false };
 
-    // --- CONFIGURATION ---
-    let width = container.clientWidth;
-    let height = container.clientHeight;
-    let particles: Particle[] = [];
-    let animationFrameId: number;
-    let mouse = { x: -1000, y: -1000 }; // Start off-screen
+    // Use requestIdleCallback when available, fall back to setTimeout
+    const scheduleIdle =
+      typeof window !== 'undefined' && 'requestIdleCallback' in window
+        ? (cb: () => void) => (window as any).requestIdleCallback(cb, { timeout: 2000 })
+        : (cb: () => void) => setTimeout(cb, 200);
 
-    // --- PARTICLE CLASS ---
-    class Particle {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      age: number;
-      life: number;
+    const cancelIdle =
+      typeof window !== 'undefined' && 'cancelIdleCallback' in window
+        ? (id: number) => (window as any).cancelIdleCallback(id)
+        : (id: number) => clearTimeout(id);
 
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = 0;
-        this.vy = 0;
-        this.age = 0;
-        // Random lifespan to create natural recycling
-        this.life = Math.random() * 200 + 100;
-      }
+    let idleId = 0;
 
-      update() {
-        // 1. Flow Field Math (Simplex-ish noise)
-        // We calculate an angle based on position to create the "flow"
-        const angle = (Math.cos(this.x * 0.005) + Math.sin(this.y * 0.005)) * Math.PI;
-
-        // 2. Add force from flow field
-        this.vx += Math.cos(angle) * 0.2 * speed;
-        this.vy += Math.sin(angle) * 0.2 * speed;
-
-        // 3. Mouse Repulsion/Attraction
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const interactionRadius = 50;
-
-        if (distance < interactionRadius) {
-          const force = (interactionRadius - distance) / interactionRadius;
-          // Push away
-          this.vx -= dx * force * 0.05;
-          this.vy -= dy * force * 0.05;
+    // Set up intersection observer BEFORE idle callback so state.isInView is correct when init runs
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        state.isInView = entry.isIntersecting;
+        if (state.isInView && !animationFrameId && cleanupFn) {
+          // canvas is already initialised — just restart the loop
+          animationFrameId = requestAnimationFrame(tick);
         }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
 
-        // 4. Apply Velocity & Friction
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= 0.95; // Friction to stop infinite acceleration
-        this.vy *= 0.95;
+    // Placeholder — will be assigned once canvas is initialised
+    let tick = (_t: number) => {};
 
-        // 5. Aging
-        this.age++;
-        if (this.age > this.life) {
-          this.reset();
-        }
+    idleId = scheduleIdle(() => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-        // 6. Wrap around screen
-        if (this.x < 0) this.x = width;
-        if (this.x > width) this.x = 0;
-        if (this.y < 0) this.y = height;
-        if (this.y > height) this.y = 0;
-      }
+      let width = container.clientWidth;
+      let height = container.clientHeight;
+      let particles: Array<{
+        x: number; y: number; vx: number; vy: number; age: number; life: number;
+        update(): void; reset(): void; draw(ctx: CanvasRenderingContext2D): void;
+      }> = [];
+      const mouse = { x: -1000, y: -1000 };
 
-      reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = 0;
-        this.vy = 0;
-        this.age = 0;
-        this.life = Math.random() * 200 + 100;
-      }
+      const makeParticle = () => {
+        const p = {
+          x: Math.random() * width, y: Math.random() * height,
+          vx: 0, vy: 0, age: 0, life: Math.random() * 200 + 100,
+          update() {
+            const angle = (Math.cos(p.x * 0.005) + Math.sin(p.y * 0.005)) * Math.PI;
+            p.vx += Math.cos(angle) * 0.2 * speed;
+            p.vy += Math.sin(angle) * 0.2 * speed;
+            const dx = mouse.x - p.x, dy = mouse.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 50) { const f = (50 - dist) / 50; p.vx -= dx * f * 0.05; p.vy -= dy * f * 0.05; }
+            p.x += p.vx; p.y += p.vy;
+            p.vx *= 0.95; p.vy *= 0.95;
+            if (++p.age > p.life) p.reset();
+            if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+          },
+          reset() { p.x = Math.random() * width; p.y = Math.random() * height; p.vx = 0; p.vy = 0; p.age = 0; p.life = Math.random() * 200 + 100; },
+          draw(context: CanvasRenderingContext2D) {
+            context.fillStyle = color;
+            context.globalAlpha = 1 - Math.abs((p.age / p.life) - 0.5) * 2;
+            context.fillRect(p.x, p.y, 1.5, 1.5);
+          },
+        };
+        return p;
+      };
 
-      draw(context: CanvasRenderingContext2D) {
-        context.fillStyle = color;
-        // Fade in and out based on age
-        const alpha = 1 - Math.abs((this.age / this.life) - 0.5) * 2;
-        context.globalAlpha = alpha;
-        context.fillRect(this.x, this.y, 1.5, 1.5); // Tiny dots are faster than arcs
-      }
-    }
+      const init = () => {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr; canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+        canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
+        particles = Array.from({ length: particleCount }, makeParticle);
+      };
 
-    // --- INITIALIZATION ---
-    const init = () => {
-      // Handle High-DPI screens (Retina)
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
-      particles = [];
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-      }
-    };
-
-    // --- ANIMATION LOOP ---
-    const animate = () => {
-      // "Fade" effect: Instead of clearing the canvas, we draw a semi-transparent rect
-      // This creates the "Trails" look.
-
-      // If background is transparent, we need to handle clearing carefully or use a specific color
-      // In SkillPath's case, we'll use the background color or a transparent black overlay.
-      if (backgroundColor === "transparent") {
-        // For transparent background, we can't easily do trails with ctx.fillRect(0,0,w,h)
-        // without affecting the whole page background unless we manage a clearRect or specific logic.
-        // However, for this effect, we'll clear with a semi-transparent version of the canvas background.
-        // Let's assume black trails if not specified, or match the design system.
+      // Assign real tick now that canvas is ready
+      tick = () => {
+        if (!state.isInView || document.hidden) { animationFrameId = 0; return; }
         ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = `rgba(${trailColor}, ${trailOpacity})`;
+        ctx.fillStyle = backgroundColor === 'transparent'
+          ? `rgba(${trailColor}, ${trailOpacity})`
+          : backgroundColor;
         ctx.fillRect(0, 0, width, height);
-      } else {
-        ctx.fillStyle = backgroundColor;
-        ctx.fillRect(0, 0, width, height);
-      }
+        particles.forEach(p => { p.update(); p.draw(ctx); });
+        animationFrameId = requestAnimationFrame(tick);
+      };
 
-      particles.forEach((p) => {
-        p.update();
-        p.draw(ctx);
-      });
+      let resizeTimer: ReturnType<typeof setTimeout>;
+      const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { width = container.clientWidth; height = container.clientHeight; init(); }, 150); };
+      const onMouseMove = (e: MouseEvent) => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; };
+      const onMouseLeave = () => { mouse.x = -1000; mouse.y = -1000; };
+      const onVisibility = () => {
+        if (document.hidden) { cancelAnimationFrame(animationFrameId); animationFrameId = 0; }
+        else if (state.isInView && !animationFrameId) animationFrameId = requestAnimationFrame(tick);
+      };
 
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    // --- EVENT LISTENERS ---
-    const handleResize = () => {
-      width = container.clientWidth;
-      height = container.clientHeight;
       init();
-    };
+      if (state.isInView) animationFrameId = requestAnimationFrame(tick);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    };
+      window.addEventListener('resize', onResize);
+      container.addEventListener('mousemove', onMouseMove);
+      container.addEventListener('mouseleave', onMouseLeave);
+      document.addEventListener('visibilitychange', onVisibility);
 
-    const handleMouseLeave = () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    }
-
-    // Start
-    init();
-    animate();
-
-    window.addEventListener("resize", handleResize);
-    container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("mouseleave", handleMouseLeave);
+      cleanupFn = () => {
+        clearTimeout(resizeTimer);
+        cancelAnimationFrame(animationFrameId);
+        window.removeEventListener('resize', onResize);
+        container.removeEventListener('mousemove', onMouseMove);
+        container.removeEventListener('mouseleave', onMouseLeave);
+        document.removeEventListener('visibilitychange', onVisibility);
+      };
+    });
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+      cancelIdle(idleId);
+      if (cleanupFn) cleanupFn();
     };
-  }, [color, trailOpacity, particleCount, speed, backgroundColor]);
+  }, [color, trailOpacity, particleCount, speed, backgroundColor, trailColor]);
 
   return (
-    <div ref={containerRef} className={cn("relative w-full h-full overflow-hidden", className)}>
+    <div ref={containerRef} className={cn('relative w-full h-full overflow-hidden', className)}>
       <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   );

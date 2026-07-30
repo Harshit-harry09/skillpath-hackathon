@@ -6,6 +6,7 @@
 
 import type { MVCProfiles, SkillGap } from "@/types/analysis";
 import mvcData from "./data/mvc_model.json";
+import mvcIndiaData from "./data/mvc_model_india.json";
 import skillTrends from "./data/skill_trends.json";
 import { findFuzzyMatch } from "./fuzzy";
 
@@ -77,6 +78,14 @@ const ROLE_LABELS: Record<string, string> = {
 
 const mvcProfiles: MVCProfiles = mvcData as MVCProfiles;
 const DYNAMIC_ROLES = Object.keys(mvcProfiles);
+const PRECOMPILED_DYNAMIC_ROLES = DYNAMIC_ROLES
+  .filter(r => r.length >= 5)
+  .sort((a, b) => b.length - a.length)
+  .map(role => {
+    const normRole = role.toLowerCase().replace(/-/g, " ");
+    const regex = new RegExp(`\\b${normRole.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    return { role, regex };
+  });
 
 export function getRoleLabel(slug: string): string {
   if (ROLE_LABELS[slug]) return ROLE_LABELS[slug];
@@ -190,15 +199,12 @@ export function detectRoleCategory(jdText: string): string {
 
   // 16. Fallback Search in Dynamic Roles
   else {
-    const sortedDynamic = [...DYNAMIC_ROLES].sort((a, b) => b.length - a.length);
-    for (const role of sortedDynamic) {
-        if (role.length < 5) continue;
-        const normRole = role.toLowerCase().replace(/-/g, " ");
-        const regex = new RegExp(`\\b${normRole.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        if (regex.test(t.replace(/-/g, " "))) {
-            baseRole = role;
-            break;
-        }
+    const tSpace = t.replace(/-/g, " ");
+    for (const { role, regex } of PRECOMPILED_DYNAMIC_ROLES) {
+      if (regex.test(tSpace)) {
+        baseRole = role;
+        break;
+      }
     }
   }
 
@@ -303,39 +309,122 @@ const UNIVERSAL_TECH = [
   "tableau", "power bi", "looker", "etl", "data pipeline", "airflow", "kafka", "spark", "hadoop", "dbt", "llm", "openai", "gpt", "rag", "langchain"
 ];
 
-/** Compiled once at module load — never rebuilt per request. */
-const ALL_KNOWN_SKILLS: Map<string, RegExp> = (() => {
-  const map = new Map<string, RegExp>();
+// ---------------------------------------------------------------------------
+// Single-Pass Aho-Corasick Trie Automaton for O(M) Skill Extraction
+// ---------------------------------------------------------------------------
 
-  const addSkill = (skill: string) => {
-    const s = skill.toLowerCase();
-    if (s.length < 2 || map.has(s)) return;
-    const escaped = s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = (s.includes(" ") || s.includes(".") || s.includes("-") || s.includes("#") || s.includes("+"))
-      ? new RegExp(`(?<=\\s|^|[\\(\\),;])${escaped}(?=\\s|$|[\\(\\),;])`, 'i')
-      : new RegExp(`\\b${escaped}\\b`, 'i');
-    map.set(s, regex);
-  };
+// Fast O(1) constant-time boundary lookup table
+const BOUNDARY_MAP = new Uint8Array(256);
+(function initBoundaryMap() {
+  const boundaryChars = " \t\n\r(),;.:!?'\"/\\<>-{}[]";
+  for (let i = 0; i < boundaryChars.length; i++) {
+    BOUNDARY_MAP[boundaryChars.charCodeAt(i)] = 1;
+  }
+})();
+
+function isFastBoundaryChar(code: number | undefined): boolean {
+  if (code === undefined) return true;
+  return code < 256 ? BOUNDARY_MAP[code] === 1 : true;
+}
+
+class AhoCorasickNode {
+  children = new Map<string, AhoCorasickNode>();
+  fail: AhoCorasickNode | null = null;
+  outputs: string[] = [];
+}
+
+class AhoCorasickAutomaton {
+  root = new AhoCorasickNode();
+
+  addWord(word: string) {
+    const s = word.toLowerCase();
+    if (s.length < 2) return;
+    let curr = this.root;
+    for (const char of s) {
+      let next = curr.children.get(char);
+      if (!next) {
+        next = new AhoCorasickNode();
+        curr.children.set(char, next);
+      }
+      curr = next;
+    }
+    if (!curr.outputs.includes(s)) {
+      curr.outputs.push(s);
+    }
+  }
+
+  buildFailureLinks() {
+    const queue: AhoCorasickNode[] = [];
+    for (const child of this.root.children.values()) {
+      child.fail = this.root;
+      queue.push(child);
+    }
+
+    while (queue.length > 0) {
+      const curr = queue.shift()!;
+      for (const [char, child] of curr.children.entries()) {
+        let failNode = curr.fail;
+        while (failNode && !failNode.children.has(char)) {
+          failNode = failNode.fail;
+        }
+        child.fail = failNode ? failNode.children.get(char)! : this.root;
+        child.outputs.push(...child.fail.outputs);
+        queue.push(child);
+      }
+    }
+  }
+
+  search(text: string): string[] {
+    const lowerText = text.toLowerCase();
+    let curr = this.root;
+    const matched = new Set<string>();
+
+    for (let i = 0; i < lowerText.length; i++) {
+      const char = lowerText[i];
+      while (curr !== this.root && !curr.children.has(char)) {
+        curr = curr.fail || this.root;
+      }
+      curr = curr.children.get(char) || this.root;
+
+      if (curr.outputs.length > 0) {
+        for (const pattern of curr.outputs) {
+          const startIdx = i - pattern.length + 1;
+          const endIdx = i + 1;
+          const prevCode = startIdx > 0 ? lowerText.charCodeAt(startIdx - 1) : undefined;
+          const nextCode = endIdx < lowerText.length ? lowerText.charCodeAt(endIdx) : undefined;
+
+          if (isFastBoundaryChar(prevCode) && isFastBoundaryChar(nextCode)) {
+            matched.add(pattern);
+          }
+        }
+      }
+    }
+
+    return Array.from(matched);
+  }
+}
+
+/** Single instance built once at module boot — zero per-request compilation cost */
+const SKILL_AUTOMATON: AhoCorasickAutomaton = (() => {
+  const automaton = new AhoCorasickAutomaton();
 
   Object.values(mvcProfiles).forEach(roleData => {
     const skills = Array.isArray(roleData) ? roleData : (roleData?.skills ?? []);
-    skills.forEach((s: any) => addSkill(s.skill));
+    skills.forEach((s: any) => automaton.addWord(s.skill));
   });
 
-  UNIVERSAL_TECH.forEach(addSkill);
+  UNIVERSAL_TECH.forEach(s => automaton.addWord(s));
 
   const trendSkills = (skillTrends as any).skills || {};
-  Object.keys(trendSkills).forEach(addSkill);
+  Object.keys(trendSkills).forEach(s => automaton.addWord(s));
 
-  return map;
+  automaton.buildFailureLinks();
+  return automaton;
 })();
 
 export function extractSkills(text: string): string[] {
-  const found: string[] = [];
-  for (const [skill, regex] of ALL_KNOWN_SKILLS) {
-    if (regex.test(text)) found.push(skill);
-  }
-  return found;
+  if (!text) return [];
+  return SKILL_AUTOMATON.search(text);
 }
 
 /**
@@ -378,9 +467,11 @@ export function rankGapsLocally(
   missingSkills: string[],
   mvcSkills: string[],
   companyType: string,
-  roleCategory: string
+  roleCategory: string,
+  useIndiaMarket: boolean = false
 ): SkillGap[] {
-  const roleData = (mvcData as any)[roleCategory] || (mvcData as any)["mid-software-engineer"];
+  const dataSource = useIndiaMarket ? (mvcIndiaData as any) : (mvcData as any);
+  const roleData = dataSource[roleCategory] || dataSource["mid-software-engineer"] || (mvcData as any)["mid-software-engineer"];
   const skills = Array.isArray(roleData) ? roleData : (roleData?.skills ?? []);
   const mvcSet = new Set(mvcSkills.map(s => s.toLowerCase()));
   const metaMap: Record<string, any> = {};
@@ -389,9 +480,7 @@ export function rankGapsLocally(
   });
 
   // Get the max frequency in this role to use as a dynamic denominator baseline
-  // We'll estimate the total samples in the model by looking at the top skill's count.
   const maxFreq = Math.max(...skills.map((s: any) => s.count || 1), 100);
-  // Estimate total records: top skill (like SQL) usually has 25% - 40% frequency.
   const estimatedTotal = maxFreq * 2.5; 
 
   return missingSkills.map((skill, index) => {
@@ -411,7 +500,6 @@ export function rankGapsLocally(
     const freqPercent = Math.round((meta.count / estimatedTotal) * 100);
     
     let reason = `${skill} is a relevant skill for this career path.`;
-    // Only call it "Core MVC" if it has real frequency > 2%
     const isStatisticallySignificant = freqPercent >= 3;
 
     if (isMvc && isStatisticallySignificant) {
@@ -432,28 +520,21 @@ export function rankGapsLocally(
     };
   })
     .sort((a, b) => {
-      // 1. MVC Skills with real frequency first
       if (a.in_mvc && !b.in_mvc) return -1;
       if (!a.in_mvc && b.in_mvc) return 1;
-      
-      // 2. Sort by frequency first (Market Demand)
       if (a.frequency !== b.frequency) return b.frequency - a.frequency;
-      
-      // 3. Then sort by Premium (Salary ROI)
       if (a.premium !== b.premium) return (b.premium || 0) - (a.premium || 0);
-      
       return 0;
     })
     .map((gap, i) => ({ ...gap, priority: i + 1 }));
 }
 
 /**
- * Predict the next step in the career path and calculate the jump.
+ * Predict the next step in the career path and provide full trajectory details.
+ * Supports Indian Market LPA formatting and top Indian tech cities when useIndiaMarket is true.
  */
-/**
- * Predict the next step in the career path and provide the full path context.
- */
-export function getTrajectoryInfo(currentRoleKey: string) {
+export function getTrajectoryInfo(currentRoleKey: string, useIndiaMarket: boolean = false) {
+  const dataSource = useIndiaMarket ? (mvcIndiaData as any) : (mvcData as any);
   let seniority = "mid";
   let baseRole = currentRoleKey;
 
@@ -464,7 +545,6 @@ export function getTrajectoryInfo(currentRoleKey: string) {
     seniority = parts[0];
     baseRole = parts.slice(1).join("-");
   } else {
-    // Try to find if the role key contains any level words
     for (const lvl of levels) {
       if (currentRoleKey.startsWith(lvl + " ")) {
          seniority = lvl;
@@ -478,13 +558,16 @@ export function getTrajectoryInfo(currentRoleKey: string) {
 
   levels.forEach(lvl => {
     const key = `${lvl}-${baseRole}`;
-    const data = (mvcData as any)[key];
+    const data = dataSource[key] || (mvcData as any)[key];
     if (data) {
+      const salVal = useIndiaMarket ? (data.salary_avg_lpa || (data.salary_avg ? Math.round(data.salary_avg / 100000) : 0)) : (data.salary_avg || 0);
       full_path.push({
         level: lvl,
         label: data.role,
-        salary: data.salary_avg || 0,
-        skills: data.skills.map((s: any) => s.skill)
+        salary: salVal,
+        currency: useIndiaMarket ? "INR" : "USD",
+        unit: useIndiaMarket ? "LPA" : "/yr",
+        skills: data.skills ? data.skills.map((s: any) => s.skill) : []
       });
     }
   });
@@ -492,14 +575,14 @@ export function getTrajectoryInfo(currentRoleKey: string) {
   const currentIdx = levels.indexOf(parts[0]);
   const nextLvl = levels[currentIdx + 1];
   const nextKey = nextLvl ? `${nextLvl}-${baseRole}` : null;
-  const nextData = nextKey ? (mvcData as any)[nextKey] : null;
-  const currentData = (mvcData as any)[currentRoleKey];
+  const nextData = nextKey ? (dataSource[nextKey] || (mvcData as any)[nextKey]) : null;
+  const currentData = dataSource[currentRoleKey] || (mvcData as any)[currentRoleKey];
 
   if (!currentData) return null;
 
   let deltaSkills: string[] = [];
-  if (nextData) {
-    const currentSkills = new Set(currentData.skills.map((s: any) => s.skill.toLowerCase()));
+  if (nextData && nextData.skills) {
+    const currentSkills = new Set((currentData.skills || []).map((s: any) => s.skill.toLowerCase()));
     deltaSkills = nextData.skills
       .filter((s: any) => !currentSkills.has(s.skill.toLowerCase()))
       .slice(0, 5)
@@ -516,14 +599,49 @@ export function getTrajectoryInfo(currentRoleKey: string) {
     }
   }
 
+  const currentSal = useIndiaMarket 
+    ? (currentData.salary_avg_lpa || (currentData.salary_avg ? Math.round(currentData.salary_avg / 100000) : 0))
+    : (currentData.salary_avg || 0);
+
+  const nextSal = nextData 
+    ? (useIndiaMarket 
+        ? (nextData.salary_avg_lpa || (nextData.salary_avg ? Math.round(nextData.salary_avg / 100000) : 0))
+        : (nextData.salary_avg || 0))
+    : 0;
+
   return {
     current_level: parts[0],
     current_role_label: currentData.role,
     next_role_label: nextData?.role || null,
-    salary_jump: nextData ? (nextData.salary_avg || 0) - (currentData.salary_avg || 0) : 0,
+    salary_jump: nextSal > currentSal ? nextSal - currentSal : 0,
     delta_skills: deltaSkills,
-    current_salary: currentData.salary_avg || 0,
-    next_salary: nextData?.salary_avg || 0,
+    current_salary: currentSal,
+    next_salary: nextSal,
+    currency: useIndiaMarket ? "INR" : "USD",
+    unit: useIndiaMarket ? "LPA" : "/yr",
+    top_locations: currentData.top_locations || ["Bengaluru", "Hyderabad", "Pune", "Gurugram"],
     full_path
   };
 }
+
+/**
+ * Retrieve trained India market model data (LPA salaries, top locations, skill frequency)
+ * for a specific role key or fallback match.
+ */
+export function getIndiaMarketData(roleKey: string) {
+  const normKey = roleKey.toLowerCase().replace(/\s+/g, "-");
+  const directMatch = (mvcIndiaData as Record<string, any>)[normKey];
+  if (directMatch) return directMatch;
+
+  // Fallback matching
+  const keys = Object.keys(mvcIndiaData);
+  const match = keys.find((k) => k.includes(normKey) || normKey.includes(k));
+  if (match) return (mvcIndiaData as Record<string, any>)[match];
+
+  return (mvcIndiaData as Record<string, any>)["mid-software-engineer"] || null;
+}
+
+export function getAllIndiaMarketRoles() {
+  return Object.keys(mvcIndiaData);
+}
+

@@ -95,7 +95,7 @@ function scoreUserAgainstRole(
     matched,
     missing,
     total: required.length,
-    pct: Math.max(10, pct), // floor at 10% for UI
+    pct: Math.max(0, pct),
   };
 }
 

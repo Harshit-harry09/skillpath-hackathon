@@ -27,11 +27,20 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="auth-modal-title"
+            aria-describedby="auth-modal-desc"
             className="relative w-full max-w-lg bg-black border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden"
           >
+            {/* Visually hidden accessibility title & description for dialog structure */}
+            <h2 id="auth-modal-title" className="sr-only">Authentication Modal</h2>
+            <p id="auth-modal-desc" className="sr-only">Sign in or create an account to access your profile and skill paths.</p>
+
             {/* Close Button */}
             <button
               onClick={onClose}
+              aria-label="Close authentication modal"
               className="absolute top-6 right-6 z-50 p-2 text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full"
             >
               <X size={20} />

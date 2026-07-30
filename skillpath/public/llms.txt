@@ -1,0 +1,21 @@
+# SkillPath
+
+> Neural Career Intelligence: Skill gap analysis and career trajectory mapping.
+
+## Overview
+SkillPath is an AI-powered career development platform designed to analyze current skills, uncover critical skill gaps, and map out customized learning paths for target tech roles.
+
+## Core Capabilities & Features
+- **Skill Gap Analysis**: Upload resume or input skills to get AI-driven gap identification.
+- **Career Trajectory Mapping**: Dynamic roadmap generation based on deep learning market benchmarks.
+- **Time Machine**: Simulate career advancement and skill accumulation over time.
+- **Role Exploration**: Discover emerging tech roles, market demand, and required competencies.
+- **Skill Battles**: Challenge and evaluate interactive skill scenarios.
+
+## Important Pages
+- [/](/): Landing page with interactive exploration engine and career intelligence overview.
+- [/analyze](/analyze): Skill gap analysis and personalized career roadmap generator.
+- [/explore](/explore): Tech role exploration engine and salary benchmarks.
+- [/time-machine](/time-machine): Interactive career simulation tool over multi-year horizons.
+- [/battle](/battle): Interactive skill evaluation scenarios.
+- [/history](/history): Past analyses, saved skill paths, and learning progress.

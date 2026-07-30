@@ -8,6 +8,14 @@ import { TECH_ALIASES, TYPO_PATTERNS } from "./data/fuzzy-dictionary";
  * Replaces Groq AI with a high-speed, local multi-layered filter.
  */
 
+// Build Golden List ONCE at module load (cold start) — not per request
+const goldenList = new Set<string>();
+Object.values(mvcData as any).forEach((role: any) => {
+  const skills = Array.isArray(role) ? role : (role?.skills ?? []);
+  skills.forEach((s: any) => goldenList.add(s.skill.toLowerCase()));
+});
+
+
 const cleanerCache = new LRUCache<string, string[]>({ 
   max: 1000,
   ttl: 1000 * 60 * 60 * 24 // 24 hour TTL
@@ -79,12 +87,7 @@ export async function cleanSkillsWithAI(
     };
   }
 
-  // Build Golden List from MVC Data (The Anchor)
-  const goldenList = new Set<string>();
-  Object.values(mvcData as any).forEach((role: any) => {
-    const skills = Array.isArray(role) ? role : (role?.skills ?? []);
-    skills.forEach((s: any) => goldenList.add(s.skill.toLowerCase()));
-  });
+  // Use pre-built module-level golden list (built once at cold start)
 
   const cleaned: string[] = [];
   const rejectedCount: string[] = [];

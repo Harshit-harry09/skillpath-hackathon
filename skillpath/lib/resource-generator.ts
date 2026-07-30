@@ -2,8 +2,12 @@ import { getDb } from './firebase-admin';
 import { callGeminiJSON } from './gemini';
 import { generateResourcesPrompt } from '../prompts/generate-resources';
 import type { Resource, SkillResources } from '../types/analysis';
+import { LRUCache } from 'lru-cache';
 
-const globalCache = new Map<string, { data: SkillResources; expiresAt: number }>();
+const globalCache = new LRUCache<string, { data: SkillResources; expiresAt: number }>({
+  max: 500,
+  ttl: 7 * 24 * 60 * 60 * 1000, // 7 days
+});
 
 // ─── URL Sanitizer ────────────────────────────────────────────────────────────
 // The model occasionally still outputs watch?v= links despite instructions.

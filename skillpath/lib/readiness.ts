@@ -80,7 +80,7 @@ export function calculateCountdown(
 
   return {
     readyByDate: readyDate.toISOString().split("T")[0],
-    weeksRequired: totalWeeks,
+    weeksRequired: Math.max(1, Math.ceil(daysNeeded / 7)),
     totalHours,
     hoursPerDay,
   };

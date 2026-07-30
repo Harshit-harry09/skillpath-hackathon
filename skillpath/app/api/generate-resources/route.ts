@@ -39,6 +39,7 @@ function sanitizeString(val: string, maxLen = 100): string {
 }
 
 import { getAuthUserSafe } from "@/lib/auth-helpers";
+import { checkGuestRateLimit } from "@/lib/rate-limit";
 
 // ─── Route ────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
@@ -46,6 +47,15 @@ export async function POST(req: NextRequest) {
 
   // Optional Auth — allow guest visitors to generate resources
   const user = await getAuthUserSafe(req);
+  if (!user) {
+    const rateCheck = checkGuestRateLimit(req, 10);
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { error: "too_many_requests", message: "Guest rate limit exceeded. Please sign in or try again in a minute." },
+        { status: 429 }
+      );
+    }
+  }
 
   // ── Parse body ─────────────────────────────────────────────────────────────
   let body: Partial<GenerateResourcesBody>;

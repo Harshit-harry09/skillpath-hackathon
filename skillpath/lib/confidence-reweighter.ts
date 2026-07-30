@@ -83,28 +83,30 @@ export function recomputeReadinessWithConfidence(
   resumeSkills: string[],
   assessments: Record<string, ConfidenceLevel>
 ): number {
-  const allSkills: { skill: string; priority: number; isGap: boolean }[] = [
-    ...gaps.map(g => ({ skill: g.skill, priority: g.priority, isGap: true })),
-    ...resumeSkills.map(s => ({ skill: s, priority: 3, isGap: false })) // Default priority 3 for resume skills
+  if (gaps.length === 0 && resumeSkills.length === 0) return 100;
+
+  // Identify all required role skills: gaps + matched resume skills
+  const gapSkillsSet = new Set(gaps.map(g => g.skill.toLowerCase()));
+  const matchedResumeSkills = resumeSkills.filter(s => !gapSkillsSet.has(s.toLowerCase()));
+
+  const allRequired: { skill: string; priority: number; isGap: boolean }[] = [
+    ...gaps.map(g => ({ skill: g.skill, priority: g.priority || 3, isGap: true })),
+    ...matchedResumeSkills.map((s, i) => ({ skill: s, priority: 3, isGap: false }))
   ];
 
-  if (allSkills.length === 0) return 100;
+  if (allRequired.length === 0) return 100;
 
-  const maxPossible = allSkills.reduce((sum, s) => {
-    const baseWeight = Math.max(1, 6 - (s.priority || 3));
-    return sum + baseWeight;
-  }, 0);
+  let maxPossible = 0;
+  let remainingGapWeight = 0;
 
-  const remainingGapWeight = allSkills.reduce((sum, s) => {
-    const level = assessments[s.skill] ?? (s.isGap ? 'never_used' : 'strong');
-    const weight = CONFIDENCE_WEIGHTS[level];
-    const baseWeight = Math.max(1, 6 - (s.priority || 3));
-    
-    // If it's a gap, the weight represents how much is LEFT to learn (1.0 = all, 0.0 = none)
-    // If it's a resume skill, the weight should also represent how much is LEFT to learn.
-    // Default for resume skill is 'strong' (weight 0.0), meaning 0 gap.
-    return sum + (baseWeight * weight);
-  }, 0);
+  for (const item of allRequired) {
+    const baseWeight = Math.max(1, 6 - Math.min(5, item.priority));
+    maxPossible += baseWeight;
+
+    const level = assessments[item.skill] ?? (item.isGap ? 'never_used' : 'strong');
+    const gapMultiplier = CONFIDENCE_WEIGHTS[level];
+    remainingGapWeight += baseWeight * gapMultiplier;
+  }
 
   if (maxPossible === 0) return 100;
   return Math.max(0, Math.min(100, Math.round((1 - remainingGapWeight / maxPossible) * 100)));

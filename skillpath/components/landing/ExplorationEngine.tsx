@@ -43,7 +43,7 @@ export function ExplorationEngine() {
   ];
 
   return (
-    <section id="exploration" className="relative bg-transparent py-section px-8 flex justify-center border-t border-hairline overflow-hidden">
+    <section id="exploration" className="relative bg-transparent py-12 md:py-section px-4 sm:px-8 flex justify-center border-t border-hairline overflow-hidden">
       {/* Dynamic Background Shader */}
       <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
         <NeuralBackground 
@@ -57,7 +57,7 @@ export function ExplorationEngine() {
       </div>
 
 
-      <div className="max-w-[1280px] w-full grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
+      <div className="max-w-[1280px] w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center relative z-10">
 
         {/* Left Side: Explanation */}
         <div className="flex flex-col items-start text-left">
@@ -65,7 +65,7 @@ export function ExplorationEngine() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hairline bg-surface-soft text-[10px] font-black uppercase tracking-widest text-muted mb-8"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hairline bg-surface-soft text-[10px] font-black uppercase tracking-widest text-muted mb-6 sm:mb-8"
           >
             <Sparkles className="w-3 h-3 text-brand-pink" />
             AI Exploration Engine
@@ -76,16 +76,16 @@ export function ExplorationEngine() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="font-display text-[48px] lg:text-[64px] text-ink leading-[1.05] tracking-tight mb-8"
+            className="font-display text-[32px] sm:text-[48px] lg:text-[64px] text-ink leading-[1.05] tracking-tight mb-6 sm:mb-8"
           >
-            Uncover the exact <br />
+            Uncover the exact <br className="hidden sm:inline" />
             <span className="italic font-serif text-brand-teal">blueprint for any role.</span>
           </motion.h2>
 
           <motion.p 
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-sans text-[20px] text-muted max-w-xl leading-relaxed mb-12"
+            className="font-sans text-base sm:text-[20px] text-muted max-w-xl leading-relaxed mb-8 sm:mb-12"
           >
             Reverse-engineer the job market. Browse 30+ career paths to discover the exact skills, tech stacks, and benchmarks top-tier companies demand—empowering you to level up proactively.
           </motion.p>
@@ -93,7 +93,7 @@ export function ExplorationEngine() {
           <Button 
             variant="primary"
             onClick={handleExplore}
-            className="h-[56px] px-8 rounded-xl gap-3 shadow-lg"
+            className="w-full sm:w-auto h-[52px] sm:h-[56px] px-8 rounded-xl gap-3 shadow-lg"
           >
             Explore Career Paths
             <ArrowRight className="w-5 h-5" />
@@ -101,7 +101,7 @@ export function ExplorationEngine() {
         </div>
 
         {/* Right Side: Feature Highlights */}
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           {featureHighlights.map((feature, i) => (
             <motion.div
               key={feature.title}
@@ -109,7 +109,7 @@ export function ExplorationEngine() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1 + 0.3, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
-              className="p-lg rounded-[24px] bg-white/40 dark:bg-black/20 backdrop-blur-md border border-white/20 dark:border-white/5 flex items-start gap-6 tactile-card group overflow-hidden"
+              className="p-5 sm:p-lg rounded-2xl sm:rounded-[24px] bg-white/40 dark:bg-black/20 backdrop-blur-md border border-white/20 dark:border-white/5 flex items-start gap-4 sm:gap-6 tactile-card group overflow-hidden"
             >
 
               <div className="w-12 h-12 rounded-lg bg-canvas flex items-center justify-center shadow-sm border border-hairline flex-shrink-0">

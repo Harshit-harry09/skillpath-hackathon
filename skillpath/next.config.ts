@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   turbopack: {},
+  productionBrowserSourceMaps: true,
 };
 
 export default nextConfig;

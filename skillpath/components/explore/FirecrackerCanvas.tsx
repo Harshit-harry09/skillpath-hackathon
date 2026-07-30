@@ -52,51 +52,57 @@ export function FirecrackerCanvas({ active }: FirecrackerProps) {
     fillLight.position.set(-4, -6, 5);
     scene.add(fillLight);
 
-    // 3. Ultra-Thin 3D Paper Geometries (Zero-depth Plane geometries for true paper thinness)
+    // 3. Ultra-Thin 3D Instanced Paper Geometries (Zero-depth Plane geometries)
     const paperSheetGeo = new THREE.PlaneGeometry(0.24, 0.40);
     const paperRibbonGeo = new THREE.PlaneGeometry(0.12, 0.75);
 
-    // Crisp Double-Sided Paper Materials
-    const materials = PAPER_PALETTE.map(
-      (color) =>
-        new THREE.MeshStandardMaterial({
-          color,
-          roughness: 0.8, // Crisp matte paper texture
-          metalness: 0.1,  // Slight vibrant paper sheen
-          side: THREE.DoubleSide, // Double-sided thin paper
-          transparent: true,
-          opacity: 1,
-        })
-    );
+    const paperMaterial = new THREE.MeshStandardMaterial({
+      roughness: 0.8,
+      metalness: 0.1,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 1,
+    });
 
-    interface PaperPhysics {
-      mesh: THREE.Mesh;
-      vx: number;
-      vy: number;
-      vz: number;
-      vrx: number;
-      vry: number;
-      vrz: number;
+    const MAX_PARTICLES = 600;
+    const instancedSheets = new THREE.InstancedMesh(paperSheetGeo, paperMaterial, MAX_PARTICLES);
+    const instancedRibbons = new THREE.InstancedMesh(paperRibbonGeo, paperMaterial, MAX_PARTICLES);
+
+    instancedSheets.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    instancedRibbons.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+    scene.add(instancedSheets);
+    scene.add(instancedRibbons);
+
+    interface ParticleState {
+      isRibbon: boolean;
+      instancedIndex: number;
+      x: number; y: number; z: number;
+      rx: number; ry: number; rz: number;
+      vx: number; vy: number; vz: number;
+      vrx: number; vry: number; vrz: number;
       gravity: number;
       drag: number;
       isResting: boolean;
       wobbleSeed: number;
-      wobbleSpeed: number;
-      restTimer: number;
     }
 
-    const paperParticles: PaperPhysics[] = [];
+    const particles: ParticleState[] = [];
+    let sheetCount = 0;
+    let ribbonCount = 0;
+
+    const dummy = new THREE.Object3D();
+    const tempColor = new THREE.Color();
 
     // Calculate 3D viewport floor boundaries
     const vFOV = (camera.fov * Math.PI) / 180;
     const visibleHeight = 2 * Math.tan(vFOV / 2) * camera.position.z;
     const visibleWidth = visibleHeight * camera.aspect;
 
-    const floorY = -visibleHeight / 2 + 0.35; // Screen bottom floor
+    const floorY = -visibleHeight / 2 + 0.35;
     const leftX = -visibleWidth / 2 + 0.4;
     const rightX = visibleWidth / 2 - 0.4;
 
-    // Mouse World Coordinate Tracking for Paper Flutter Wind
     const mouseWorld = new THREE.Vector3(999, 999, 0);
     const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
     const raycaster = new THREE.Raycaster();
@@ -111,20 +117,18 @@ export function FirecrackerCanvas({ active }: FirecrackerProps) {
 
     const handlePointerMove = (e: PointerEvent) => updateMousePos(e);
 
-    // Click trigger: Explosive paper wind gust!
     const handleClick = (e: MouseEvent) => {
       updateMousePos(e);
-      // Create paper gust lifting sheets into the air
-      paperParticles.forEach((p) => {
-        const dx = p.mesh.position.x - mouseWorld.x;
-        const dy = p.mesh.position.y - mouseWorld.y;
+      particles.forEach((p) => {
+        const dx = p.x - mouseWorld.x;
+        const dy = p.y - mouseWorld.y;
         const distSq = dx * dx + dy * dy;
 
         if (distSq < 16) {
           const dist = Math.sqrt(distSq) || 0.1;
           const force = (1 - dist / 4) * 0.35;
           p.vx += (dx / dist) * force;
-          p.vy += (dy / dist) * force + 0.15; // Lift paper upward
+          p.vy += (dy / dist) * force + 0.15;
           p.vz += (Math.random() - 0.5) * 0.15;
           p.vrx += (Math.random() - 0.5) * 0.4;
           p.vry += (Math.random() - 0.5) * 0.4;
@@ -136,58 +140,54 @@ export function FirecrackerCanvas({ active }: FirecrackerProps) {
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('click', handleClick);
 
-    // Spawns Light Paper Popper Burst
-    const firePaperCannon = (startX: number, angleDeg: number, count = 130) => {
+    const spawnParticles = (startX: number, angleDeg: number, count = 130) => {
       const angleRad = (angleDeg * Math.PI) / 180;
 
       for (let i = 0; i < count; i++) {
-        const mat = materials[Math.floor(Math.random() * materials.length)];
+        if (particles.length >= MAX_PARTICLES) break;
         const isRibbon = Math.random() < 0.3;
-        const mesh = new THREE.Mesh(isRibbon ? paperRibbonGeo : paperSheetGeo, mat);
+        const hexColor = PAPER_PALETTE[Math.floor(Math.random() * PAPER_PALETTE.length)];
+        tempColor.setHex(hexColor);
 
-        mesh.position.set(
-          startX + (Math.random() - 0.5) * 0.3,
-          floorY + 0.3,
-          (Math.random() - 0.5) * 1.5
-        );
-        mesh.rotation.set(
-          Math.random() * Math.PI * 2,
-          Math.random() * Math.PI * 2,
-          Math.random() * Math.PI * 2
-        );
-
-        scene.add(mesh);
+        const idx = isRibbon ? ribbonCount++ : sheetCount++;
+        const targetMesh = isRibbon ? instancedRibbons : instancedSheets;
+        targetMesh.setColorAt(idx, tempColor);
 
         const spread = (Math.random() - 0.5) * 0.5;
-        const speed = Math.random() * 0.38 + 0.28; // Light paper blast speed
+        const speed = Math.random() * 0.38 + 0.28;
         const finalAngle = angleRad + spread;
 
-        paperParticles.push({
-          mesh,
+        particles.push({
+          isRibbon,
+          instancedIndex: idx,
+          x: startX + (Math.random() - 0.5) * 0.3,
+          y: floorY + 0.3,
+          z: (Math.random() - 0.5) * 1.5,
+          rx: Math.random() * Math.PI * 2,
+          ry: Math.random() * Math.PI * 2,
+          rz: Math.random() * Math.PI * 2,
           vx: Math.cos(finalAngle) * speed,
           vy: Math.sin(finalAngle) * speed,
           vz: (Math.random() - 0.5) * 0.15,
           vrx: (Math.random() - 0.5) * 0.3,
           vry: (Math.random() - 0.5) * 0.4,
           vrz: (Math.random() - 0.5) * 0.3,
-          gravity: Math.random() * 0.0012 + 0.0018, // Light paper gravity (slow soft fall)
-          drag: 0.992, // Air float resistance
+          gravity: Math.random() * 0.0012 + 0.0018,
+          drag: 0.992,
           isResting: false,
           wobbleSeed: Math.random() * 100,
-          wobbleSpeed: Math.random() * 0.08 + 0.04,
-          restTimer: 0,
         });
       }
+      if (instancedSheets.instanceColor) instancedSheets.instanceColor.needsUpdate = true;
+      if (instancedRibbons.instanceColor) instancedRibbons.instanceColor.needsUpdate = true;
     };
 
-    // Initial pop from bottom corners
-    firePaperCannon(leftX, 58, 140);
-    firePaperCannon(rightX, 122, 140);
+    spawnParticles(leftX, 58, 140);
+    spawnParticles(rightX, 122, 140);
 
-    // Secondary burst at 300ms
     const timer1 = setTimeout(() => {
-      firePaperCannon(leftX + 1.2, 65, 80);
-      firePaperCannon(rightX - 1.2, 115, 80);
+      spawnParticles(leftX + 1.2, 65, 80);
+      spawnParticles(rightX - 1.2, 115, 80);
     }, 300);
 
     let animationFrameId: number;
@@ -196,20 +196,18 @@ export function FirecrackerCanvas({ active }: FirecrackerProps) {
     const animate = () => {
       clock += 0.016;
 
-      for (let i = 0; i < paperParticles.length; i++) {
-        const p = paperParticles[i];
-        const mesh = p.mesh;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
 
-        // Interactive Cursor Paper Gust (Lifts and scatters paper)
-        const dx = mesh.position.x - mouseWorld.x;
-        const dy = mesh.position.y - mouseWorld.y;
+        const dx = p.x - mouseWorld.x;
+        const dy = p.y - mouseWorld.y;
         const distSq = dx * dx + dy * dy;
 
         if (distSq < 3.2) {
           const dist = Math.sqrt(distSq) || 0.1;
           const force = (1 - dist / 1.8) * 0.06;
           p.vx += (dx / dist) * force;
-          p.vy += (dy / dist) * force + 0.02; // Lift paper upwards
+          p.vy += (dy / dist) * force + 0.02;
           p.vrx += (Math.random() - 0.5) * 0.15;
           p.vry += (Math.random() - 0.5) * 0.15;
           p.isResting = false;
@@ -219,33 +217,38 @@ export function FirecrackerCanvas({ active }: FirecrackerProps) {
           p.vx *= p.drag;
           p.vy *= p.drag;
           p.vz *= p.drag;
-
           p.vy -= p.gravity;
-
-          // Strong Aerodynamic Side Wobble (Paper floating side to side)
           p.vx += Math.sin(clock * 5 + p.wobbleSeed) * 0.0035;
 
-          mesh.position.x += p.vx;
-          mesh.position.y += p.vy;
-          mesh.position.z += p.vz;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.z += p.vz;
+          p.rx += p.vrx;
+          p.ry += p.vry;
+          p.rz += p.vrz;
 
-          mesh.rotation.x += p.vrx;
-          mesh.rotation.y += p.vry;
-          mesh.rotation.z += p.vrz;
-
-          // Soft Paper Floor Landing (No hard bouncing!)
-          if (mesh.position.y <= floorY) {
-            mesh.position.y = floorY + (Math.random() * 0.04);
+          if (p.y <= floorY) {
+            p.y = floorY + Math.random() * 0.04;
             p.isResting = true;
-            p.vy = 0;
-            p.vx = 0;
-            p.vz = 0;
-            // Lie flat on floor with slight natural tilt
-            mesh.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.15;
-            mesh.rotation.y = (Math.random() - 0.5) * 0.2;
+            p.vy = 0; p.vx = 0; p.vz = 0;
+            p.rx = Math.PI / 2 + (Math.random() - 0.5) * 0.15;
+            p.ry = (Math.random() - 0.5) * 0.2;
           }
         }
+
+        dummy.position.set(p.x, p.y, p.z);
+        dummy.rotation.set(p.rx, p.ry, p.rz);
+        dummy.updateMatrix();
+
+        const mesh = p.isRibbon ? instancedRibbons : instancedSheets;
+        mesh.setMatrixAt(p.instancedIndex, dummy.matrix);
       }
+
+      instancedSheets.count = sheetCount;
+      instancedRibbons.count = ribbonCount;
+
+      instancedSheets.instanceMatrix.needsUpdate = true;
+      instancedRibbons.instanceMatrix.needsUpdate = true;
 
       renderer.render(scene, camera);
       animationFrameId = requestAnimationFrame(animate);
@@ -253,27 +256,29 @@ export function FirecrackerCanvas({ active }: FirecrackerProps) {
 
     animate();
 
-    const handleResize = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    };
-
-    window.addEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const w = entry.contentRect.width || window.innerWidth;
+        const h = entry.contentRect.height || window.innerHeight;
+        if (w > 0 && h > 0) {
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(w, h);
+        }
+      }
+    });
+    resizeObserver.observe(container);
 
     return () => {
       clearTimeout(timer1);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('click', handleClick);
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       cancelAnimationFrame(animationFrameId);
 
-      paperParticles.forEach((p) => {
-        scene.remove(p.mesh);
-        p.mesh.geometry.dispose();
-      });
+      paperSheetGeo.dispose();
+      paperRibbonGeo.dispose();
+      paperMaterial.dispose();
 
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

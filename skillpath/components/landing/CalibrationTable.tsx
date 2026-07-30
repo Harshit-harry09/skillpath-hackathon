@@ -49,9 +49,9 @@ export function CalibrationTable() {
   ];
 
   return (
-    <section className="bg-canvas py-32 px-8 lg:px-24 flex justify-center overflow-hidden">
+    <section className="bg-canvas py-16 md:py-32 px-4 sm:px-8 lg:px-24 flex justify-center overflow-hidden">
       <div className="max-w-[1280px] w-full">
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20">
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ export function CalibrationTable() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-display text-display-md lg:text-[64px] text-ink mb-6 leading-tight"
+            className="font-display text-[32px] sm:text-display-md lg:text-[64px] text-ink mb-4 sm:mb-6 leading-tight"
           >
             One role. Two worlds.
           </motion.h2>
