@@ -3,7 +3,7 @@
 import { localPoint } from "@visx/event";
 import { ParentSize } from "@visx/responsive";
 import { scaleBand, scaleLinear } from "@visx/scale";
-import type { Transition } from "motion/react";
+import type { Transition } from 'framer-motion';
 import {
   memo,
   type ReactElement,

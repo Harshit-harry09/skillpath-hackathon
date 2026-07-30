@@ -2,7 +2,7 @@
 
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { bisector, extent } from "d3-array";
-import type { Transition } from "motion/react";
+import type { Transition } from 'framer-motion';
 import {
   Children,
   cloneElement,
