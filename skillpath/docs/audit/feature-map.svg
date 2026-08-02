@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">SkillPath feature map</title>
+  <desc id="desc">Feature areas map to their primary UI, API or local engine, and persisted state.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,3 L0,6 Z" fill="#64748b"/></marker>
+    <style>.box{rx:14;stroke-width:2}.label{font:600 17px Arial,sans-serif;fill:#0f172a}.small{font:13px Arial,sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}.title{font:700 28px Arial,sans-serif;fill:#0f172a}</style>
+  </defs>
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <text x="44" y="50" class="title">SkillPath — feature-to-pipeline map</text>
+  <rect x="42" y="95" width="210" height="110" class="box" fill="#dbeafe" stroke="#60a5fa"/><text x="65" y="130" class="label">Analyze</text><text x="65" y="158" class="small">resume + JD → gaps</text><text x="65" y="181" class="small">/api/analyze → results</text>
+  <rect x="42" y="245" width="210" height="110" class="box" fill="#dbeafe" stroke="#60a5fa"/><text x="65" y="280" class="label">Explore</text><text x="65" y="308" class="small">role → market view</text><text x="65" y="331" class="small">skeleton → enrichment</text>
+  <rect x="42" y="395" width="210" height="110" class="box" fill="#dbeafe" stroke="#60a5fa"/><text x="65" y="430" class="label">Battle</text><text x="65" y="458" class="small">skill comparison</text><text x="65" y="481" class="small">local index + AI verdict</text>
+  <rect x="42" y="545" width="210" height="110" class="box" fill="#dbeafe" stroke="#60a5fa"/><text x="65" y="580" class="label">Time Machine</text><text x="65" y="608" class="small">local simulator</text><text x="65" y="631" class="small">not a backend AI job</text>
+
+  <rect x="350" y="175" width="240" height="190" class="box" fill="#dcfce7" stroke="#4ade80"/><text x="375" y="212" class="label">Deterministic engines</text><text x="375" y="242" class="small">mvc-profiler</text><text x="375" y="265" class="small">ai-skill-cleaner</text><text x="375" y="288" class="small">gap-scorer / readiness</text><text x="375" y="311" class="small">skill-battle index</text><text x="375" y="334" class="small">PDF/text extraction</text>
+  <rect x="350" y="455" width="240" height="150" class="box" fill="#fef3c7" stroke="#f59e0b"/><text x="375" y="492" class="label">Optional AI engines</text><text x="375" y="522" class="small">Gemini REST wrapper</text><text x="375" y="545" class="small">resource generator</text><text x="375" y="568" class="small">career content tools</text><text x="375" y="591" class="small">enrichment branch</text>
+
+  <rect x="690" y="105" width="210" height="120" class="box" fill="#e0f2fe" stroke="#38bdf8"/><text x="715" y="142" class="label">Results dashboard</text><text x="715" y="172" class="small">readiness, gaps, resources</text><text x="715" y="195" class="small">local resume utilities</text>
+  <rect x="690" y="285" width="210" height="120" class="box" fill="#e0f2fe" stroke="#38bdf8"/><text x="715" y="322" class="label">Career state</text><text x="715" y="352" class="small">active job + history</text><text x="715" y="375" class="small">timeline + streak</text>
+  <rect x="690" y="465" width="210" height="120" class="box" fill="#e0f2fe" stroke="#38bdf8"/><text x="715" y="502" class="label">Share / profile</text><text x="715" y="532" class="small">public share card</text><text x="715" y="555" class="small">profile bootstrap</text>
+  <rect x="1000" y="245" width="145" height="210" class="box" fill="#ede9fe" stroke="#8b5cf6"/><text x="1021" y="282" class="label">Firestore</text><text x="1021" y="314" class="small">analyses</text><text x="1021" y="338" class="small">explorations</text><text x="1021" y="362" class="small">profiles</text><text x="1021" y="386" class="small">active jobs</text><text x="1021" y="410" class="small">share cards</text>
+
+  <path d="M252 150 L350 230" class="arrow"/><path d="M252 300 L350 275" class="arrow"/><path d="M252 450 L350 320" class="arrow"/><path d="M252 600 L350 540" class="arrow"/>
+  <path d="M590 250 L690 165" class="arrow"/><path d="M590 315 L690 345" class="arrow"/><path d="M590 520 L690 520" class="arrow"/>
+  <path d="M900 165 L1000 300" class="arrow"/><path d="M900 345 L1000 345" class="arrow"/><path d="M900 525 L1000 400" class="arrow"/>
+</svg>

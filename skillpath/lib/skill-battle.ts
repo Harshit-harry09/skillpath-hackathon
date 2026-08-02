@@ -1,8 +1,8 @@
 /**
  * Skill Battle Engine — Feature 15 (Optimized with O(1) Pre-indexing & AI Fallback)
  * 
- * Uses the local MVC Model (320k+ samples) for instant O(1) comparisons,
- * with automated Gemini AI synthesis (10k sample benchmark) for custom/niche skills.
+ * Uses the local MVC Model for fast comparisons, with clearly labeled Gemini
+ * estimates for custom/niche skills when local evidence is unavailable.
  */
 
 import mvcData from './data/mvc_model.json';

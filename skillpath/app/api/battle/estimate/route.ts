@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callGemini } from '@/lib/gemini';
+import { guardAiRequest } from '@/lib/request-guard';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const rateLimitError = guardAiRequest(req, undefined, 10);
+  if (rateLimitError) return rateLimitError;
   let skillA = 'Option A';
   let skillB = 'Option B';
 
@@ -11,11 +16,16 @@ export async function POST(req: NextRequest) {
     if (body.skillB && typeof body.skillB === 'string') skillB = body.skillB.trim();
   } catch (err) {
     console.warn('[Battle Estimate API] Body parse error:', err);
+    return NextResponse.json({ error: 'invalid_json', message: 'Request body must be valid JSON.' }, { status: 400 });
+  }
+
+  if (!skillA || !skillB || skillA.length > 100 || skillB.length > 100) {
+    return NextResponse.json({ error: 'invalid_input', message: 'Both skills must be between 1 and 100 characters.' }, { status: 400 });
   }
 
   const system = `You are a tech recruiter and developer ecosystem analyst. Output ONLY valid JSON. No markdown backticks, no extra text.`;
   const user = `Compare tech stack "${skillA}" vs "${skillB}".
-Simulate a market survey sample of 10,000 software engineers.
+Produce a normalized model estimate. Do not claim this is a real survey or real votes.
 
 Format output as JSON:
 {
@@ -29,7 +39,7 @@ Format output as JSON:
 }
 
 Rules:
-- votes for optionA + optionB MUST equal 10000
+- votes are normalized model points and optionA + optionB MUST equal 100
 - premium is salary premium in USD (e.g. 8000 - 25000)
 - trend is decimal growth (e.g. 0.15 - 0.40)
 - shareA + shareB = 100`;
@@ -55,13 +65,13 @@ Rules:
             trend: Number(data.optionB.trend) || 0.15,
           },
           verdict: data.verdict || `Learn ${data.winner === 'A' ? skillA : skillB} — market trend favors this architecture.`,
-          totalVotes: 10000,
+          totalVotes: 100,
           winner: data.winner,
           shareA: Number(data.shareA) || 55,
           shareB: Number(data.shareB) || 45,
           highlights: Array.isArray(data.highlights) && data.highlights.length > 0
             ? data.highlights
-            : [`⚡ 10,000 Sample Developer Survey Benchmark`],
+            : ['Model estimate; no survey data used'],
           isAiEstimated: true,
         },
       });
@@ -70,18 +80,19 @@ Rules:
     console.error('[Battle Estimate API] Gemini estimate error:', error);
   }
 
-  // Fallback 10,000 estimate if AI fails
+  // Transparent deterministic fallback; these are not survey votes.
   return NextResponse.json({
     result: {
-      optionA: { name: skillA, votes: 5400, premium: 12500, trend: 0.18 },
-      optionB: { name: skillB, votes: 4600, premium: 11000, trend: 0.14 },
+      optionA: { name: skillA, votes: 54, premium: 12500, trend: 0.18 },
+      optionB: { name: skillB, votes: 46, premium: 11000, trend: 0.14 },
       verdict: `Data shows ${skillA} holds a slight lead over ${skillB} in enterprise usage.`,
-      totalVotes: 10000,
+      totalVotes: 100,
       winner: 'A',
       shareA: 54,
       shareB: 46,
-      highlights: ['⚡ 10,000 Sample Developer Benchmark'],
+      highlights: ['Model estimate; no survey data used'],
       isAiEstimated: true,
+      estimateSource: 'deterministic_fallback',
     },
   });
 }

@@ -81,9 +81,9 @@ export default function ProfilePage() {
       : 0,
   };
 
-  // Mocking existing skills for now - in a real app, this comes from the initial analysis data
+  // Extract all tracked skills from the active job analysis data
   const existingSkills: string[] = activeJob && activeJob !== 'loading'
-    ? activeJob.skills.slice(0, 3).map(s => s.skill) // Just as placeholder
+    ? activeJob.skills.map(s => s.skill)
     : [];
 
   return (

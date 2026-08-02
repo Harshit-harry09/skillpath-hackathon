@@ -7,10 +7,10 @@
  * 3. Detect company type locally
  * 4. Build MVC profile from trained dataset
  * 5. Rank gaps using dataset frequency
- * 6. AI Summary: Groq (Llama 3.1) for Professional Profile (optional, graceful fallback)
- * 7. Save to Firestore (fire-and-forget, don't block response)
+ * 6. Build a deterministic summary and prerequisites for the fast response
+ * 7. Persist the result before returning its share token
  *
- * This is INSTANT — no rate limits for extraction, minimal latency for summary.
+ * The initial response is deterministic and does not wait on a model provider.
  */
 
 export const runtime = 'nodejs';
@@ -26,16 +26,19 @@ import { detectCompanyType } from "@/lib/company-detector";
 import { cleanSkillsWithAI } from "@/lib/ai-skill-cleaner";
 import { getDb } from "@/lib/firebase-admin";
 import { extractTextFromPDF } from "@/lib/pdf-extract";
-import { getAuthUser, getAuthUserSafe, AuthError } from "@/lib/auth-helpers";
-import { ANALYZE_SUMMARY_SYSTEM, buildAnalyzeSummaryPrompt } from "@/prompts/analyze-summary";
+import { getAuthUserSafe } from "@/lib/auth-helpers";
 import crypto from "crypto";
-import { callGemini, callGeminiJSON } from "@/lib/gemini";
+import { guardAiRequest, requestId, withRequestId } from "@/lib/request-guard";
+import { deleteEnrichmentPayload, isEnrichmentConfigured, storeEnrichmentPayload } from "@/lib/analyze-enrichment-store";
 
 export async function POST(req: NextRequest) {
+  const traceId = requestId(req);
+  const startTime = Date.now();
   try {
     // ---- Auth Check (Optional for guest analysis) ----
     const user = await getAuthUserSafe(req);
-
+    const rateLimitError = guardAiRequest(req, user?.uid, user ? 30 : 5);
+    if (rateLimitError) return withRequestId(rateLimitError, traceId);
 
     let jd_text = "";
     let resume_text = "";
@@ -44,11 +47,11 @@ export async function POST(req: NextRequest) {
     let experienceLevel = "";
     let targetCompany = "";
     const contentLength = req.headers.get("content-length");
-    if (contentLength && parseInt(contentLength, 10) > 5 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: "payload_too_large", message: "Request payload exceeds maximum allowed size of 5MB." },
+    if (contentLength && parseInt(contentLength, 10) > 10 * 1024 * 1024) {
+      return withRequestId(NextResponse.json(
+        { error: "payload_too_large", message: "Request payload exceeds maximum allowed size of 10MB." },
         { status: 413 }
-      );
+      ), traceId);
     }
 
     const contentType = req.headers.get("content-type") || "";
@@ -75,8 +78,21 @@ export async function POST(req: NextRequest) {
       targetCompany = (formData.get("target_company") as string) || "";
 
       if (resumeFile && resumeFile.size > 0) {
+        if (resumeFile.size > 10 * 1024 * 1024) {
+          return withRequestId(NextResponse.json(
+            { error: "payload_too_large", message: "Resume PDF must be 10MB or smaller." },
+            { status: 413 }
+          ), traceId);
+        }
         console.log(`[Analyze] Processing PDF: ${resumeFile.name} (${resumeFile.size} bytes)`);
         const buffer = await resumeFile.arrayBuffer();
+        const signature = Buffer.from(buffer).subarray(0, 5).toString('ascii');
+        if (resumeFile.type !== 'application/pdf' || signature !== '%PDF-') {
+          return withRequestId(NextResponse.json(
+            { error: "invalid_file", message: "Please upload a valid PDF resume." },
+            { status: 400 }
+          ), traceId);
+        }
         try {
           resume_text = await extractTextFromPDF(buffer);
           console.log(`[Analyze] Extracted ${resume_text.length} chars from PDF`);
@@ -110,17 +126,17 @@ export async function POST(req: NextRequest) {
 
     // ---- Validate Input ----
     if (!jd_text?.trim()) {
-      return NextResponse.json(
+      return withRequestId(NextResponse.json(
         { error: "insufficient_input", message: "Job description text is missing." },
         { status: 400 }
-      );
+      ), traceId);
     }
 
     if (!resume_text?.trim()) {
-      return NextResponse.json({
+      return withRequestId(NextResponse.json({
         error: "insufficient_input",
         message: "Could not extract text from your resume. If you uploaded a PDF, please ensure it's not a scanned image, or try pasting the text manually."
-      }, { status: 400 });
+      }, { status: 400 }), traceId);
     }
 
     console.log(`[Analyze] Starting for user ${user?.uid || 'guest'} | JD: ${jd_text.length} chars | Resume: ${resume_text.length} chars`);
@@ -170,54 +186,13 @@ export async function POST(req: NextRequest) {
     // ---- Step 6: Calculate ready-by date (local) ----
     const countdown = calculateCountdown(rankedGaps);
 
-    // ---- Step 7: AI Calls (run in parallel for ~50% latency reduction) ----
-    const [aiSummaryResult, foundationalPrerequisitesResult] = await Promise.allSettled([
-      // 7a: AI Summary (10s timeout)
-      Promise.race([
-        callGemini(
-          ANALYZE_SUMMARY_SYSTEM,
-          buildAnalyzeSummaryPrompt(
-            gapResult.gapScore,
-            rankedGaps.filter(g => g.in_mvc).map(g => g.skill),
-            countdown.readyByDate,
-            companyType,
-            getRoleLabel(roleCategory)
-          ),
-          { model: "gemini-2.0-flash", temperature: 0.3, maxTokens: 150 }
-        ),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Summary generation timed out")), 10_000)
-        ),
-      ]),
-      // 7b: Foundational Prerequisites
-      callGeminiJSON<any>(
-        "You are a Technical Architect. Identify 3 SPECIFIC TECHNICAL foundational concepts the user is MISSING from their resume that are required to master their advanced gaps. Focus on Logic & Fundamentals (e.g., 'Memory Management', 'Asynchronous Flow', 'Relational Logic'). Return ONLY a JSON array of 3 strings.",
-        `Target Role: ${roleCategory}\nUser's Current Skills: ${resumeSkills.join(", ")}\nMissing Advanced Skills: ${rankedGaps.slice(0, 5).map(g => g.skill).join(", ")}`,
-        { model: "gemini-2.0-flash", temperature: 0.1, maxTokens: 256 }
-      ),
-    ]);
-
-    // Resolve summary
-    let aiSummary = "";
-    if (aiSummaryResult.status === "fulfilled" && aiSummaryResult.value) {
-      aiSummary = aiSummaryResult.value.trim();
-      console.log("[Analyze] ✓ AI summary generated");
-    } else {
-      console.warn("[Analyze] AI summary skipped (non-critical):", aiSummaryResult.status === "rejected" ? aiSummaryResult.reason?.message : "empty");
-      aiSummary = `You are ${countdown.weeksRequired} weeks away from being a competitive candidate for this ${getRoleLabel(roleCategory)} role.`;
-    }
-
-    // Resolve prerequisites
-    let foundationalPrerequisites: string[] = [];
-    if (foundationalPrerequisitesResult.status === "fulfilled") {
-      const parsed = foundationalPrerequisitesResult.value;
-      const arr = Array.isArray(parsed) ? parsed : (Object.values(parsed).find(v => Array.isArray(v)) as any[] ?? []);
-      foundationalPrerequisites = (arr as any[]).filter(s => typeof s === 'string' && s.length > 2).slice(0, 3);
-      console.log("[Analyze] ✓ Foundational prerequisites generated");
-    } else {
-      console.warn("[Analyze] Prerequisites generation failed:", foundationalPrerequisitesResult.reason?.message);
-      foundationalPrerequisites = ["Version Control (Git)", "Data Structures", "Command Line Basics"];
-    }
+    // ---- Step 7: Deterministic fast-path enrichment ----
+    const aiSummary = `You are ${countdown.weeksRequired} weeks away from being a competitive candidate for this ${getRoleLabel(roleCategory)} role. Your highest-priority gaps are ${rankedGaps.slice(0, 3).map(g => g.skill).join(', ') || 'the core requirements listed below'}.`;
+    const foundationalPrerequisites = Array.from(new Set([
+      ...rankedGaps.slice(0, 3).map(g => g.skill),
+      'Version Control (Git)',
+      'Data Structures',
+    ])).slice(0, 3);
 
     // ---- Build response document ----
     const shareToken = crypto.randomUUID();
@@ -255,9 +230,10 @@ export async function POST(req: NextRequest) {
       skill_gaps: rankedGaps,
       foundational_prerequisites: foundationalPrerequisites,
       jd_preview: jd_text.slice(0, 200),
-      jd_text: jd_text.length > 4000 ? jd_text.slice(0, 4000) + "..." : jd_text,
-      resume_text: resume_text.length > 4000 ? resume_text.slice(0, 4000) + "..." : resume_text,
       created_at: new Date().toISOString(),
+      analysis_version: 'deterministic-v2',
+      enrichment_status: isEnrichmentConfigured() ? 'pending' : 'not_configured',
+      summary_source: 'local_pipeline',
       // Dream context metadata (if present)
       ...(typeof dreamRole === 'string' && dreamRole ? {
         dream_context: {
@@ -269,22 +245,38 @@ export async function POST(req: NextRequest) {
       } : {}),
     };
 
-    // ---- Step 8: Save to Firestore (Non-blocking background save for instant response) ----
-    const savePromise = (async () => {
-      try {
-        const db = getDb();
-        await db.collection("analyses").doc(shareToken).set({
-          ...analysisDoc,
-          user_id: user?.uid || null,
-        });
-        console.log(`[Analyze] ✓ Saved to Firestore: ${shareToken}`);
-      } catch (dbError) {
-        console.warn("[Analyze] Firestore save skipped or unavailable:", dbError instanceof Error ? dbError.message : dbError);
+    // ---- Step 8: Persist before issuing a share token to the client ----
+    try {
+      const db = getDb();
+      const analysisRef = db.collection("analyses").doc(shareToken);
+      const persistAnalysis = analysisRef.set({
+        ...analysisDoc,
+        user_id: user?.uid || null,
+      });
+      if (!isEnrichmentConfigured()) {
+        await persistAnalysis;
+      } else {
+        const [analysisWrite, enrichmentWrite] = await Promise.allSettled([
+          persistAnalysis,
+          storeEnrichmentPayload(db, shareToken, { resumeText: resume_text, jdText: jd_text }),
+        ]);
+        if (analysisWrite.status === 'rejected') {
+          if (enrichmentWrite.status === 'fulfilled') await deleteEnrichmentPayload(db, shareToken);
+          throw analysisWrite.reason;
+        }
+        if (enrichmentWrite.status === 'rejected') {
+          console.warn(`[Analyze] AI enrichment payload was not stored [${traceId}]:`, enrichmentWrite.reason instanceof Error ? enrichmentWrite.reason.message : enrichmentWrite.reason);
+          await analysisRef.update({ enrichment_status: 'unavailable', enrichment_error: 'temporary_input_not_stored' }).catch(() => undefined);
+          analysisDoc.enrichment_status = 'unavailable';
+        }
       }
-    })();
-    // Allow serverless function to register background completion without blocking client HTTP response
-    if (typeof (req as any).waitUntil === 'function') {
-      (req as any).waitUntil(savePromise);
+      console.log(`[Analyze] ✓ Saved to Firestore: ${shareToken}`);
+    } catch (dbError) {
+      console.error(`[Analyze] Firestore persistence failed [${traceId}]:`, dbError instanceof Error ? dbError.message : dbError);
+      return withRequestId(NextResponse.json(
+        { error: "persistence_failed", message: "Analysis could not be saved. Please try again." },
+        { status: 503 }
+      ), traceId);
     }
 
     console.log(`[Analyze] ✓ Complete | Gap: ${gapResult.gapScore}% | Weeks: ${countdown.weeksRequired} | Token: ${shareToken}`);
@@ -292,12 +284,13 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json(analysisDoc);
     response.headers.set('X-Analysis-Id', shareToken);
     response.headers.set('X-Pipeline-Status', 'Success');
-    return response;
+    response.headers.set('X-Pipeline-Latency-Ms', String(Date.now() - startTime));
+    return withRequestId(response, traceId);
 
   } catch (error) {
     console.error("[Analyze] Pipeline crash:", error);
     const message = error instanceof Error ? error.message : "An unexpected error occurred during analysis.";
-    return NextResponse.json({
+    return withRequestId(NextResponse.json({
       error: "analysis_failed",
       message,
       hint: message.includes("PDF")
@@ -305,6 +298,6 @@ export async function POST(req: NextRequest) {
         : message.includes("Firebase") || message.includes("database")
           ? "Database temporarily unavailable. Your analysis still completed — try refreshing."
           : "Something went wrong. Please try again.",
-    }, { status: 500 });
+    }, { status: 500 }), traceId);
   }
 }

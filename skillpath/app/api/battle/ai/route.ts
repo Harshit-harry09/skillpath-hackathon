@@ -3,6 +3,8 @@ import { callGemini } from '@/lib/gemini';
 import { getAuthUser } from '@/lib/auth-helpers';
 import { checkGuestRateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     let isGuest = false;

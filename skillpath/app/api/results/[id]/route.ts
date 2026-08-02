@@ -2,12 +2,13 @@
  * GET /api/results/[id]
  *
  * Fetch a saved analysis by its share token.
- * Uses lazy Firebase init so a transient boot failure doesn't permanently block reads.
- * Includes a fallback sample analysis for 'sample' token.
+ * Uses lazy Firebase init and returns explicit not-found/service-unavailable
+ * responses. A missing token must never look like a successful analysis.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/firebase-admin";
+import { requestId, withRequestId } from "@/lib/request-guard";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -77,17 +78,18 @@ const MOCK_SAMPLE_ANALYSIS = {
 };
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const traceId = requestId(req);
   try {
     const { id } = await params;
 
     if (!id) {
-      return NextResponse.json(
+      return withRequestId(NextResponse.json(
         { error: "missing_id", message: "Share token is required." },
         { status: 400 }
-      );
+      ), traceId);
     }
 
     // Return sample mock data if id is 'sample'
@@ -99,26 +101,34 @@ export async function GET(
     try {
       db = getDb();
     } catch (e) {
-      console.warn("[Results] Firebase unavailable, checking sample fallback:", e instanceof Error ? e.message : e);
-      return NextResponse.json(MOCK_SAMPLE_ANALYSIS);
+      console.error(`[Results] Firebase unavailable [${traceId}]:`, e instanceof Error ? e.message : e);
+      return withRequestId(NextResponse.json(
+        { error: "service_unavailable", message: "Results are temporarily unavailable. Please try again." },
+        { status: 503 }
+      ), traceId);
     }
 
     // Fetch from Firestore
     const doc = await db.collection("analyses").doc(id).get();
 
     if (!doc.exists) {
-      // Fallback to sample analysis if not found
-      return NextResponse.json(MOCK_SAMPLE_ANALYSIS);
+      return withRequestId(NextResponse.json(
+        { error: "not_found", message: "This analysis does not exist or has expired." },
+        { status: 404 }
+      ), traceId);
     }
 
     const data = doc.data();
 
     // Strip the raw JD/resume text from public results for privacy
-    const { jd_text: _jd, resume_text: _resume, ...publicData } = data as Record<string, unknown>;
+    const { jd_text: _jd, resume_text: _resume, user_id: _userId, ...publicData } = data as Record<string, unknown>;
 
-    return NextResponse.json(publicData);
+    return withRequestId(NextResponse.json(publicData), traceId);
   } catch (error) {
-    console.error("Error fetching result:", error);
-    return NextResponse.json(MOCK_SAMPLE_ANALYSIS);
+    console.error(`[Results] Error fetching result [${traceId}]:`, error);
+    return withRequestId(NextResponse.json(
+      { error: "result_lookup_failed", message: "Unable to load this analysis right now." },
+      { status: 500 }
+    ), traceId);
   }
 }

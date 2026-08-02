@@ -8,7 +8,7 @@ import {
   Swords,
   Compass,
   Target,
-  Hourglass,
+  MessageSquareText,
   History,
   User
 } from 'lucide-react';
@@ -65,13 +65,13 @@ export function FloatingDock() {
         </DockIcon>
 
         <DockIcon
-          onClick={() => router.push('/time-machine')}
-          aria-label="Career Time Machine"
+          onClick={() => router.push('/interview-lab')}
+          aria-label="Interview Lab"
           role="button"
           tabIndex={0}
-          className={pathname === '/time-machine' ? 'bg-amber-400/20 text-amber-500 border border-amber-400/40' : ''}
+          className={pathname === '/interview-lab' ? 'bg-brand-pink/20 text-brand-pink border border-brand-pink/40' : ''}
         >
-          <Hourglass className="w-5 h-5 text-amber-400 animate-pulse" />
+          <MessageSquareText className="w-5 h-5" />
         </DockIcon>
 
         <DockIcon

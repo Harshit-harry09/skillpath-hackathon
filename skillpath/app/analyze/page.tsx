@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/AuthContext';
 import { DreamOnboarding, type DreamContext } from '@/components/analyze/DreamOnboarding';
 import { Button } from '@/components/ui/Button';
+import { useDraft } from '@/context/DraftContext';
 
 const GenerativeArtScene = dynamic(
   () => import('@/components/ui/anomalous-matter-hero').then((m) => m.GenerativeArtScene),
@@ -40,6 +41,7 @@ class AnalysisError extends Error {
 export default function AnalyzePage() {
   const router = useRouter();
   const { user, openAuthModal, getToken } = useAuth();
+  const { draft, clearDraft } = useDraft();
   const [mode, setMode] = useState<'job' | 'dream'>('job');
   const [jd, setJd] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -53,19 +55,23 @@ export default function AnalyzePage() {
   const [autoTrigger, setAutoTrigger] = useState(false);
 
   useEffect(() => {
-    const pendingJd = sessionStorage.getItem('pending_jd');
-    const pendingResume = sessionStorage.getItem('pending_resume');
-
-    if (pendingJd && pendingResume) {
-      setJd(pendingJd);
-      setResumeText(pendingResume);
-      setAutoTrigger(true);
-
-      // Clean up storage immediately
-      sessionStorage.removeItem('pending_jd');
-      sessionStorage.removeItem('pending_resume');
+    try {
+      const pendingJd = sessionStorage.getItem('pending_jd');
+      if (pendingJd && pendingJd.trim()) {
+        setJd(pendingJd.trim());
+        sessionStorage.removeItem('pending_jd');
+      }
+    } catch {
+      // Storage retrieval fallback
     }
-  }, []);
+
+    if (draft.jd) setJd(draft.jd);
+    if (draft.resumeText) {
+      setResumeText(draft.resumeText);
+      setAutoTrigger(true);
+    }
+    if (draft.jd || draft.resumeText) clearDraft();
+  }, [draft, clearDraft]);
 
   const isFormValid = jd.trim().length > 0 && (file !== null || resumeText.trim().length > 0);
 
@@ -133,15 +139,7 @@ export default function AnalyzePage() {
         mvc_skills: data.mvc_skills || [],
         created_at: data.created_at,
         jd_preview: jd.slice(0, 80),
-        resume_text: data.resume_text || resumeText
       });
-
-      // Save full analysis payload to sessionStorage for instant 0ms result rendering
-      try {
-        sessionStorage.setItem(`analysis_${data.share_token}`, JSON.stringify(data));
-      } catch {
-        // quota fallback
-      }
 
       router.push(`/results/${data.share_token}?new=true`);
     } catch (err: any) {

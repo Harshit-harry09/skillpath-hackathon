@@ -13,12 +13,18 @@ const ipTracker = new LRUCache<string, number[]>({
 export function checkGuestRateLimit(
   req: NextRequest,
   maxRequests = 10,
-  windowMs = 60 * 1000
+  windowMs = 60 * 1000,
+  identity?: string
 ): { success: boolean; remaining: number } {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "127.0.0.1";
+  const configuredProxy = process.env.TRUST_PROXY_HEADERS === 'true';
+  const forwardedIp = configuredProxy
+    ? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    : undefined;
+  const ip = identity ||
+    req.headers.get("cf-connecting-ip")?.trim() ||
+    req.headers.get("x-real-ip")?.trim() ||
+    forwardedIp ||
+    "anonymous";
 
   const now = Date.now();
   const timestamps = ipTracker.get(ip) || [];

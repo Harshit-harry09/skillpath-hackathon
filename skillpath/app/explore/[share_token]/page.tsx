@@ -1,5 +1,5 @@
 /**
- * Explore Results Page — Hybrid Server/Client Component with dual-layer sessionStorage cache
+ * Explore Results Page — server-fetched result with client fallback for transient reads
  */
 
 import { getDb } from '@/lib/firebase-admin';

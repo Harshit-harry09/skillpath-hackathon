@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion, useTransform } from 'framer-motion';
+import { motion, useTransform, type MotionValue } from 'framer-motion';
 
 export const LinePath = ({
   className,
@@ -10,11 +10,11 @@ export const LinePath = ({
   strokeColor,
 }: {
   className?: string;
-  scrollYProgress: any;
+  scrollYProgress: MotionValue<number>;
   mirrored?: boolean;
   strokeColor?: string;
 }) => {
-  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const pathLength = useTransform(scrollYProgress, [0, 1], [0.15, 1]);
 
   return (
     <svg

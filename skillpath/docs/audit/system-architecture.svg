@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">SkillPath system architecture</title>
+  <desc id="desc">Browser UI connects to Next.js pages and API routes. APIs use deterministic local engines, optional Gemini enrichment, Firebase Auth and Firestore.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,3 L0,6 Z" fill="#64748b"/></marker>
+    <style>
+      .box{rx:16;stroke-width:2} .label{font:600 18px Arial,sans-serif;fill:#0f172a}.small{font:14px Arial,sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:2.5;fill:none;marker-end:url(#arrow)} .title{font:700 28px Arial,sans-serif;fill:#0f172a}
+    </style>
+  </defs>
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <text x="48" y="54" class="title">SkillPath — runtime architecture</text>
+
+  <rect x="48" y="105" width="220" height="155" class="box" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="72" y="143" class="label">Browser UI</text>
+  <text x="72" y="171" class="small">Home, Analyze, Explore</text>
+  <text x="72" y="194" class="small">Results, Battle, Profile</text>
+  <text x="72" y="217" class="small">localStorage / in-memory drafts</text>
+
+  <rect x="340" y="95" width="250" height="180" class="box" fill="#ede9fe" stroke="#8b5cf6"/>
+  <text x="364" y="133" class="label">Next.js application</text>
+  <text x="364" y="163" class="small">App Router pages</text>
+  <text x="364" y="186" class="small">API route handlers</text>
+  <text x="364" y="209" class="small">Auth/UI providers</text>
+  <text x="364" y="232" class="small">security headers + guards</text>
+
+  <rect x="670" y="70" width="230" height="145" class="box" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="694" y="108" class="label">Local engines</text>
+  <text x="694" y="138" class="small">role + skill extraction</text>
+  <text x="694" y="161" class="small">gap / readiness scoring</text>
+  <text x="694" y="184" class="small">battle + resource fallbacks</text>
+
+  <rect x="670" y="260" width="230" height="145" class="box" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="694" y="298" class="label">Optional AI</text>
+  <text x="694" y="328" class="small">Gemini enrichment</text>
+  <text x="694" y="351" class="small">career content generation</text>
+  <text x="694" y="374" class="small">bounded timeout + fallback</text>
+
+  <rect x="970" y="110" width="180" height="135" class="box" fill="#fee2e2" stroke="#f87171"/>
+  <text x="994" y="148" class="label">Firebase Auth</text>
+  <text x="994" y="178" class="small">ID token</text>
+  <text x="994" y="201" class="small">protected routes</text>
+
+  <rect x="970" y="300" width="180" height="150" class="box" fill="#e0f2fe" stroke="#38bdf8"/>
+  <text x="994" y="338" class="label">Firestore</text>
+  <text x="994" y="368" class="small">analyses</text>
+  <text x="994" y="391" class="small">explorations</text>
+  <text x="994" y="414" class="small">profiles + jobs</text>
+
+  <rect x="340" y="370" width="250" height="150" class="box" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="364" y="408" class="label">Shared data paths</text>
+  <text x="364" y="438" class="small">history metadata</text>
+  <text x="364" y="461" class="small">active job tracker</text>
+  <text x="364" y="484" class="small">share cards + timeline</text>
+
+  <path d="M268 180 L340 180" class="arrow"/>
+  <path d="M590 150 L670 150" class="arrow"/>
+  <path d="M590 215 L670 330" class="arrow"/>
+  <path d="M590 420 L970 380" class="arrow"/>
+  <path d="M900 145 L970 175" class="arrow"/>
+  <path d="M900 335 L970 365" class="arrow"/>
+  <path d="M590 460 L670 390" class="arrow"/>
+  <path d="M590 125 L970 195" class="arrow"/>
+
+  <text x="48" y="610" class="small">Solid arrows represent code-traced runtime connections. AI is an optional enrichment/content dependency, not the deterministic analysis core.</text>
+  <text x="48" y="640" class="small">Source basis: app/, components/, context/, lib/, and Firebase configuration in the repository.</text>
+</svg>

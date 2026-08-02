@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callGemini } from '@/lib/gemini';
+import { guardAiRequest } from '@/lib/request-guard';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const rateLimitError = guardAiRequest(req, undefined, 10);
+  if (rateLimitError) return rateLimitError;
   let role = 'Software Engineer';
   let topSkills: string[] = ['TypeScript', 'React', 'Node.js'];
 
@@ -13,6 +18,7 @@ export async function POST(req: NextRequest) {
     }
   } catch (err) {
     console.warn('[LinkedIn Headline API] Request body parse issue:', err);
+    return NextResponse.json({ error: 'invalid_json', message: 'Request body must be valid JSON.' }, { status: 400 });
   }
 
   const skillsStr = topSkills.join(', ') || 'Engineering & System Design';
@@ -32,7 +38,7 @@ Rules:
     const headlines: string[] = JSON.parse(cleaned);
 
     if (Array.isArray(headlines) && headlines.length >= 1) {
-      return NextResponse.json({ headlines: headlines.slice(0, 3) });
+      return NextResponse.json({ headlines: headlines.slice(0, 3), fallback: false, source: 'gemini' });
     }
   } catch (error) {
     console.error('[LinkedIn Headline API] Gemini Call Error:', error instanceof Error ? error.message : error);
@@ -45,5 +51,5 @@ Rules:
     `${role} Specialist | ${topSkills[0] || 'Architecture'} & Systems Engineering | Open to ${role} Roles`,
   ];
 
-  return NextResponse.json({ headlines: fallbackHeadlines });
+  return NextResponse.json({ headlines: fallbackHeadlines, fallback: true, source: 'deterministic_template' });
 }

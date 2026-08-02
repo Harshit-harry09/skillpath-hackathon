@@ -4,6 +4,8 @@ import { getAuthUserSafe } from '@/lib/auth-helpers';
 import { computeReadiness, nextPinColor } from '@/lib/readiness';
 import type { ActiveJob, TrackedSkill, SkillState } from '@/types/active-job';
 
+export const dynamic = 'force-dynamic';
+
 // ── GET — fetch active job ──────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
   try {

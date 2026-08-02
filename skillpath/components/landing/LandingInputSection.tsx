@@ -11,11 +11,16 @@ const sampleRoles = ['Full-Stack AI Engineer', 'LLM Systems Architect', 'Senior 
 export function LandingInputSection() {
   const [jd, setJd] = useState('');
   const router = useRouter();
-  const { user, openAuthModal } = useAuth();
 
-  const handleStart = () => {
-    if (!user) { openAuthModal(); return; }
-    if (jd.trim()) { sessionStorage.setItem('pending_jd', jd); router.push('/analyze'); }
+  const handleStartWithText = (textToSubmit: string) => {
+    const finalJd = textToSubmit.trim();
+    if (!finalJd) return;
+    try {
+      sessionStorage.setItem('pending_jd', finalJd);
+    } catch {
+      // Best-effort storage fallback
+    }
+    router.push('/analyze');
   };
 
   return (
@@ -43,8 +48,11 @@ export function LandingInputSection() {
               {sampleRoles.map((role) => (
                 <button
                   key={role}
-                  onClick={() => setJd(`Targeting role: ${role}. Requires core engineering, architecture, and deployment standards.`)}
-                  className="flex items-center gap-1.5 px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-wide transition-all duration-150 active:translate-y-[1px]"
+                  type="button"
+                  onClick={() => {
+                    setJd(`Targeting role: ${role}. Requires core engineering, architecture, and deployment standards.`);
+                  }}
+                  className="flex items-center gap-1.5 px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-wide transition-all duration-150 active:translate-y-[1px] cursor-pointer hover:border-brand-pink"
                   style={{ background: 'var(--color-surface-soft)', color: 'var(--color-ink)', border: '2px solid var(--bold-border)', borderRadius: '8px', boxShadow: '2px 2px 0 var(--bold-border)' }}
                 >
                   <ChevronRight className="w-3 h-3" />{role}
@@ -52,15 +60,6 @@ export function LandingInputSection() {
               ))}
             </div>
           </div>
-
-          {['Instant skill extraction', 'Market salary delta', 'Week-by-week roadmap'].map((f, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#2DD4BF', border: '2px solid var(--bold-border)' }}>
-                <span className="text-[10px] font-black text-white">✓</span>
-              </div>
-              <span className="font-medium text-[14px]" style={{ color: 'var(--color-muted)' }}>{f}</span>
-            </div>
-          ))}
         </motion.div>
 
         {/* Right: Input Terminal */}
@@ -104,7 +103,8 @@ export function LandingInputSection() {
                   <span>{jd.length} chars · instant skill match &amp; gap analysis</span>
                 </div>
                 <button
-                  onClick={handleStart}
+                  type="button"
+                  onClick={() => handleStartWithText(jd)}
                   disabled={!jd.trim()}
                   className="flex items-center gap-2.5 font-black uppercase tracking-wider transition-all duration-150 active:translate-y-[2px] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0"
                   style={{

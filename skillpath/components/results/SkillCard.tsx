@@ -28,6 +28,7 @@ interface SkillCardProps {
   // Confidence self-assessment
   confidenceLevel?: ConfidenceLevel;
   onConfidenceChange?: (skill: string, level: ConfidenceLevel) => void;
+  onResumeAction?: () => void;
 }
 
 type Status = 'idle' | 'loading' | 'done' | 'error';

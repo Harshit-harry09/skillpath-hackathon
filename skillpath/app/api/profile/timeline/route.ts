@@ -4,6 +4,8 @@ import { getDb } from '@/lib/firebase-admin';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 import type { TimelineEntry } from '@/types/profile';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const user = await getAuthUserSafe(req);
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });

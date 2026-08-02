@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Explore pipeline</title>
+  <desc id="desc">A job title enters the Explore page, a local deterministic skeleton is persisted and returned quickly, then a client-triggered enrichment endpoint can add Gemini-backed details.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,3 L0,6 Z" fill="#475569"/></marker>
+    <style>.box{rx:14;stroke-width:2}.label{font:600 18px Arial,sans-serif;fill:#0f172a}.small{font:14px Arial,sans-serif;fill:#334155}.arrow{stroke:#475569;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.title{font:700 28px Arial,sans-serif;fill:#0f172a}</style>
+  </defs>
+  <rect width="1200" height="700" fill="#f8fafc"/>
+  <text x="48" y="52" class="title">SkillPath — Explore pipeline</text>
+  <rect x="50" y="120" width="205" height="145" class="box" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="74" y="158" class="label">1. Explore UI</text><text x="74" y="188" class="small">job title / role</text><text x="74" y="211" class="small">market preference</text><text x="74" y="234" class="small">guest or signed-in</text>
+  <rect x="325" y="105" width="230" height="175" class="box" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="350" y="143" class="label">2. /api/explore</text><text x="350" y="173" class="small">guard + input checks</text><text x="350" y="196" class="small">local role profile</text><text x="350" y="219" class="small">skill gaps / market facts</text><text x="350" y="242" class="small">fallback provenance</text>
+  <rect x="625" y="105" width="230" height="175" class="box" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="650" y="143" class="label">3. Fast skeleton</text><text x="650" y="173" class="small">persist exploration</text><text x="650" y="196" class="small">status: pending</text><text x="650" y="219" class="small">return share token</text><text x="650" y="242" class="small">page is usable now</text>
+  <rect x="925" y="105" width="220" height="175" class="box" fill="#e0f2fe" stroke="#38bdf8"/>
+  <text x="949" y="143" class="label">4. Results UI</text><text x="949" y="173" class="small">load by token</text><text x="949" y="196" class="small">show local data</text><text x="949" y="219" class="small">trigger enrichment</text><text x="949" y="242" class="small">render provenance</text>
+  <path d="M255 192 L325 192" class="arrow"/><path d="M555 192 L625 192" class="arrow"/><path d="M855 192 L925 192" class="arrow"/>
+  <rect x="305" y="420" width="230" height="145" class="box" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="330" y="458" class="label">5. Optional enrich</text><text x="330" y="488" class="small">POST /api/explore/:id/enrich</text><text x="330" y="511" class="small">bounded Gemini call</text><text x="330" y="534" class="small">validate object shape</text>
+  <rect x="665" y="420" width="230" height="145" class="box" fill="#ede9fe" stroke="#8b5cf6"/>
+  <text x="690" y="458" class="label">6. Merge + persist</text><text x="690" y="488" class="small">update exploration</text><text x="690" y="511" class="small">status: enriched / fallback</text><text x="690" y="534" class="small">client refreshes view</text>
+  <path d="M1035 280 C1035 360 420 360 420 420" class="arrow"/><path d="M535 492 L665 492" class="arrow"/>
+  <rect x="120" y="620" width="960" height="42" class="box" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="145" y="647" class="small">The important product trade-off: response availability is decoupled from AI latency, but the initial output is a heuristic/local skeleton until enrichment succeeds.</text>
+</svg>

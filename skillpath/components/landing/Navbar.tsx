@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { MarketToggle } from '@/components/ui/MarketToggle';
 import { Zap } from 'lucide-react';
 
 export function Navbar() {
@@ -45,27 +44,8 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Center nav links */}
-        <div className="hidden md:flex items-center gap-1">
-          {['Features', 'How It Works', 'Explore'].map((label, i) => (
-            <button
-              key={label}
-              aria-label={`Scroll to ${label} section`}
-              onClick={() => {
-                const ids = ['features', 'how-it-works', 'explore'];
-                document.getElementById(ids[i])?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="px-4 py-2 text-[13px] font-bold uppercase tracking-wider text-muted hover:text-ink hover:bg-surface-strong transition-all duration-150 rounded-md focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:outline-none"
-              style={{ letterSpacing: '0.06em' }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <MarketToggle />
           <ThemeToggle />
           {mounted && (!user ? (
             <>

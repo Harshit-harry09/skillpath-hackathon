@@ -54,7 +54,7 @@ export function QuantificationScanner({ resumeText }: QuantificationScannerProps
         {/* Progress bar */}
         <div className="w-full h-2 rounded-full bg-surface-soft overflow-hidden mb-6">
           <div
-            className="h-full bg-brand-teal transition-all duration-500"
+            className="h-full bg-brand-teal transition-[width] duration-300 ease-out"
             style={{ width: `${pct}%` }}
           />
         </div>

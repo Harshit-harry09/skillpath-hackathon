@@ -101,12 +101,16 @@ export function getRoleLabel(slug: string): string {
  */
 export function detectRoleCategory(jdText: string): string {
   const t = jdText.toLowerCase();
+  const has = (phrase: string) => {
+    const escaped = phrase.toLowerCase().trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`(?:^|[^a-z0-9])${escaped}(?=$|[^a-z0-9])`, 'i').test(t);
+  };
 
   // Extract Seniority
   let seniority = "mid";
-  if (t.includes("junior") || t.includes("jr") || t.includes("entry") || t.includes("associate")) seniority = "junior";
-  else if (t.includes("senior") || t.includes("sr") || t.includes("lead") || t.includes("staff") || t.includes("principal")) seniority = "senior";
-  else if (t.includes("vp") || t.includes("director") || t.includes("head of") || t.includes("chief") || t.includes("executive")) seniority = "executive";
+  if (has("junior") || has("jr") || has("entry") || has("associate")) seniority = "junior";
+  else if (has("senior") || has("sr") || has("lead") || has("staff") || has("principal")) seniority = "senior";
+  else if (has("vp") || has("director") || has("head of") || has("chief") || has("executive")) seniority = "executive";
 
   let baseRole = "other";
 
@@ -141,7 +145,7 @@ export function detectRoleCategory(jdText: string): string {
   else if (t.includes("backend") || t.includes("back-end") || t.includes("node.js") || t.includes("go engineer") || t.includes("django") || t.includes("laravel")) baseRole = "backend-developer";
   else if (t.includes("full stack") || t.includes("fullstack") || t.includes("full-stack")) baseRole = "fullstack-developer";
   else if (t.includes("devops") || t.includes("sre") || t.includes("site reliability") || t.includes("platform engineer")) baseRole = "devops";
-  else if (t.includes("qa") || t.includes("quality assurance") || t.includes("test engineer") || t.includes("automation") || t.includes("sdet")) baseRole = "qa-engineer";
+  else if (has("qa") || t.includes("quality assurance") || t.includes("test engineer") || t.includes("automation") || has("sdet")) baseRole = "qa-engineer";
   else if (t.includes("embedded") || t.includes("firmware") || t.includes("microcontroller") || t.includes("rtos")) baseRole = "embedded-systems";
   else if (t.includes("cloud") || t.includes("infrastructure") || t.includes("aws") || t.includes("azure") || t.includes("kubernetes")) baseRole = "cloud-infra";
   else if (t.includes("data engineer") || t.includes("etl") || t.includes("data pipeline") || t.includes("analytics engineer")) baseRole = "data-engineer";
@@ -178,13 +182,13 @@ export function detectRoleCategory(jdText: string): string {
   else if (t.includes("management consultant") || t.includes("strategy consultant") || t.includes("consultant") || t.includes("consulting") || t.includes("strategy analyst")) baseRole = "consultant";
 
   // 10. People / HR
-  else if (t.includes("hr") || t.includes("human resources") || t.includes("people operations") || t.includes("people partner") || t.includes("compensation")) baseRole = "hr";
+  else if (has("hr") || t.includes("human resources") || t.includes("people operations") || t.includes("people partner") || t.includes("compensation")) baseRole = "hr";
 
   // 11. Legal
   else if (t.includes("legal") || t.includes("lawyer") || t.includes("attorney") || t.includes("counsel") || t.includes("compliance") || t.includes("paralegal")) baseRole = "legal";
 
   // 12. Design / Creative
-  else if (t.includes("product designer") || t.includes("ux designer") || t.includes("ui designer") || t.includes("designer") || t.includes("ux") || t.includes("ui") || t.includes("figma")) baseRole = "designer";
+  else if (t.includes("product designer") || t.includes("ux designer") || t.includes("ui designer") || t.includes("designer") || has("ux") || has("ui") || t.includes("figma")) baseRole = "designer";
   else if (t.includes("content creator") || t.includes("content writer") || t.includes("video editor") || t.includes("copywriter")) baseRole = "content-creator";
   else if (t.includes("technical writer") || t.includes("documentation engineer") || t.includes("api writer")) baseRole = "technical-writer";
   else if (t.includes("motion designer") || t.includes("graphic designer") || t.includes("animator") || t.includes("creative director")) baseRole = "graphic-designer";

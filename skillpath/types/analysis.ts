@@ -2,12 +2,76 @@
 
 export type ConfidenceLevel = 'never_used' | 'heard_of_it' | 'used_it' | 'comfortable' | 'strong';
 
+export type EvidenceMatchStatus =
+  | 'matched'
+  | 'partially_matched'
+  | 'transferable'
+  | 'missing'
+  | 'contradicted'
+  | 'unclear';
+
+export type RequirementImportance = 'must_have' | 'should_have' | 'nice_to_have';
+
+export interface SkillEvidenceDetail {
+  quote: string;
+  section?: string;
+  years?: number;
+  recency_year?: number;
+  strength?: 'strong' | 'moderate' | 'weak' | 'unclear';
+}
+
+export interface AnalysisEvidence {
+  id: string;
+  source: 'resume' | 'job_description';
+  skill: string;
+  canonical_skill: string;
+  quote: string;
+  section?: string;
+  years?: number;
+  recency_year?: number;
+  strength?: 'strong' | 'moderate' | 'weak' | 'unclear';
+  confidence: number;
+}
+
+export interface AnalysisRequirement {
+  id: string;
+  skill: string;
+  canonical_skill: string;
+  importance: RequirementImportance;
+  quote: string;
+  minimum_years?: number;
+  confidence: number;
+}
+
+export interface AnalysisMatch {
+  requirement_id: string;
+  status: EvidenceMatchStatus;
+  evidence_ids: string[];
+  similarity?: number;
+  reason: string;
+  confidence: number;
+}
+
+export interface AnalysisExplanation {
+  summary: string;
+  top_strengths: Array<{ skill: string; evidence_ids: string[] }>;
+  top_gaps: Array<{ skill: string; reason: string; requirement_ids: string[] }>;
+  next_actions: string[];
+}
+
 export interface SkillGap {
   skill: string;
   priority: number;
   weeks_to_learn: number;
   reason: string;
   in_mvc: boolean;
+  match_status?: EvidenceMatchStatus;
+  importance?: RequirementImportance;
+  requirement_id?: string;
+  evidence_ids?: string[];
+  evidence_quotes?: string[];
+  evidence_details?: SkillEvidenceDetail[];
+  confidence?: number;
   category?: string;
   premium?: number;
   trend?: Record<string, number>;
@@ -73,6 +137,7 @@ export interface AnalysisResult {
   resume_skills: string[];
   skill_gaps: SkillGap[];
   learning_plan?: LearningPlan;
+  learning_plan_source?: 'gemini' | 'deterministic_fallback' | 'deterministic_empty';
   jd_preview: string;
   summary?: string;
   created_at: string;
@@ -82,6 +147,16 @@ export interface AnalysisResult {
   matched_skills?: string[];
   trajectory?: TrajectoryInfo;
   foundational_prerequisites?: string[];
+  enrichment_status?: 'not_configured' | 'pending' | 'processing' | 'complete' | 'fallback' | 'unavailable' | 'deterministic_complete';
+  enrichment_error?: string;
+  score_source?: string;
+  ai_model?: string;
+  ai_prompt_version?: string;
+  evidence_version?: string;
+  evidence?: AnalysisEvidence[];
+  requirements?: AnalysisRequirement[];
+  matches?: AnalysisMatch[];
+  ai_explanation?: AnalysisExplanation;
   resume_text?: string;
   jd_text?: string;
 }

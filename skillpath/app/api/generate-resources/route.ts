@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateResources } from "@/lib/resource-generator";
 
+export const dynamic = 'force-dynamic';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface GenerateResourcesBody {
   analysis_id: string;
