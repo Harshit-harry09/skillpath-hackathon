@@ -1,4 +1,5 @@
 'use client';
+// updated
  
 import React, { useState, useRef } from 'react';
 import { X, Upload, FileText } from 'lucide-react';

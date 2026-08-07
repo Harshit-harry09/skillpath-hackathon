@@ -1,4 +1,5 @@
 'use client';
+// updated
 
 import React, { useMemo } from 'react';
 import { Trophy } from 'lucide-react';

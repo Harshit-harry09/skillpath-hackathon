@@ -1,3 +1,4 @@
+<!-- updated -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
   <title id="title">SkillPath system architecture</title>
   <desc id="desc">Browser UI connects to Next.js pages and API routes. APIs use deterministic local engines, optional Gemini enrichment, Firebase Auth and Firestore.</desc>

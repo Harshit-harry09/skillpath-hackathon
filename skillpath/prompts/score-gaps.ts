@@ -1,3 +1,4 @@
+// updated
 // Prompt: Score and rank skill gaps
 export const GAP_SCORING_SYSTEM = `You are a career advisor focused on speed-to-market. Given a list of skill gaps, rank each by hiring importance.
 Return ONLY a JSON object with a "gaps" key containing an array of objects. No explanation. No markdown.

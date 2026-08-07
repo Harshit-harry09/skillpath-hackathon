@@ -1,3 +1,4 @@
+// updated
 import { getDb } from './firebase-admin';
 import { callGeminiJSON } from './gemini';
 import { generateResourcesPrompt } from '../prompts/generate-resources';

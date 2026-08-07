@@ -1,3 +1,4 @@
+// updated
 // Prompt: Extract skills from a Resume
 export const RESUME_EXTRACTION_SYSTEM = `You are a technical recruiter. Extract every demonstrated skill, tool, technology, and qualification from the resume below.
 Include skills mentioned in: work experience, projects, education, certifications.

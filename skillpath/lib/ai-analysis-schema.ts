@@ -1,3 +1,4 @@
+// updated
 import type { AnalysisEvidence, AnalysisRequirement } from '@/types/analysis';
 
 export interface AiRoleExtraction {

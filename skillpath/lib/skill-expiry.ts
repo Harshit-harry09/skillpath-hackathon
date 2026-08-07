@@ -1,3 +1,4 @@
+// updated
 import skillTrends from './data/skill_trends.json';
 
 export type TrendStatus = 'declining' | 'stable_high' | 'rising' | 'unknown';

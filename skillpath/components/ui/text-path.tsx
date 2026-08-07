@@ -1,3 +1,4 @@
+// updated
 // Text Path — Originkit Infinite Wave Marquee
 "use client"
 

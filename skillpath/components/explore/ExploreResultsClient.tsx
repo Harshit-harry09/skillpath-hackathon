@@ -1,4 +1,5 @@
 'use client';
+// updated
 
 import React, { useEffect, useState } from 'react';
 import SkillMap from '@/components/explore/SkillMap';

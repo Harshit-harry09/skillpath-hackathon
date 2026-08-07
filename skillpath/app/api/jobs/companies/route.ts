@@ -1,3 +1,4 @@
+// updated
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/firebase-admin';
 import { validateGreenhouseBoardToken, refreshCompanyJobs } from '@/lib/greenhouse';

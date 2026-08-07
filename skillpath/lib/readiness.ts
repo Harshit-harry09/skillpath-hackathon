@@ -1,3 +1,4 @@
+// updated
 import type { TrackedSkill, SkillState } from '@/types/active-job';
 
 export function computeReadiness(skills: TrackedSkill[]): number {

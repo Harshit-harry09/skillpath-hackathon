@@ -1,3 +1,4 @@
+// updated
 // types/active-job.ts
 
 export type SkillState = 'not_started' | 'in_progress' | 'learned';

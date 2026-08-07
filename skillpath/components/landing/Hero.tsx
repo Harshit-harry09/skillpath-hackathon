@@ -1,4 +1,5 @@
 'use client';
+// updated
 
 import React, { useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';

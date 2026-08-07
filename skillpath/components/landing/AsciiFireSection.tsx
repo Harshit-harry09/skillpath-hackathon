@@ -1,4 +1,5 @@
 'use client';
+// updated
 
 import React from 'react';
 import AsciiFire from '@/components/ui/ascii-fire';

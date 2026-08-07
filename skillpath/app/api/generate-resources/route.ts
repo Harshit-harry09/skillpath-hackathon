@@ -1,3 +1,4 @@
+// updated
 import { NextRequest, NextResponse } from "next/server";
 import { generateResources } from "@/lib/resource-generator";
 

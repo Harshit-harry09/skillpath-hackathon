@@ -1,3 +1,4 @@
+// updated
 /**
  * Company Type Detector — O(1) keyword Map lookup.
  * Saves LLM tokens by classifying JD company type locally.

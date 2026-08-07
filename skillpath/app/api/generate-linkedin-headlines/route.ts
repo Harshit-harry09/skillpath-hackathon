@@ -1,3 +1,4 @@
+// updated
 import { NextRequest, NextResponse } from 'next/server';
 import { callGemini } from '@/lib/gemini';
 import { guardAiRequest } from '@/lib/request-guard';

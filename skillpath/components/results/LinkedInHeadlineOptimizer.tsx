@@ -1,4 +1,5 @@
 'use client';
+// updated
 
 import React, { useState } from 'react';
 import { Link2, Copy, Check, Loader2 } from 'lucide-react';

@@ -1,3 +1,4 @@
+// updated
 /**
  * Local history manager — saves analysis results to localStorage
  * so users can revisit past analyses without authentication.

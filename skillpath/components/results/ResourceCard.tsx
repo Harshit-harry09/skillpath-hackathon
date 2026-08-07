@@ -1,3 +1,4 @@
+// updated
 import React from 'react';
 import { ExternalLink, Sparkles, Target, Zap, Clock, SkipForward } from 'lucide-react';
 import type { Resource } from '@/types/analysis';

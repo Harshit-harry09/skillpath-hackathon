@@ -1,3 +1,4 @@
+<!-- updated -->
 # SkillPath Long-Term Memory (MEMORY.md)
 
 SkillPath is a high-performance career optimization platform designed to guide tech professionals in transition. By calculating the exact delta between a candidate's resume and a target job description (or career dream), it builds a precision-engineered 12-week learning roadmap with real-time tracking, salary projections, and curated learning recommendations.

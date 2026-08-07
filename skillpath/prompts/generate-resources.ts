@@ -1,3 +1,4 @@
+// updated
 export const generateResourcesPrompt = (
   skill: string,
   role: string,

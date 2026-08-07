@@ -1,4 +1,5 @@
 'use client';
+// updated
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from 'next-themes';

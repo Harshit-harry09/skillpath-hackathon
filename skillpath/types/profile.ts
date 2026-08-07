@@ -1,3 +1,4 @@
+// updated
 // types/profile.ts
 export interface UserProfile {
   uid: string;

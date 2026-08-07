@@ -1,3 +1,4 @@
+// updated
 // app/share/[id]/page.tsx
 import { getDb } from '@/lib/firebase-admin';
 import { notFound } from 'next/navigation';

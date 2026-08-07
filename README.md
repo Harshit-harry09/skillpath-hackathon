@@ -1,3 +1,4 @@
+<!-- updated -->
 # SkillPath: The Elite Career Architect 🚀
 
 ![SkillPath Banner](https://github.com/shauryap9006/Skillpath/raw/main/public/banner.png)

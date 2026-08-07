@@ -1,3 +1,4 @@
+<!-- updated -->
 # 🚀 SKILLPATH — Complete Hackathon Pitch & Deep Technical Documentation
 
 > **Event / Context**: Nehru Hackathon Pitch & Technical Review  
