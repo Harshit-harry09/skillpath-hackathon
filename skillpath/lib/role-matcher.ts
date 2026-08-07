@@ -32,14 +32,6 @@ export interface RoleMatch {
 
 // ── Helpers ──────────────────────────────────────────────
 
-function normalizeRole(role: string): string {
-  return role
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
-}
-
 function getDisplayName(slug: string): string {
   if (mvcProfiles[slug] && !Array.isArray(mvcProfiles[slug])) {
     return (mvcProfiles[slug] as any).role || formatSlug(slug);

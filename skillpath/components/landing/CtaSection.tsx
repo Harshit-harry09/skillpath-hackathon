@@ -34,8 +34,7 @@ export function CtaSection() {
   const { user, openAuthModal } = useAuth();
 
   const handleAction = () => {
-    if (user) router.push('/analyze');
-    else openAuthModal();
+    router.push('/analyze');
   };
 
   return (

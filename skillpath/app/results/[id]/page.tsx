@@ -3,12 +3,11 @@
 import React, { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Info, Share2, Target } from 'lucide-react';
+import { CheckCircle2, ChevronDown, Info, Share2, Target } from 'lucide-react';
 import { Accordion } from '@/components/ui/Accordion';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Chip } from '@/components/ui/Chip';
 import { GenerateAllButton } from '@/components/results/GenerateAllButton';
-import { PinJobButton } from '@/components/results/PinJobButton';
 import { ReadinessRing } from '@/components/results/ReadinessRing';
 import { SelfAssessmentModal } from '@/components/results/SelfAssessmentModal';
 import { SkillCard } from '@/components/results/SkillCard';
@@ -17,6 +16,14 @@ import { useAuth } from '@/context/AuthContext';
 import { saveToHistory, getHistory } from '@/lib/history';
 import { computeFreshnessScore } from '@/lib/skill-expiry';
 import { reweightGaps, recomputeReadinessWithConfidence, recomputeWeeks } from '@/lib/confidence-reweighter';
+import { JDSynonymMatcher } from '@/components/results/JDSynonymMatcher';
+import { RecruiterRedFlagRadar } from '@/components/results/RecruiterRedFlagRadar';
+import { InlineDiffEditor } from '@/components/editor/InlineDiffEditor';
+import { ShowYourWorkScore } from '@/components/results/ShowYourWorkScore';
+import { LayoutParseWarning } from '@/components/results/LayoutParseWarning';
+import { SeniorityCalibrator } from '@/components/results/SeniorityCalibrator';
+import { JargonTranslator } from '@/components/results/JargonTranslator';
+import { MultiFormatExporter } from '@/components/results/MultiFormatExporter';
 import type { AnalysisResult, ConfidenceLevel, SkillGap, SkillEvidenceDetail } from '@/types/analysis';
 
 const SecondaryTools = dynamic(
@@ -111,6 +118,7 @@ export default function ResultsPage({
   const [batchProgress, setBatchProgress] = useState({ current: 0, total: 0 });
   const [isListExpanded, setIsListExpanded] = useState(false);
   const [isPlanExpanded, setIsPlanExpanded] = useState(false);
+  const [showOptionalTools, setShowOptionalTools] = useState(false);
   const [activeJob, setActiveJob] = useState<ActiveJobState | null>(null);
 
   const handleConfidenceChange = useCallback((skill: string, level: ConfidenceLevel) => {
@@ -133,8 +141,10 @@ export default function ResultsPage({
   }, [data, assessments]);
 
   const visibleGaps = isListExpanded ? activeGaps : activeGaps.slice(0, 5);
+  const hasGapScore = typeof data?.gap_score === 'number';
   const gapScore = data?.gap_score ?? 0;
-  const readinessScore = adjustedReadiness ?? activeJob?.readiness_score ?? gapScore;
+  const serverReadiness = (data as (AnalysisResult & { readiness_score?: number }) | null)?.readiness_score;
+  const readinessScore = adjustedReadiness ?? activeJob?.readiness_score ?? serverReadiness ?? (hasGapScore ? gapScore : 0);
   const readyDate = adjustedWeeks !== undefined
     ? formatDate(new Date(Date.now() + adjustedWeeks * 7 * 24 * 60 * 60 * 1000).toISOString())
     : formatDate(data?.ready_by_date);
@@ -432,7 +442,7 @@ export default function ResultsPage({
       />
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-8 lg:px-12 pt-8 md:pt-14 w-full">
-        <header className="border-b border-hairline pb-8">
+        <header id="results-overview" className="border-b border-hairline pb-8">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-7">
             <div className="max-w-2xl">
               <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -467,14 +477,6 @@ export default function ResultsPage({
               >
                 {saved ? 'Saved' : 'Save'}
               </button>
-              <PinJobButton
-                analysisId={data.share_token}
-                jobTitle={data.role_label || 'Software Engineer'}
-                role={data.role_category || ''}
-                seniority="entry"
-                companyType={data.company_type}
-                skillGaps={data.skill_gaps}
-              />
               <button
                 onClick={handleShare}
                 className="min-h-11 px-4 rounded-md bg-primary text-on-primary font-sans font-semibold text-button hover:bg-primary-active transition-colors active:scale-[0.96]"
@@ -497,8 +499,8 @@ export default function ResultsPage({
                   </span>
                 </span>
               </div>
-              <span className="block font-display text-3xl mt-1 tabular-nums">{gapScore}<span className="text-base text-muted">/100</span></span>
-              <span className="block text-[10px] text-muted mt-1">Higher is stronger</span>
+              <span className="block font-display text-3xl mt-1 tabular-nums">{hasGapScore ? gapScore : 'Not scored'}{hasGapScore && <span className="text-base text-muted">/100</span>}</span>
+              <span className="block text-[10px] text-muted mt-1">Resume coverage of role requirements</span>
             </div>
             <div className="rounded-xl bg-surface-card border border-hairline px-4 py-4">
               <span className="block text-[10px] text-muted uppercase tracking-widest font-bold">Readiness</span>
@@ -524,37 +526,60 @@ export default function ResultsPage({
           </div>
         </header>
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-5 py-8 border-b border-hairline">
-          <div className="rounded-2xl bg-surface-card border border-hairline p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <CheckCircle2 size={16} className="text-brand-teal" />
-              <h2 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">What you already show</h2>
-            </div>
-            {topStrengths.length ? (
-              <div className="flex flex-wrap gap-2">
-                {topStrengths.map((strength) => <Chip key={strength.skill} variant="filled">{strength.skill}</Chip>)}
-              </div>
-            ) : (
-              <p className="font-sans text-body-sm text-muted">No strong matches were verified yet.</p>
-            )}
+        <nav aria-label="Results sections" className="sticky top-[72px] z-20 -mx-1 mt-4 mb-2 overflow-x-auto rounded-2xl border border-hairline bg-canvas/90 p-1.5 backdrop-blur-md">
+          <div className="flex min-w-max items-center gap-1">
+            <a href="#results-overview" className="rounded-xl bg-surface-card px-3 py-2 font-sans text-body-xs font-semibold text-ink shadow-sm transition-colors hover:bg-surface-soft">Overview</a>
+            <a href="#priority-gaps" className="rounded-xl px-3 py-2 font-sans text-body-xs font-semibold text-muted transition-colors hover:bg-surface-soft hover:text-ink">Priority gaps <span className="ml-1 tabular-nums">{activeGaps.length}</span></a>
+            <a href="#learning-roadmap" className="rounded-xl px-3 py-2 font-sans text-body-xs font-semibold text-muted transition-colors hover:bg-surface-soft hover:text-ink">Roadmap</a>
+            <a href="#more-tools" className="rounded-xl px-3 py-2 font-sans text-body-xs font-semibold text-muted transition-colors hover:bg-surface-soft hover:text-ink">More tools</a>
           </div>
-          <div className="rounded-2xl bg-surface-card border border-hairline p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Target size={16} className="text-brand-pink" />
-              <h2 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">Start here</h2>
-            </div>
-            <div className="space-y-2">
-              {topGaps.length ? topGaps.map((gap) => (
-                <div key={gap.skill} className="flex items-center justify-between gap-4 text-body-sm">
-                  <span className="font-semibold text-ink truncate">{gap.skill}</span>
-                  <span className="text-muted text-xs shrink-0">{gap.weeks_to_learn}w</span>
-                </div>
-              )) : <p className="font-sans text-body-sm text-muted">No priority gaps detected.</p>}
-            </div>
-          </div>
-        </section>
+        </nav>
 
-        <section id="priority-gaps" className="pt-10">
+        <div className="mt-7 grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="order-last min-w-0 xl:order-first">
+            <section className="pt-0 pb-8" aria-labelledby="readout-heading">
+          <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-brand-teal">Your readout</p>
+              <h2 id="readout-heading" className="mt-1 font-display text-title-lg md:text-display-sm tracking-tight">Start with the gaps that matter most.</h2>
+            </div>
+            <p className="max-w-md font-sans text-body-sm text-muted md:text-right">Use the overview to orient yourself, then work through the priority cards in order.</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-brand-teal" />
+                <h3 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">What you already show</h3>
+              </div>
+              {topStrengths.length ? (
+                <div className="flex flex-wrap gap-2">
+                  {topStrengths.map((strength) => <Chip key={strength.skill} variant="filled">{strength.skill}</Chip>)}
+                </div>
+              ) : (
+                <p className="font-sans text-body-sm text-muted">No strong matches were verified yet.</p>
+              )}
+            </div>
+            <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-2">
+                <Target size={16} className="text-brand-pink" />
+                <h3 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">Start here</h3>
+              </div>
+              <div className="space-y-2">
+                {topGaps.length ? topGaps.map((gap) => (
+                  <a key={gap.skill} href={`#skill-${gap.skill.toLowerCase().replace(/\s+/g, '-')}`} className="flex min-h-10 items-center justify-between gap-4 rounded-lg px-2 text-body-sm transition-colors hover:bg-surface-soft">
+                    <span className="truncate font-semibold text-ink">{gap.skill}</span>
+                    <span className="shrink-0 text-xs text-muted tabular-nums">{gap.weeks_to_learn}w</span>
+                  </a>
+                )) : <p className="font-sans text-body-sm text-muted">No priority gaps detected.</p>}
+              </div>
+            </div>
+          </div>
+            </section>
+
+            <LayoutParseWarning hasMultiColumn={true} />
+
+            <section id="priority-gaps" className="scroll-mt-28 pt-10">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
             <div>
               <p className="font-sans text-[10px] text-brand-teal uppercase tracking-widest font-bold mb-2">Your next actions</p>
@@ -605,9 +630,9 @@ export default function ResultsPage({
               {isListExpanded ? 'Show fewer gaps' : `View ${activeGaps.length - 5} more skill gaps`}
             </button>
           )}
-        </section>
+            </section>
 
-        <section className="mt-12 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
+            <section id="learning-roadmap" className="scroll-mt-28 mt-12 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
             <div>
               <p className="font-sans text-[10px] text-muted uppercase tracking-widest font-bold mb-2">One focused path</p>
@@ -652,9 +677,9 @@ export default function ResultsPage({
           ) : (
             <p className="mt-6 rounded-xl bg-surface-soft px-4 py-4 font-sans text-body-sm text-muted">Your plan will be generated from the evidence-backed cards above.</p>
           )}
-        </section>
+            </section>
 
-        <section className="mt-8 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
+            <section id="progress" className="scroll-mt-28 mt-8 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
             <div className="flex items-center gap-5">
               {activeJob && <ReadinessRing score={readinessScore} color={activeJob.color} size={80} strokeWidth={7} />}
@@ -670,9 +695,68 @@ export default function ResultsPage({
             </div>
           </div>
           <div className="mt-6"><ProgressBar progress={readinessScore} className="h-2" /></div>
-        </section>
+            </section>
+          </div>
 
-        <SecondaryTools data={data} activeGaps={activeGaps} freshnessResult={freshnessResult} />
+          <aside id="feature-rail" className="order-first min-w-0 space-y-4 xl:order-last xl:sticky xl:top-[88px] xl:max-h-[calc(100dvh-112px)] xl:overflow-y-auto xl:pr-1" aria-label="Feature rail">
+            <section className="rounded-2xl border border-hairline bg-surface-card p-5 shadow-sm">
+              <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-brand-teal">Tools at a glance</p>
+              <h2 className="mt-2 font-display text-title-md text-ink">Everything within reach</h2>
+              <p className="mt-1 font-sans text-body-sm text-muted">Jump to the part of your analysis you want to work on next.</p>
+
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <a href="#priority-gaps" className="rounded-xl border border-hairline bg-surface-soft px-3 py-3 transition-colors hover:bg-surface-strong">
+                  <span className="block font-display text-xl tabular-nums text-ink">{activeGaps.length}</span>
+                  <span className="mt-1 block font-sans text-[10px] font-semibold uppercase tracking-wider text-muted">Priority gaps</span>
+                </a>
+                <a href="#learning-roadmap" className="rounded-xl border border-hairline bg-surface-soft px-3 py-3 transition-colors hover:bg-surface-strong">
+                  <span className="block font-display text-xl tabular-nums text-ink">{data.learning_plan?.weeks?.length || 'Not set'}</span>
+                  <span className="mt-1 block font-sans text-[10px] font-semibold uppercase tracking-wider text-muted">Roadmap weeks</span>
+                </a>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                <a href="#more-tools" className="flex min-h-11 items-center justify-between rounded-xl border border-hairline px-3 py-2 font-sans text-body-sm font-semibold text-ink transition-colors hover:bg-surface-soft">
+                  <span>Resume and recruiter checks</span>
+                  <span className="text-muted">Open</span>
+                </a>
+                <a href="#career-tools" className="flex min-h-11 items-center justify-between rounded-xl border border-hairline px-3 py-2 font-sans text-body-sm font-semibold text-ink transition-colors hover:bg-surface-soft">
+                  <span>Career tools and market context</span>
+                  <span className="text-muted">Open</span>
+                </a>
+              </div>
+            </section>
+
+            <section id="more-tools" className="scroll-mt-28 rounded-2xl border border-hairline bg-surface-card p-4 shadow-sm" aria-label="Optional analysis tools">
+              <button
+                type="button"
+                onClick={() => setShowOptionalTools((value) => !value)}
+                aria-expanded={showOptionalTools}
+                className="flex min-h-14 w-full items-center justify-between gap-4 text-left"
+              >
+                <span>
+                  <span className="block font-display text-title-md text-ink">Resume and recruiter checks</span>
+                  <span className="mt-1 block font-sans text-body-xs text-muted">Open these after you understand your main gaps.</span>
+                </span>
+                <ChevronDown size={18} className={`shrink-0 text-muted transition-transform ${showOptionalTools ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showOptionalTools && (
+                <div className="mt-4 space-y-6">
+                  <RecruiterRedFlagRadar data={data} />
+                  <JDSynonymMatcher data={data} />
+                  <InlineDiffEditor />
+                  <ShowYourWorkScore data={data} />
+                  <SeniorityCalibrator />
+                  <JargonTranslator />
+                  <MultiFormatExporter data={data} />
+                </div>
+              )}
+            </section>
+
+            <SecondaryTools data={data} activeGaps={activeGaps} freshnessResult={freshnessResult} />
+          </aside>
+        </div>
       </div>
     </main>
   );

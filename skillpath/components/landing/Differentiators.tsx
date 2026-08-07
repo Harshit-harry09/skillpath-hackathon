@@ -11,7 +11,7 @@ const features = [
 
 export function Differentiators() {
   return (
-    <section id="features" className="relative py-16 md:py-28 px-4 sm:px-8 lg:px-24 flex justify-center" style={{ background: 'var(--color-canvas)' }}>
+    <section id="features" className="relative pt-8 pb-16 md:pt-12 md:pb-28 px-4 sm:px-8 lg:px-24 flex justify-center" style={{ background: 'var(--color-canvas)' }}>
       <div className="max-w-[1280px] w-full">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="mb-12 md:mb-20 flex items-end justify-between flex-wrap gap-4">
           <div>

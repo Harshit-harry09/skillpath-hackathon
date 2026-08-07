@@ -70,7 +70,13 @@ yarn-error.log*
 *.csv
 *.7z
 *.rar
+*.jsonl
+*.parquet
+data/india/
+data/mega/
+.next-stale*/
 assest/new1/glassdoor.csv
 assest/new1/glassdoor_wwfu.csv
 assest/so_survey/survey_results_public.csv
 assest/archive_4/postings.csv
+

@@ -1,0 +1,11 @@
+{
+  "name": "skillpath-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix skillpath run dev",
+    "build": "npm --prefix skillpath run build",
+    "start": "npm --prefix skillpath run start",
+    "lint": "npm --prefix skillpath run lint"
+  }
+}

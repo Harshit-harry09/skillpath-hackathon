@@ -44,43 +44,24 @@ export function Navbar() {
           </span>
         </Link>
 
+
+
         {/* Right side */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          {mounted && (!user ? (
-            <>
-              <button onClick={openAuthModal} className="text-[13px] font-bold uppercase tracking-wider px-3 py-1.5 transition-colors" style={{ color: 'var(--color-muted)' }}>
-                Sign in
-              </button>
-              <button
-                onClick={openAuthModal}
-                className="text-[13px] font-black uppercase tracking-wider px-5 py-2 rounded-md transition-all duration-150 active:translate-y-[2px]"
-                style={{
-                  background: 'var(--color-brand-pink)',
-                  color: '#fff',
-                  border: '2px solid var(--bold-border)',
-                  boxShadow: '3px 3px 0 var(--bold-border)',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                Try Free
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => router.push('/profile')}
-              className="text-[13px] font-black uppercase tracking-wider px-5 py-2 rounded-md transition-all duration-150 active:translate-y-[2px]"
-              style={{
-                background: 'var(--color-brand-pink)',
-                color: '#fff',
-                border: '2px solid var(--bold-border)',
-                boxShadow: '3px 3px 0 var(--bold-border)',
-                letterSpacing: '0.06em',
-              }}
-            >
-              Profile
-            </button>
-          ))}
+          <Link
+            href="/analyze"
+            className="text-[13px] font-black uppercase tracking-wider px-5 py-2 rounded-md transition-all duration-150 active:translate-y-[2px]"
+            style={{
+              background: 'var(--color-brand-pink)',
+              color: '#fff',
+              border: '2px solid var(--bold-border)',
+              boxShadow: '3px 3px 0 var(--bold-border)',
+              letterSpacing: '0.06em',
+            }}
+          >
+            Analyze Resume
+          </Link>
         </div>
       </div>
     </nav>

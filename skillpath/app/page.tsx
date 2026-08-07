@@ -6,7 +6,6 @@ import { LandingInputSection } from '@/components/landing/LandingInputSection';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { StatsSection } from '@/components/landing/StatsSection';
 import { FeaturesGrid } from '@/components/landing/FeaturesGrid';
-import { InterviewLabSection } from '@/components/landing/InterviewLabSection';
 import { Differentiators } from '@/components/landing/Differentiators';
 import { CtaSection, Footer } from '@/components/landing/CtaSection';
 
@@ -23,7 +22,6 @@ export default function Home() {
         <StatsSection />
        
         <FeaturesGrid />
-        <InterviewLabSection />
         <Differentiators />
         <CtaSection />
         <Footer />

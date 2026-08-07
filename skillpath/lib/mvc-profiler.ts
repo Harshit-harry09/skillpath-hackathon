@@ -477,6 +477,21 @@ export function rankGapsLocally(
   const dataSource = useIndiaMarket ? (mvcIndiaData as any) : (mvcData as any);
   const roleData = dataSource[roleCategory] || dataSource["mid-software-engineer"] || (mvcData as any)["mid-software-engineer"];
   const skills = Array.isArray(roleData) ? roleData : (roleData?.skills ?? []);
+  const allRoleSkillNames = skills.map((s: any) => s.skill);
+
+  // Guarantee minimum 15 gap skills per role analysis
+  let effectiveMissing = Array.from(new Set([...missingSkills]));
+  if (effectiveMissing.length < 15) {
+    const existingNorm = new Set(effectiveMissing.map(s => s.toLowerCase()));
+    for (const stdSkill of allRoleSkillNames) {
+      if (!existingNorm.has(stdSkill.toLowerCase())) {
+        effectiveMissing.push(stdSkill);
+        existingNorm.add(stdSkill.toLowerCase());
+        if (effectiveMissing.length >= 15) break;
+      }
+    }
+  }
+
   const mvcSet = new Set(mvcSkills.map(s => s.toLowerCase()));
   const metaMap: Record<string, any> = {};
   skills.forEach((s: any) => {
@@ -487,7 +502,7 @@ export function rankGapsLocally(
   const maxFreq = Math.max(...skills.map((s: any) => s.count || 1), 100);
   const estimatedTotal = maxFreq * 2.5; 
 
-  return missingSkills.map((skill, index) => {
+  return effectiveMissing.map((skill, index) => {
     const sNorm = skill.toLowerCase();
     const isMvc = mvcSet.has(sNorm);
     const meta = metaMap[sNorm] || { count: 0, premium: 0, trend: {} };

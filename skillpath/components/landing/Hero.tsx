@@ -87,7 +87,7 @@ export function Hero() {
           className="flex flex-wrap items-center justify-center gap-4 pt-2 relative z-10"
         >
           <button
-            onClick={() => (user ? router.push('/analyze') : openAuthModal())}
+            onClick={() => router.push('/analyze')}
             className="group flex items-center gap-3 font-black uppercase tracking-wider text-sm px-8 py-4 rounded-xl bg-[#1F3A4B] text-[#FAFDEE] dark:bg-[#C2F84F] dark:text-[#1F3A4B] border-2 border-[#1F3A4B] dark:border-[#C2F84F] shadow-[5px_5px_0_#ff4d8b] hover:shadow-[7px_7px_0_#ff4d8b] transition-all duration-150 active:translate-y-[2px] active:shadow-none"
           >
             <Zap className="w-4 h-4 fill-current text-[#C2F84F] dark:text-[#1F3A4B]" />

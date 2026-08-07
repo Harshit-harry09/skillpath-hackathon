@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Target, Map, Building, Clock, Zap } from 'lucide-react';
+import AsciiFire from '@/components/ui/ascii-fire';
 
 const features = [
   { icon: <Brain className="w-6 h-6" />, title: 'Instant Profile Analysis', desc: 'Upload your resume and get a gap score against real-world job descriptions in under a second.', accent: '#ff4d8b', num: '01' },
@@ -15,10 +16,31 @@ const features = [
 
 export function FeaturesGrid() {
   return (
-    <section className="relative py-16 md:py-28 px-4 sm:px-8 lg:px-24 flex justify-center" style={{ background: 'var(--color-canvas)' }}>
-      <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'var(--bold-border)' }} />
+    <section className="relative pt-16 pb-10 md:pt-24 md:pb-12 px-4 sm:px-8 lg:px-24 flex justify-center overflow-hidden" style={{ background: 'linear-gradient(to bottom, var(--color-canvas) 0%, var(--color-surface-soft) 100%)' }}>
+      <div className="absolute top-0 left-0 right-0 h-1 z-20" style={{ background: 'var(--bold-border)' }} />
 
-      <div className="max-w-[1280px] w-full">
+      {/* Background ASCII Flames rising from bottom behind cards */}
+      <div className="absolute inset-x-0 bottom-0 h-[360px] sm:h-[420px] md:h-[500px] pointer-events-none z-0 opacity-90 select-none overflow-hidden">
+        <AsciiFire
+          intensity={140}
+          thickness={4}
+          embers={true}
+          sparks={true}
+          charset="classic"
+          turbulence={40}
+          decay={8}
+        />
+        {/* Soft edge masking for seamless top and bottom fade */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to bottom, transparent 0%, transparent 80%, var(--color-surface-soft) 100%)',
+          }}
+        />
+      </div>
+
+      <div className="max-w-[1280px] w-full relative z-10">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="mb-14 md:mb-20">
           <div className="flex items-center gap-3 mb-5">
             <div className="h-1 w-10 rounded" style={{ background: '#2DD4BF' }} />
@@ -34,7 +56,7 @@ export function FeaturesGrid() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10">
           {features.map((f, i) => (
             <motion.div
               key={i}
@@ -42,7 +64,7 @@ export function FeaturesGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              className="group flex flex-col p-7 md:p-8 relative overflow-hidden transition-transform duration-200 hover:-translate-y-1"
+              className="group flex flex-col p-7 md:p-8 relative z-10 overflow-hidden transition-transform duration-200 hover:-translate-y-1"
               style={{ background: 'var(--color-surface-card)', border: '2px solid var(--bold-border)', borderRadius: '18px', boxShadow: `4px 4px 0 ${f.accent}` }}
             >
               <span className="absolute top-4 right-5 font-black select-none pointer-events-none" style={{ fontSize: '72px', lineHeight: 1, color: f.accent, opacity: 0.1, letterSpacing: '-0.05em' }}>{f.num}</span>
@@ -57,7 +79,7 @@ export function FeaturesGrid() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: 'var(--bold-border)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-1 z-20" style={{ background: 'var(--bold-border)' }} />
     </section>
   );
 }
