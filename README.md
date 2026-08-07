@@ -107,10 +107,3 @@ SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis wi
 
 ---
 
-## 🛡️ License
-Distributed under the MIT License.
-
-## 🤝 Contact
-Shaurya P - [shaurya.p@example.com](mailto:shaurya.p@example.com)
-
-Project Link: [https://github.com/shauryap9006/Skillpath](https://github.com/shauryap9006/Skillpath)

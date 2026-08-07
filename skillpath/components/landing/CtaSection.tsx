@@ -155,7 +155,7 @@ export function Footer() {
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-6">
-          {['Privacy', 'Terms', 'Contact'].map(link => (
+          {['Privacy', 'Terms'].map(link => (
             <button
               key={link}
               type="button"
