@@ -1,16 +1,17 @@
 'use client';
-// updated
 
 import React, { useState } from 'react';
 import {
   Play, Sparkles, CheckCircle2, AlertCircle,
   ChevronDown, Clock, RotateCcw, Layers, Zap,
-  TrendingUp, ArrowUpRight, DollarSign
+  DollarSign, FileText, Save, Check, Shield, User, UserCheck, Stethoscope, Search, FileCheck
 } from 'lucide-react';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import { ResourceCard } from './ResourceCard';
 import { ConfidenceStrip } from './ConfidenceStrip';
+import type { LucideIcon } from 'lucide-react';
 import type { SkillGap, Resource, SkillResources, ConfidenceLevel } from '@/types/analysis';
+import type { SkillState, AppRole } from '@/types/active-job';
 
 interface SkillCardProps {
   gap: SkillGap;
@@ -21,9 +22,9 @@ interface SkillCardProps {
   companyType: string;
   initialResources?: SkillResources | Resource[];
   autoGenerate?: boolean;
-  // Tracking integration
-  trackingState?: 'not_started' | 'in_progress' | 'learned';
-  onTrackingChange?: (skill: string, state: 'not_started' | 'in_progress' | 'learned') => Promise<void>;
+  // Tracking & Note integration
+  trackingState?: SkillState;
+  onTrackingChange?: (skill: string, state: SkillState, note?: string) => Promise<void>;
   trackingColor?: string;
   colorVariant?: string;
   // Confidence self-assessment
@@ -42,6 +43,15 @@ const statusConfig: Record<Status, { accent: string; border: string; bg: string 
 };
 
 const LEVELS = ['Basic', 'Intermediate', 'Advanced', 'Expert'] as const;
+
+const ROLE_BADGES: Record<AppRole, { label: string; icon: LucideIcon; color: string }> = {
+  user: { label: 'User', icon: User, color: 'text-brand-pink bg-brand-pink/10 border-brand-pink/20' },
+  admin: { label: 'Admin', icon: UserCheck, color: 'text-primary bg-primary/10 border-primary/20' },
+  authority: { label: 'Authority', icon: Shield, color: 'text-brand-purple bg-brand-purple/10 border-brand-purple/20' },
+  hospital: { label: 'Hospital', icon: Stethoscope, color: 'text-brand-teal bg-brand-teal/10 border-brand-teal/20' },
+  investigator: { label: 'Investigator', icon: Search, color: 'text-brand-ochre bg-brand-ochre/10 border-brand-ochre/20' },
+  reviewer: { label: 'Reviewer', icon: FileCheck, color: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20' },
+};
 
 const PriorityDots = ({ priority }: { priority: number }) => {
   const lit = Math.max(1, 6 - priority);
@@ -82,8 +92,15 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
     skillResources ? Math.floor(skillResources.resources.length / 4) : 0
   );
 
+  // Reflection note state
+  const [showNoteBox, setShowNoteBox] = useState(Boolean(gap.note));
+  const [noteText, setNoteText] = useState(gap.note || '');
+  const [savingNote, setSavingNote] = useState(false);
+  const [savedNoteSuccess, setSavedNoteSuccess] = useState(false);
+
   const level = LEVELS[Math.min(clickCount, 3)];
   const cfg = statusConfig[status];
+  const roleBadge = gap.role_category ? ROLE_BADGES[gap.role_category] : null;
 
   const generate = async (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -132,17 +149,21 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
     if (autoGenerate && status === 'idle' && !initialResources) generate();
   }, [autoGenerate]);
 
-  const handleToggle = async (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleStateChange = async (newState: SkillState) => {
     if (!onTrackingChange) return;
+    await onTrackingChange(gap.skill, newState, noteText);
+  };
 
-    const next = {
-      not_started: 'in_progress',
-      in_progress: 'learned',
-      learned: 'not_started'
-    }[trackingState] as any;
-
-    await onTrackingChange(gap.skill, next);
+  const handleSaveNote = async () => {
+    if (!onTrackingChange) return;
+    setSavingNote(true);
+    try {
+      await onTrackingChange(gap.skill, trackingState, noteText);
+      setSavedNoteSuccess(true);
+      setTimeout(() => setSavedNoteSuccess(false), 2000);
+    } finally {
+      setSavingNote(false);
+    }
   };
 
   return (
@@ -158,24 +179,53 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
           {/* Header: grid */}
           <div className="flex gap-4 md:gap-6 items-start">
 
-            {/* Tracking Toggle */}
-            <div className="pt-1.5">
-              <button
-                onClick={handleToggle}
-                className={`w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all active:scale-90 ${trackingState === 'learned' ? 'bg-brand-teal border-brand-teal text-on-primary' :
-                    trackingState === 'in_progress' ? 'bg-primary/10 border-primary text-primary' :
-                      'bg-transparent border-hairline text-muted hover:border-muted/50'
-                  } ${!onTrackingChange ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}`}
-                title={onTrackingChange ? `Status: ${trackingState.replace('_', ' ')}` : 'Pin job to track progress'}
-              >
-                {trackingState === 'learned' ? <CheckCircle2 size={18} /> :
-                  trackingState === 'in_progress' ? <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" /> :
-                    <div className="w-2.5 h-2.5 rounded-full border-2 border-hairline" />}
-              </button>
+            {/* Tracking State Selector */}
+            <div className="pt-1 flex flex-col items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 bg-surface-soft p-1 rounded-full border border-hairline">
+                <button
+                  onClick={() => handleStateChange('not_started')}
+                  className={[
+                    'px-2 py-1 rounded-full font-mono text-[9px] font-bold uppercase transition-all',
+                    trackingState === 'not_started'
+                      ? 'bg-muted/20 text-ink shadow-xs'
+                      : 'text-muted hover:text-ink',
+                  ].join(' ')}
+                  title="Mark Not Started"
+                >
+                  NS
+                </button>
+                <button
+                  onClick={() => handleStateChange('in_progress')}
+                  className={[
+                    'px-2 py-1 rounded-full font-mono text-[9px] font-bold uppercase transition-all',
+                    trackingState === 'in_progress'
+                      ? 'bg-primary text-on-primary shadow-xs'
+                      : 'text-muted hover:text-ink',
+                  ].join(' ')}
+                  title="Mark In Progress"
+                >
+                  IP
+                </button>
+                <button
+                  onClick={() => handleStateChange('learned')}
+                  className={[
+                    'px-2 py-1 rounded-full font-mono text-[9px] font-bold uppercase transition-all',
+                    trackingState === 'learned'
+                      ? 'bg-brand-teal text-on-primary shadow-xs'
+                      : 'text-muted hover:text-ink',
+                  ].join(' ')}
+                  title="Mark Completed"
+                >
+                  CP
+                </button>
+              </div>
+              <span className="font-mono text-[8px] text-muted uppercase tracking-wider font-bold">
+                {trackingState === 'learned' ? 'Completed' : trackingState === 'in_progress' ? 'In Progress' : 'Not Started'}
+              </span>
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="font-mono text-[11px] text-muted font-bold tracking-widest">
                   #{String(index + 1).padStart(2, '0')}
                 </span>
@@ -185,11 +235,18 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
                     MVC
                   </span>
                 )}
-                {/* Phase 2: Salary ROI Badge */}
+                {/* Feature 2: Role Badge */}
+                {roleBadge && (
+                  <span className={`flex items-center gap-1 px-2 py-0.5 rounded-sm border text-[9px] font-bold tracking-widest uppercase ${roleBadge.color}`}>
+                    <roleBadge.icon size={9} />
+                    {roleBadge.label}
+                  </span>
+                )}
+                {/* Salary ROI Badge */}
                 {gap.premium && gap.premium > 0 && (
                   <span className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-brand-ochre/10 border border-brand-ochre/20 text-[9px] text-brand-ochre font-bold tracking-widest uppercase">
                     <DollarSign size={8} />
-                    +${Math.round(gap.premium / 1000)}k Market Value
+                    +${Math.round(gap.premium / 1000)}k Value
                   </span>
                 )}
                 <span className="px-2 py-0.5 rounded-sm bg-surface-soft border border-hairline text-[9px] text-muted font-bold uppercase tracking-widest">
@@ -214,13 +271,13 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
           </div>
 
           {/* Reason */}
-          <p className="font-sans text-body-md text-muted leading-relaxed mt-5 max-w-2xl">
+          <p className="font-sans text-body-md text-muted leading-relaxed mt-4 max-w-2xl">
             {gap.reason}
           </p>
 
           {/* Confidence Self-Assessment Strip */}
           {onConfidenceChange && (
-            <div className="mt-5 pt-4 border-t border-hairline/50">
+            <div className="mt-4 pt-4 border-t border-hairline/50">
               <ConfidenceStrip
                 skill={gap.skill}
                 value={confidenceLevel ?? 'never_used'}
@@ -229,6 +286,55 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
               />
             </div>
           )}
+
+          {/* Feature 1: Reflection & Notes Toggle & Input */}
+          <div className="mt-4 pt-4 border-t border-hairline/40">
+            <button
+              onClick={() => setShowNoteBox(v => !v)}
+              className="flex items-center gap-2 font-sans text-xs font-semibold text-muted hover:text-ink transition-colors"
+            >
+              <FileText size={14} className={noteText ? 'text-primary' : 'text-muted'} />
+              <span>{noteText ? 'View / Edit Reflection Note' : 'Add Reflection Note'}</span>
+              {noteText && (
+                <span className="w-2 h-2 rounded-full bg-primary" />
+              )}
+            </button>
+
+            <AnimatePresence>
+              {showNoteBox && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden mt-3 space-y-2"
+                >
+                  <textarea
+                    value={noteText}
+                    onChange={e => setNoteText(e.target.value)}
+                    placeholder="Document your key learnings, projects built, or obstacles encountered..."
+                    rows={3}
+                    className="w-full p-3 bg-surface-soft border border-hairline rounded-xl font-sans text-body-sm text-ink placeholder:text-muted/50 focus:outline-none focus:border-primary transition-all resize-y"
+                  />
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[10px] text-muted">
+                      {gap.note_updated_at ? `Saved ${new Date(gap.note_updated_at).toLocaleDateString()}` : 'Persisted to your active path'}
+                    </span>
+                    <button
+                      onClick={handleSaveNote}
+                      disabled={savingNote}
+                      className="flex items-center gap-1.5 px-4 py-2 bg-ink text-on-primary font-sans text-xs font-bold rounded-lg hover:opacity-90 active:scale-95 transition-all shadow-xs disabled:opacity-50"
+                    >
+                      {savedNoteSuccess ? (
+                        <><Check size={14} className="text-brand-teal" /> Saved!</>
+                      ) : (
+                        <><Save size={14} /> {savingNote ? 'Saving...' : 'Save Note'}</>
+                      )}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* ── Strategic Focus (slides in) ───────────────────────── */}
