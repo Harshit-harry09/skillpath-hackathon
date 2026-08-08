@@ -1,11 +1,12 @@
 // updated
 import type { TrackedSkill, SkillState } from '@/types/active-job';
 
-export function computeReadiness(skills: TrackedSkill[]): number {
-  if (!skills || skills.length === 0) return 0;
-
-  // Log what we're receiving
-  console.log('[computeReadiness] skills:', skills.map(s => `${s.skill}:${s.state}`));
+export function computeReadiness(
+  skills: TrackedSkill[],
+  resumeSkills?: string[],
+  baselineScore?: number
+): number {
+  if (!skills || skills.length === 0) return baselineScore ?? 100;
 
   const stateValue = (state: SkillState): number => {
     if (state === 'learned') return 1.0;
@@ -13,22 +14,36 @@ export function computeReadiness(skills: TrackedSkill[]): number {
     return 0;
   };
 
-  const totalWeight = skills.reduce((sum, s) => {
-    // Guard against priority=0 or negative
+  const totalGapWeight = skills.reduce((sum, s) => {
     const w = Math.max(1, 6 - (s.priority || 3));
     return sum + w;
   }, 0);
 
-  const earned = skills.reduce((sum, s) => {
+  const earnedGapWeight = skills.reduce((sum, s) => {
     const w = Math.max(1, 6 - (s.priority || 3));
     const v = stateValue(s.state);
-    console.log(`  ${s.skill}: priority=${s.priority} weight=${w} state=${s.state} value=${v}`);
     return sum + w * v;
   }, 0);
 
-  const score = totalWeight === 0 ? 0 : Math.round((earned / totalWeight) * 100);
-  console.log(`[computeReadiness] earned=${earned} total=${totalWeight} score=${score}`);
-  return score;
+  const gapFraction = totalGapWeight === 0 ? 1 : earnedGapWeight / totalGapWeight;
+
+  // 1. If resumeSkills array is provided and has matched items
+  if (Array.isArray(resumeSkills) && resumeSkills.length > 0) {
+    const matchedCount = resumeSkills.length;
+    const matchedWeight = matchedCount * 3; // Average priority weight 3
+    const totalWeight = matchedWeight + totalGapWeight;
+    const totalEarned = matchedWeight + earnedGapWeight;
+    return Math.min(100, Math.round((totalEarned / totalWeight) * 100));
+  }
+
+  // 2. If explicit baseline score is provided (e.g. 65%)
+  if (typeof baselineScore === 'number' && baselineScore > 0 && baselineScore < 100) {
+    const score = baselineScore + (100 - baselineScore) * gapFraction;
+    return Math.min(100, Math.round(score));
+  }
+
+  // 3. Fallback: gap completion percentage
+  return Math.min(100, Math.round(gapFraction * 100));
 }
 
 export const PIN_COLORS = [
