@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   turbopack: {},
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      '@number-flow/react',
+      'sonner',
+      'clsx',
+      'tailwind-merge',
+    ],
+  },
   // Source maps make production debugging easier but expose the complete
   // client source tree. Keep them opt-in for controlled debugging sessions.
   productionBrowserSourceMaps: process.env.NEXT_PUBLIC_ENABLE_SOURCE_MAPS === 'true',

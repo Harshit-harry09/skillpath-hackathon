@@ -2,8 +2,11 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
-import NeuralBackground from '@/components/ui/flow-field-background';
+import dynamic from 'next/dynamic';
 import { SkillBattle } from '@/components/explore/SkillBattle';
+
+const NeuralBackground = dynamic(() => import('@/components/ui/flow-field-background'), { ssr: false });
+
 
 export default function BattlePage() {
   const [mounted, setMounted] = React.useState(false);

@@ -10,9 +10,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Chip } from '@/components/ui/Chip';
 import { GenerateAllButton } from '@/components/results/GenerateAllButton';
 import { ReadinessRing } from '@/components/results/ReadinessRing';
-import { SelfAssessmentModal } from '@/components/results/SelfAssessmentModal';
 import { SkillCard } from '@/components/results/SkillCard';
-import { StarBulletModal } from '@/components/results/StarBulletModal';
 import { useAuth } from '@/context/AuthContext';
 import { saveToHistory, getHistory } from '@/lib/history';
 import { computeFreshnessScore } from '@/lib/skill-expiry';
@@ -29,9 +27,13 @@ import { SidebarScorecard } from '@/components/results/SidebarScorecard';
 import { UnifiedToolkit } from '@/components/results/UnifiedToolkit';
 import { RoleFilterTabs } from '@/components/results/RoleFilterTabs';
 import { PinJobButton } from '@/components/results/PinJobButton';
-import { OpenJobModal } from '@/components/results/OpenJobModal';
 import type { AppRole, ActiveJob } from '@/types/active-job';
 import type { AnalysisResult, ConfidenceLevel, SkillGap, SkillEvidenceDetail } from '@/types/analysis';
+
+const SelfAssessmentModal = dynamic(() => import('@/components/results/SelfAssessmentModal').then((m) => m.SelfAssessmentModal), { ssr: false });
+const StarBulletModal = dynamic(() => import('@/components/results/StarBulletModal').then((m) => m.StarBulletModal), { ssr: false });
+const OpenJobModal = dynamic(() => import('@/components/results/OpenJobModal').then((m) => m.OpenJobModal), { ssr: false });
+
 
 const SecondaryTools = dynamic(
   () => import('@/components/results/SecondaryTools').then((module) => module.SecondaryTools),
