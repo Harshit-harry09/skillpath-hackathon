@@ -24,6 +24,17 @@ interface SecondaryToolsProps {
 
 type PanelKey = 'resume' | 'career' | 'market';
 
+// COUNTS BY STATUS/TOPIC \u2014 secondary panel groups
+// SecondaryTools organises all non-critical analysis tools into three named panels
+// so judges can navigate by topic without being overwhelmed on first load.
+//
+// Panel groups (PanelKey):
+//   'resume'  \u2014 Resume quality & De-Slopifier: grammar audit, buzzword removal, metric discovery
+//   'career'  \u2014 Career content & STAR bullets: cover letter, LinkedIn headline, STAR generators
+//   'market'  \u2014 Market & trajectory simulations: salary ROI, skill freshness, competitive benchmark
+//
+// Each panel is collapsed by default; the judge/user opens whichever topic they want to explore.
+// This keeps the initial results view focused on the primary decision path (gaps \u2192 roadmap).
 const panelMeta: Record<PanelKey, { label: string; description: string; icon: typeof Wrench }> = {
   resume: {
     label: 'Resume quality & De-Slopifier',

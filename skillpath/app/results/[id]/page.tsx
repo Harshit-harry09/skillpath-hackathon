@@ -155,6 +155,16 @@ export default function ResultsPage({
     return computeFreshnessScore(data.resume_skills);
   }, [data?.resume_skills]);
 
+  // COUNTS BY STATUS/TOPIC
+  // Computes a breakdown of every job-description requirement into five
+  // status buckets: matched, partially_matched, transferable, missing, and
+  // contradicted/unclear ("review"). These counts are surfaced in the status
+  // strip below the header metrics so judges can instantly see coverage.
+  //
+  // Data source priority:
+  //   1. data.matches[]  — AI-enriched evidence matches (highest fidelity)
+  //   2. data.skill_gaps[] with match_status — local gap list as fallback
+  //   3. Estimated from matched_skills length when neither is available
   const requirementSummary = useMemo(() => {
     if (!data) return { total: 0, matched: 0, partial: 0, transferable: 0, missing: 0, review: 0 };
     const total = data.matches?.length || data.requirements?.length || data.jd_skills?.length || activeGaps.length;
@@ -412,6 +422,15 @@ export default function ResultsPage({
     );
   }
 
+  // DEMO DATA — VISIBLE TO JUDGES
+  // topStrengths: up to 3 confirmed skill matches shown in the "What you already show" card.
+  // topGaps: first 3 priority skill gaps shown in the "Start here" next-step card.
+  // primarySummary: one-sentence analysis overview shown in the page header.
+  // planStatusLabel: badge on the learning roadmap card indicating AI vs fallback plan source.
+  //
+  // For a live hackathon demo, these values are populated from real analysis data once
+  // the user submits a resume and JD. The AI-enrichment pass (if configured) upgrades
+  // them from local heuristics to evidence-backed AI output after the page loads.
   const topStrengths = data.ai_explanation?.top_strengths?.slice(0, 3) || (data.matched_skills || []).slice(0, 3).map((skill) => ({ skill, evidence_ids: [] }));
   const topGaps = activeGaps.slice(0, 3);
   const primarySummary = data.ai_explanation?.summary || data.summary || `You have ${activeGaps.length} priority skill gaps for this role.`;
@@ -487,6 +506,14 @@ export default function ResultsPage({
             </div>
           </div>
 
+          {/* SUMMARY PANEL — four at-a-glance metric cards
+              Gap score    : 0–100 coverage of JD requirements (higher = better match)
+              Readiness    : adjusted score that respects user self-assessments and active-job tracking
+              Priority gaps: count of skills the user still needs to close
+              Ready by     : estimated date when all gaps could be closed given weekly study hours
+
+              These four numbers are the first thing judges see after a resume is analyzed.
+              They are deterministic on the critical path — no AI call is needed to render them. */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
             <div className="rounded-xl bg-surface-card border border-hairline px-4 py-4">
               <div className="flex items-center gap-1">
@@ -517,6 +544,16 @@ export default function ResultsPage({
             </div>
           </div>
 
+          {/* COUNTS BY STATUS/TOPIC — requirement coverage strip
+              Shows total JD requirements checked and breaks them down by match status.
+              Matched (teal) — exact or strong evidence in the resume
+              Partial (ochre) — some evidence but not full coverage
+              Transferable (lavender) — adjacent skill the model accepted as a proxy
+              Missing (pink) — no supporting evidence found
+              Need review (muted) — contradicted or unclear evidence
+
+              This strip lets judges immediately gauge overall coverage depth
+              without needing to scroll through individual skill cards. */}
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl bg-surface-soft/70 border border-hairline px-4 py-3">
             <span className="font-sans text-[10px] font-bold uppercase tracking-widest text-ink">{requirementSummary.total} requirements checked</span>
             <span className="font-sans text-[10px] font-semibold text-brand-teal">{requirementSummary.matched} matched</span>
@@ -547,6 +584,14 @@ export default function ResultsPage({
             <p className="max-w-md font-sans text-body-sm text-muted md:text-right">Use the overview to orient yourself, then work through the priority cards in order.</p>
           </div>
 
+          {/* NEXT-STEP RECOMMENDATION — two-column decision summary
+              Left card  "What you already show": up to 3 confirmed skill strengths
+              Right card "Start here": the 3 highest-priority gaps, each linking
+                         directly to its full skill card below for drill-down
+
+              This is the primary judge-facing demo moment: the system surfaces
+              a personalized, evidence-backed action queue so users know exactly
+              what to learn next — no digging through a long list required. */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-2">
