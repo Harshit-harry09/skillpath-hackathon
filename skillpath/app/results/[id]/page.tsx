@@ -25,6 +25,12 @@ import { LayoutParseWarning } from '@/components/results/LayoutParseWarning';
 import { SeniorityCalibrator } from '@/components/results/SeniorityCalibrator';
 import { JargonTranslator } from '@/components/results/JargonTranslator';
 import { MultiFormatExporter } from '@/components/results/MultiFormatExporter';
+import { SidebarScorecard } from '@/components/results/SidebarScorecard';
+import { UnifiedToolkit } from '@/components/results/UnifiedToolkit';
+import { RoleFilterTabs } from '@/components/results/RoleFilterTabs';
+import { PinJobButton } from '@/components/results/PinJobButton';
+import { OpenJobModal } from '@/components/results/OpenJobModal';
+import type { AppRole, ActiveJob } from '@/types/active-job';
 import type { AnalysisResult, ConfidenceLevel, SkillGap, SkillEvidenceDetail } from '@/types/analysis';
 
 const SecondaryTools = dynamic(
@@ -36,6 +42,7 @@ type ActiveJobSkill = {
   skill: string;
   state: 'not_started' | 'in_progress' | 'learned';
   weeks_to_learn?: number;
+  note?: string;
 };
 
 type ActiveJobState = {
@@ -43,6 +50,27 @@ type ActiveJobState = {
   readiness_score: number;
   skills: ActiveJobSkill[];
 };
+
+// ── localStorage helpers for guest / unpinned progress persistence ─────────
+const LS_KEY = (id: string) => `skillpath_progress_${id}`;
+
+function loadLocalProgress(id: string): ActiveJobState | null {
+  try {
+    const raw = localStorage.getItem(LS_KEY(id));
+    if (!raw) return null;
+    return JSON.parse(raw) as ActiveJobState;
+  } catch {
+    return null;
+  }
+}
+
+function saveLocalProgress(id: string, state: ActiveJobState) {
+  try {
+    localStorage.setItem(LS_KEY(id), JSON.stringify(state));
+  } catch {
+    // storage quota exceeded — ignore
+  }
+}
 
 const statusLabel: Record<string, string> = {
   not_configured: 'Local analysis',
@@ -121,15 +149,96 @@ export default function ResultsPage({
   const [isPlanExpanded, setIsPlanExpanded] = useState(false);
   const [showOptionalTools, setShowOptionalTools] = useState(false);
   const [activeJob, setActiveJob] = useState<ActiveJobState | null>(null);
+  const [seniorityLevel, setSeniorityLevel] = useState<import('@/components/results/SeniorityCalibrator').SeniorityLevel>('senior');
+  const [selectedRole, setSelectedRole] = useState<AppRole | 'all'>('all');
 
   const handleConfidenceChange = useCallback((skill: string, level: ConfidenceLevel) => {
     setAssessments((previous) => ({ ...previous, [skill]: level }));
   }, []);
 
+  /** Called by PinJobButton when a job is successfully pinned */
+  const handlePinned = useCallback((job: ActiveJob) => {
+    setActiveJob({
+      color: job.color,
+      readiness_score: job.readiness_score,
+      skills: job.skills as unknown as ActiveJobSkill[],
+    });
+    // Clear local draft once real DB record exists
+    try { localStorage.removeItem(LS_KEY(id)); } catch { /* noop */ }
+  }, [id]);
+
   const { activeGaps, masteredSkills } = useMemo(() => {
     if (!data) return { activeGaps: [] as SkillGap[], masteredSkills: [] as SkillGap[] };
     return reweightGaps(data.skill_gaps, assessments);
   }, [data, assessments]);
+
+  const gapsWithRoles = useMemo(() => {
+    function inferRole(skillName: string): AppRole {
+      const lower = skillName.toLowerCase();
+      if (lower.includes('admin') || lower.includes('devops') || lower.includes('docker') || lower.includes('kubernetes') || lower.includes('aws') || lower.includes('cloud')) return 'admin';
+      if (lower.includes('security') || lower.includes('compliance') || lower.includes('audit') || lower.includes('auth') || lower.includes('governance')) return 'authority';
+      if (lower.includes('health') || lower.includes('hipaa') || lower.includes('medical') || lower.includes('clinical') || lower.includes('hospital')) return 'hospital';
+      if (lower.includes('flaw') || lower.includes('investigat') || lower.includes('debug') || lower.includes('fraud') || lower.includes('forensic')) return 'investigator';
+      if (lower.includes('review') || lower.includes('quality') || lower.includes('testing') || lower.includes('qa') || lower.includes('code review')) return 'reviewer';
+      return 'user';
+    }
+
+    return activeGaps.map((gap) => ({
+      ...gap,
+      role_category: gap.role_category || inferRole(gap.skill),
+    }));
+  }, [activeGaps]);
+
+  const roleCounts = useMemo(() => {
+    const counts: Record<AppRole | 'all', number> = {
+      all: gapsWithRoles.length,
+      user: 0, admin: 0, authority: 0, hospital: 0, investigator: 0, reviewer: 0,
+    };
+    gapsWithRoles.forEach((gap) => {
+      if (gap.role_category) counts[gap.role_category] = (counts[gap.role_category] || 0) + 1;
+    });
+    return counts;
+  }, [gapsWithRoles]);
+
+  const filteredGaps = useMemo(() => {
+    if (selectedRole === 'all') return gapsWithRoles;
+    return gapsWithRoles.filter((gap) => gap.role_category === selectedRole);
+  }, [gapsWithRoles, selectedRole]);
+
+  // Role-scoped requirement summary for SidebarScorecard
+  const filteredRequirementSummary = useMemo(() => {
+    if (selectedRole === 'all' || !data) return undefined;
+    const total = filteredGaps.length;
+    if (data.matches?.length) {
+      // Link matches to filteredGaps via requirement_id
+      const filteredReqIds = new Set(filteredGaps.map(g => g.requirement_id).filter(Boolean));
+      // Also allow matching by skill name for older data without requirement_id
+      const filteredSkillNames = new Set(filteredGaps.map(g => g.skill.toLowerCase()));
+      const filteredMatches = data.matches.filter(m =>
+        filteredReqIds.has(m.requirement_id) ||
+        filteredGaps.some(g => g.requirement_id === m.requirement_id)
+      );
+      // Fallback: if no requirement_id overlap, use gap count-based summary
+      const matchBase = filteredMatches.length ? filteredMatches : data.matches.slice(0, total);
+      return {
+        total: matchBase.length || total,
+        matched: matchBase.filter(m => m.status === 'matched').length,
+        partial: matchBase.filter(m => m.status === 'partially_matched').length,
+        transferable: matchBase.filter(m => m.status === 'transferable').length,
+        missing: matchBase.filter(m => m.status === 'missing').length,
+        review: matchBase.filter(m => m.status === 'contradicted' || m.status === 'unclear').length,
+      };
+    }
+    return {
+      total,
+      matched: filteredGaps.filter(g => !g.match_status || g.match_status === 'matched').length,
+      partial: filteredGaps.filter(g => g.match_status === 'partially_matched').length,
+      transferable: filteredGaps.filter(g => g.match_status === 'transferable').length,
+      missing: filteredGaps.filter(g => !g.match_status || g.match_status === 'missing').length,
+      review: filteredGaps.filter(g => g.match_status === 'contradicted' || g.match_status === 'unclear').length,
+    };
+  }, [selectedRole, filteredGaps, data]);
+
 
   const adjustedReadiness = useMemo(() => {
     if (!data || Object.keys(assessments).length === 0) return undefined;
@@ -141,7 +250,8 @@ export default function ResultsPage({
     return recomputeWeeks(data.skill_gaps, assessments);
   }, [data, assessments]);
 
-  const visibleGaps = isListExpanded ? activeGaps : activeGaps.slice(0, 5);
+  const [showOpenJobModal, setShowOpenJobModal] = useState(false);
+  const visibleGaps = isListExpanded ? filteredGaps : filteredGaps.slice(0, 5);
   const hasGapScore = typeof data?.gap_score === 'number';
   const gapScore = data?.gap_score ?? 0;
   const serverReadiness = (data as (AnalysisResult & { readiness_score?: number }) | null)?.readiness_score;
@@ -149,6 +259,17 @@ export default function ResultsPage({
   const readyDate = adjustedWeeks !== undefined
     ? formatDate(new Date(Date.now() + adjustedWeeks * 7 * 24 * 60 * 60 * 1000).toISOString())
     : formatDate(data?.ready_by_date);
+
+  // Auto popup OpenJobModal once when readiness score reaches 80%+
+  useEffect(() => {
+    if (readinessScore >= 80 && id) {
+      const storageKey = `open_job_modal_popped_results_${id}`;
+      if (!sessionStorage.getItem(storageKey)) {
+        setShowOpenJobModal(true);
+        sessionStorage.setItem(storageKey, 'true');
+      }
+    }
+  }, [readinessScore, id]);
 
   const freshnessResult = useMemo(() => {
     if (!data?.resume_skills) return null;
@@ -269,14 +390,32 @@ export default function ResultsPage({
   useEffect(() => {
     async function fetchActiveJob() {
       const token = await getToken();
-      if (!token) return;
+      if (!token) {
+        // No token: try to load from localStorage for guest persistence
+        const local = loadLocalProgress(id);
+        if (local) setActiveJob(local);
+        return;
+      }
       try {
         const response = await fetch('/api/active-job', { headers: { Authorization: `Bearer ${token}` } });
-        if (!response.ok) return;
+        if (!response.ok) {
+          // API error: fall back to localStorage
+          const local = loadLocalProgress(id);
+          if (local) setActiveJob(local);
+          return;
+        }
         const json = await response.json();
-        if (json.active_job?.analysis_id === id) setActiveJob(json.active_job as ActiveJobState);
+        if (json.active_job?.analysis_id === id) {
+          setActiveJob(json.active_job as ActiveJobState);
+        } else {
+          // No pinned job for this analysis: try localStorage draft
+          const local = loadLocalProgress(id);
+          if (local) setActiveJob(local);
+        }
       } catch {
         // The results view remains usable without the optional tracker.
+        const local = loadLocalProgress(id);
+        if (local) setActiveJob(local);
       }
     }
     void fetchActiveJob();
@@ -314,28 +453,45 @@ export default function ResultsPage({
     setSaved(true);
   };
 
-  const handleTrackingChange = async (skill: string, state: ActiveJobSkill['state']) => {
+  const handleTrackingChange = async (skill: string, state: ActiveJobSkill['state'], note?: string) => {
     setActiveJob((previous) => {
       if (!previous) return previous;
-      const skills = previous.skills.map((item) => item.skill === skill ? { ...item, state } : item);
+      const skills = previous.skills.map((item) => item.skill === skill ? { ...item, state, note: note ?? item.note } : item);
       const learned = skills.filter((item) => item.state === 'learned').length;
       return { ...previous, skills, readiness_score: Math.round((learned / Math.max(1, skills.length)) * 100) };
     });
 
     const token = await getToken();
-    if (!token) return;
+    if (!token) {
+      // Guest user: persist optimistic state to localStorage
+      setActiveJob((prev) => {
+        if (prev) saveLocalProgress(id, prev);
+        return prev;
+      });
+      return;
+    }
     try {
       const response = await fetch('/api/active-job', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ skill, state }),
+        body: JSON.stringify({ skill, state, note }),
       });
       if (response.ok) {
         const json = await response.json();
         setActiveJob((previous) => previous ? { ...previous, skills: json.skills, readiness_score: json.readiness_score } : previous);
+      } else if (response.status === 401 || response.status === 404) {
+        // Not pinned as active job yet — persist to localStorage as draft
+        setActiveJob((prev) => {
+          if (prev) saveLocalProgress(id, prev);
+          return prev;
+        });
       }
     } catch {
-      // Keep the optimistic state; the next server read will reconcile it.
+      // Keep the optimistic state; persist to localStorage as fallback
+      setActiveJob((prev) => {
+        if (prev) saveLocalProgress(id, prev);
+        return prev;
+      });
     }
   };
 
@@ -461,51 +617,82 @@ export default function ResultsPage({
         role={data.role_label || 'Software Engineer'}
       />
 
-      <div className="max-w-[1100px] mx-auto px-5 md:px-8 lg:px-12 pt-8 md:pt-14 w-full">
-        <header id="results-overview" className="border-b border-hairline pb-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-7">
-            <div className="max-w-2xl">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-2 font-sans text-[10px] text-brand-teal uppercase tracking-widest font-bold">
-                  <span className="w-2 h-2 rounded-full bg-brand-teal" />
-                  {activeJob ? 'Active learning path' : 'Analysis complete'}
-                </span>
-                {enrichmentNotice && (
-                  <span className="px-2 py-1 rounded-full bg-surface-soft border border-hairline text-[10px] text-muted font-bold uppercase tracking-wider">
-                    {enrichmentNotice}
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 w-full">
+        {/* TWO-COLUMN GRID: LEFT SIDEBAR (SCORECARD) + RIGHT MAIN (DETAILED INFO) */}
+        <div className="grid grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] xl:grid-cols-[370px_minmax(0,1fr)] gap-8 items-start">
+          
+          {/* LEFT SIDEBAR: ATS SCORECARD & SUB-SCORES */}
+          <aside className="lg:sticky lg:top-[84px] space-y-4">
+            <SidebarScorecard
+              data={data}
+              gapScore={hasGapScore ? gapScore : 0}
+              readinessScore={readinessScore}
+              activeGaps={filteredGaps}
+              requirementSummary={requirementSummary}
+              filteredRequirementSummary={filteredRequirementSummary}
+              readyDate={readyDate}
+              saved={saved}
+              onSave={handleSave}
+              onShare={handleShare}
+              onRateSkills={() => setShowAssessmentModal(true)}
+              isPinned={Boolean(activeJob)}
+              onPinned={handlePinned}
+              selectedRole={selectedRole}
+              resumeSkills={data.resume_skills || data.matched_skills}
+            />
+          </aside>
+
+          {/* RIGHT COLUMN: BIG INFO & DETAILED INTERACTIVE TOOLS */}
+          <div className="min-w-0 space-y-8">
+            <header id="results-overview" className="border-b border-hairline pb-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-2 font-sans text-[10px] text-brand-teal uppercase tracking-widest font-bold">
+                    <span className="w-2 h-2 rounded-full bg-brand-teal animate-pulse" />
+                    {activeJob ? 'Active learning path' : 'Analysis complete'}
                   </span>
-                )}
-                {!enrichmentNotice && data.enrichment_status && (
-                  <span className="px-2 py-1 rounded-full bg-surface-soft border border-hairline text-[10px] text-muted font-bold uppercase tracking-wider">
-                    {statusLabel[data.enrichment_status] || 'Analysis ready'}
-                  </span>
-                )}
+                  {enrichmentNotice && (
+                    <span className="px-2 py-1 rounded-full bg-surface-soft border border-hairline text-[10px] text-muted font-bold uppercase tracking-wider">
+                      {enrichmentNotice}
+                    </span>
+                  )}
+                  {!enrichmentNotice && data.enrichment_status && (
+                    <span className="px-2 py-1 rounded-full bg-surface-soft border border-hairline text-[10px] text-muted font-bold uppercase tracking-wider">
+                      {statusLabel[data.enrichment_status] || 'Analysis ready'}
+                    </span>
+                  )}
+                </div>
+
+                <h1 className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.05] tracking-[-0.04em]">
+                  {data.role_label || 'Target role'} match analysis
+                </h1>
+
+                <p className="font-sans text-body-md text-muted max-w-2xl leading-relaxed">
+                  {primarySummary}
+                </p>
+
+                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl bg-surface-soft/70 border border-hairline px-4 py-3">
+                  <span className="font-sans text-[10px] font-bold uppercase tracking-widest text-ink">{requirementSummary.total} requirements checked</span>
+                  <span className="font-sans text-[10px] font-semibold text-brand-teal">{requirementSummary.matched} matched</span>
+                  {requirementSummary.partial > 0 && <span className="font-sans text-[10px] font-semibold text-brand-ochre">{requirementSummary.partial} partial</span>}
+                  {requirementSummary.transferable > 0 && <span className="font-sans text-[10px] font-semibold text-brand-lavender">{requirementSummary.transferable} transferable</span>}
+                  {requirementSummary.missing > 0 && <span className="font-sans text-[10px] font-semibold text-brand-pink">{requirementSummary.missing} missing</span>}
+                  {requirementSummary.review > 0 && <span className="font-sans text-[10px] font-semibold text-muted">{requirementSummary.review} need review</span>}
+                </div>
               </div>
-              <h1 className="font-display text-[34px] md:text-[52px] font-semibold leading-[1.05] tracking-[-0.04em] text-balance">
-                {data.role_label || 'Target role'} match analysis
-              </h1>
-              <p className="font-sans text-body-md text-muted mt-4 max-w-xl leading-relaxed text-pretty">
-                {primarySummary}
-              </p>
-            </div>
+            </header>
 
-            <div className="flex flex-wrap gap-3 lg:max-w-[320px] lg:justify-end">
-              <button
-                onClick={handleSave}
-                disabled={saved}
-                className={`min-h-11 px-4 rounded-md border font-sans font-semibold text-button transition-colors active:scale-[0.96] ${saved ? 'text-brand-teal border-brand-teal/20 bg-brand-teal/5' : 'text-ink border-hairline hover:bg-surface-soft'}`}
-              >
-                {saved ? 'Saved' : 'Save'}
-              </button>
-              <button
-                onClick={handleShare}
-                className="min-h-11 px-4 rounded-md bg-primary text-on-primary font-sans font-semibold text-button hover:bg-primary-active transition-colors active:scale-[0.96]"
-              >
-                <Share2 size={15} className="inline mr-2" />Share
-              </button>
-            </div>
-          </div>
+            {/* Readout section */}
+            <section aria-labelledby="readout-heading" className="pt-0">
+              <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-brand-teal">Your readout</p>
+                  <h2 id="readout-heading" className="mt-1 font-display text-title-lg md:text-display-sm tracking-tight">Start with the gaps that matter most.</h2>
+                </div>
+                <p className="max-w-md font-sans text-body-sm text-muted md:text-right">Use the overview to orient yourself, then work through the priority cards in order.</p>
+              </div>
 
+<<<<<<< HEAD
           {/* SUMMARY PANEL — four at-a-glance metric cards
               Gap score    : 0–100 coverage of JD requirements (higher = better match)
               Readiness    : adjusted score that respects user self-assessments and active-job tracking
@@ -521,29 +708,74 @@ export default function ResultsPage({
                 <span className="group relative inline-flex">
                   <button type="button" aria-label="Explain Gap score" title="Higher score means stronger resume coverage." className="min-h-10 min-w-10 -my-2 -mr-2 inline-flex items-center justify-center text-muted hover:text-ink transition-colors">
                     <Info size={13} />
-                  </button>
-                  <span className="pointer-events-none absolute right-0 top-full z-20 mt-1 w-48 rounded-lg bg-ink px-3 py-2 text-[10px] leading-relaxed text-on-primary opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-                    Higher score means stronger resume coverage of the job requirements.
-                  </span>
-                </span>
-              </div>
-              <span className="block font-display text-3xl mt-1 tabular-nums">{hasGapScore ? gapScore : 'Not scored'}{hasGapScore && <span className="text-base text-muted">/100</span>}</span>
-              <span className="block text-[10px] text-muted mt-1">Resume coverage of role requirements</span>
-            </div>
-            <div className="rounded-xl bg-surface-card border border-hairline px-4 py-4">
-              <span className="block text-[10px] text-muted uppercase tracking-widest font-bold">Readiness</span>
-              <span className="block font-display text-3xl mt-1 tabular-nums">{readinessScore}<span className="text-base text-muted">/100</span></span>
-            </div>
-            <div className="rounded-xl bg-surface-card border border-hairline px-4 py-4">
-              <span className="block text-[10px] text-muted uppercase tracking-widest font-bold">Priority gaps</span>
-              <span className="block font-display text-3xl mt-1 tabular-nums">{activeGaps.length}</span>
-            </div>
-            <div className="rounded-xl bg-surface-card border border-hairline px-4 py-4">
-              <span className="block text-[10px] text-muted uppercase tracking-widest font-bold">Ready by</span>
-              <span className="block font-display text-2xl mt-2 tabular-nums">{readyDate}</span>
-            </div>
-          </div>
+=======
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+                <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
+                  <div className="mb-4 flex items-center gap-2">
+                    <CheckCircle2 size={16} className="text-brand-teal" />
+                    <h3 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">What you already show</h3>
+                  </div>
+                  {topStrengths.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {topStrengths.map((strength) => <Chip key={strength.skill} variant="filled">{strength.skill}</Chip>)}
+                    </div>
+                  ) : (
+                    <p className="font-sans text-body-sm text-muted">No strong matches were verified yet.</p>
+                  )}
+                </div>
 
+                <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
+                  <div className="mb-4 flex items-center gap-2">
+                    <Target size={16} className="text-brand-pink" />
+                    <h3 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">Start here</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {topGaps.length ? topGaps.map((gap) => (
+                      <a key={gap.skill} href={`#skill-${gap.skill.toLowerCase().replace(/\s+/g, '-')}`} className="flex min-h-10 items-center justify-between gap-4 rounded-lg px-2 text-body-sm transition-colors hover:bg-surface-soft">
+                        <span className="truncate font-semibold text-ink">{gap.skill}</span>
+                        <span className="shrink-0 text-xs text-muted tabular-nums">{gap.weeks_to_learn}w</span>
+                      </a>
+                    )) : <p className="font-sans text-body-sm text-muted">No priority gaps detected.</p>}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <LayoutParseWarning
+              hasMultiColumn={data.fraud_audit?.formatting_issues?.some(
+                (i) => i.toLowerCase().includes('column') || i.toLowerCase().includes('multi')
+              ) ?? false}
+              hasTables={data.fraud_audit?.formatting_issues?.some(
+                (i) => i.toLowerCase().includes('table')
+              ) ?? false}
+              hasHiddenText={data.fraud_audit?.hidden_text_detected ?? false}
+            />
+
+            {/* Learning Roadmap (Placed ABOVE Priority Skill Gaps) */}
+            <section id="learning-roadmap" className="scroll-mt-28 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+                <div>
+                  <p className="font-sans text-[10px] text-muted uppercase tracking-widest font-bold mb-2">One focused path</p>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="font-display text-title-lg">Learning roadmap</h2>
+                    {planStatusLabel && <span className={`px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest ${data.learning_plan_source === 'deterministic_fallback' ? 'border-brand-ochre/25 bg-brand-ochre/10 text-brand-ochre' : 'border-brand-teal/25 bg-brand-teal/10 text-brand-teal'}`}>{planStatusLabel}</span>}
+                  </div>
+                  <p className="font-sans text-body-sm text-muted mt-2 max-w-xl">Turn your highest-priority cards into a sequence you can actually finish.</p>
+                </div>
+                {!data.learning_plan?.weeks?.length && (
+                  <button
+                    type="button"
+                    onClick={handleGeneratePlan}
+                    disabled={generatingPlan}
+                    className="min-h-11 px-5 rounded-xl bg-primary text-on-primary font-sans text-button font-semibold hover:bg-primary-active transition-colors active:scale-[0.96] disabled:opacity-50"
+                  >
+                    {generatingPlan ? 'Creating plan…' : 'Create learning plan'}
+>>>>>>> 21582d5 (feat: update results page and time machine page)
+                  </button>
+                )}
+              </div>
+
+<<<<<<< HEAD
           {/* COUNTS BY STATUS/TOPIC — requirement coverage strip
               Shows total JD requirements checked and breaks them down by match status.
               Matched (teal) — exact or strong evidence in the resume
@@ -601,209 +833,145 @@ export default function ResultsPage({
               {topStrengths.length ? (
                 <div className="flex flex-wrap gap-2">
                   {topStrengths.map((strength) => <Chip key={strength.skill} variant="filled">{strength.skill}</Chip>)}
+=======
+              {data.learning_plan?.weeks?.length ? (
+                <div className="mt-6 space-y-2">
+                  {(isPlanExpanded ? data.learning_plan.weeks : data.learning_plan.weeks.slice(0, 4)).map((week) => (
+                    <Accordion key={`week-${week.week}`} title={`Week ${week.week}: ${week.skill}`}>
+                      <div className="space-y-3 pt-2">
+                        {(week.resources || []).map((resource) => (
+                          <div key={`${week.week}-${resource.title}`} className="flex items-center justify-between gap-4 text-body-sm">
+                            <span className="text-ink font-medium">{resource.title}</span>
+                            {resource.url && <a href={resource.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline shrink-0">Open</a>}
+                          </div>
+                        ))}
+                      </div>
+                    </Accordion>
+                  ))}
+                  {data.learning_plan.weeks.length > 4 && (
+                    <button type="button" onClick={() => setIsPlanExpanded((value) => !value)} className="min-h-10 mt-3 px-3 text-button font-semibold text-muted hover:text-ink transition-colors">
+                      {isPlanExpanded ? 'Show fewer weeks' : `Show all ${data.learning_plan.weeks.length} weeks`}
+                    </button>
+                  )}
+>>>>>>> 21582d5 (feat: update results page and time machine page)
                 </div>
               ) : (
-                <p className="font-sans text-body-sm text-muted">No strong matches were verified yet.</p>
+                <p className="mt-6 rounded-xl bg-surface-soft px-4 py-4 font-sans text-body-sm text-muted">Your plan will be generated from the evidence-backed cards above.</p>
               )}
-            </div>
-            <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-2">
-                <Target size={16} className="text-brand-pink" />
-                <h3 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">Start here</h3>
-              </div>
-              <div className="space-y-2">
-                {topGaps.length ? topGaps.map((gap) => (
-                  <a key={gap.skill} href={`#skill-${gap.skill.toLowerCase().replace(/\s+/g, '-')}`} className="flex min-h-10 items-center justify-between gap-4 rounded-lg px-2 text-body-sm transition-colors hover:bg-surface-soft">
-                    <span className="truncate font-semibold text-ink">{gap.skill}</span>
-                    <span className="shrink-0 text-xs text-muted tabular-nums">{gap.weeks_to_learn}w</span>
-                  </a>
-                )) : <p className="font-sans text-body-sm text-muted">No priority gaps detected.</p>}
-              </div>
-            </div>
-          </div>
             </section>
 
-            <LayoutParseWarning hasMultiColumn={true} />
-
-            <section id="priority-gaps" className="scroll-mt-28 pt-10">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
-            <div>
-              <p className="font-sans text-[10px] text-brand-teal uppercase tracking-widest font-bold mb-2">Your next actions</p>
-              <h2 className="font-display text-title-lg md:text-display-sm tracking-tight">Priority skill gaps</h2>
-              <p className="font-sans text-body-sm text-muted mt-2 max-w-xl">Each card explains the gap, shows the evidence, and keeps the learning links in one place.</p>
-            </div>
-            <GenerateAllButton
-              isVisible={data.skill_gaps.filter((gap) => !data.generated_resources?.[gap.skill]).length > 2 && !batchGenerating}
-              isGenerating={batchGenerating}
-              currentCount={batchProgress.current}
-              totalCount={batchProgress.total}
-              onGenerateAll={handleGenerateAll}
-            />
-          </div>
-
-          <div className="divide-y divide-hairline">
-            <AnimatePresence initial={false}>
-              {visibleGaps.map((gap, index) => (
-                <div key={gap.skill} id={`skill-${gap.skill.toLowerCase().replace(/\s+/g, '-')}`} className="py-5 first:pt-0">
-                  <SkillCard
-                    index={index}
-                    analysisId={data.share_token}
-                    role={data.role_label || 'Software Engineer'}
-                    seniority="entry"
-                    companyType={data.company_type}
-                    gap={decorateGapForCard(data, gap)}
-                    initialResources={data.generated_resources?.[gap.skill]}
-                    autoGenerate={(index === 0 && gap.in_mvc) || gap.skill === targetSkill}
-                    colorVariant={['pink', 'teal', 'lavender', 'peach', 'ochre', 'cream'][index % 6]}
-                    trackingState={activeJob?.skills?.find((item) => item.skill === gap.skill)?.state}
-                    onTrackingChange={handleTrackingChange}
-                    trackingColor={activeJob?.color}
-                    confidenceLevel={assessments[gap.skill]}
-                    onConfidenceChange={handleConfidenceChange}
-                    onResumeAction={() => setStarModalSkill(gap.skill)}
-                  />
+            {/* Priority Skill Gaps */}
+            <section id="priority-gaps" className="scroll-mt-28 pt-4 space-y-6">
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-2">
+                <div>
+                  <p className="font-sans text-[10px] text-brand-teal uppercase tracking-widest font-bold mb-1">Your next actions</p>
+                  <h2 className="font-display text-title-lg md:text-display-sm tracking-tight">Priority skill gaps</h2>
+                  <p className="font-sans text-body-sm text-muted mt-1 max-w-xl">Each card explains the gap, shows the evidence, and keeps the learning links in one place.</p>
                 </div>
-              ))}
-            </AnimatePresence>
-          </div>
-
-          {activeGaps.length > 5 && (
-            <button
-              type="button"
-              onClick={() => setIsListExpanded((value) => !value)}
-              className="mt-6 min-h-11 w-full rounded-xl border border-hairline bg-surface-card px-4 py-3 font-sans text-button font-semibold text-muted hover:text-ink hover:bg-surface-soft transition-colors active:scale-[0.99]"
-            >
-              {isListExpanded ? 'Show fewer gaps' : `View ${activeGaps.length - 5} more skill gaps`}
-            </button>
-          )}
-            </section>
-
-            <section id="learning-roadmap" className="scroll-mt-28 mt-12 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-            <div>
-              <p className="font-sans text-[10px] text-muted uppercase tracking-widest font-bold mb-2">One focused path</p>
-              <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-display text-title-lg">Learning roadmap</h2>
-                {planStatusLabel && <span className={`px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest ${data.learning_plan_source === 'deterministic_fallback' ? 'border-brand-ochre/25 bg-brand-ochre/10 text-brand-ochre' : 'border-brand-teal/25 bg-brand-teal/10 text-brand-teal'}`}>{planStatusLabel}</span>}
+                <GenerateAllButton
+                  isVisible={data.skill_gaps.filter((gap) => !data.generated_resources?.[gap.skill]).length > 2 && !batchGenerating}
+                  isGenerating={batchGenerating}
+                  currentCount={batchProgress.current}
+                  totalCount={batchProgress.total}
+                  onGenerateAll={handleGenerateAll}
+                />
               </div>
-              <p className="font-sans text-body-sm text-muted mt-2 max-w-xl">Turn your highest-priority cards into a sequence you can actually finish.</p>
-            </div>
-            {!data.learning_plan?.weeks?.length && (
-              <button
-                type="button"
-                onClick={handleGeneratePlan}
-                disabled={generatingPlan}
-                className="min-h-11 px-5 rounded-xl bg-primary text-on-primary font-sans text-button font-semibold hover:bg-primary-active transition-colors active:scale-[0.96] disabled:opacity-50"
-              >
-                {generatingPlan ? 'Creating plan…' : 'Create learning plan'}
-              </button>
-            )}
-          </div>
 
-          {data.learning_plan?.weeks?.length ? (
-            <div className="mt-6 space-y-2">
-              {(isPlanExpanded ? data.learning_plan.weeks : data.learning_plan.weeks.slice(0, 4)).map((week) => (
-                <Accordion key={`week-${week.week}`} title={`Week ${week.week}: ${week.skill}`}>
-                  <div className="space-y-3 pt-2">
-                    {(week.resources || []).map((resource) => (
-                      <div key={`${week.week}-${resource.title}`} className="flex items-center justify-between gap-4 text-body-sm">
-                        <span className="text-ink font-medium">{resource.title}</span>
-                        {resource.url && <a href={resource.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline shrink-0">Open</a>}
-                      </div>
-                    ))}
-                  </div>
-                </Accordion>
-              ))}
-              {data.learning_plan.weeks.length > 4 && (
-                <button type="button" onClick={() => setIsPlanExpanded((value) => !value)} className="min-h-10 mt-3 px-3 text-button font-semibold text-muted hover:text-ink transition-colors">
-                  {isPlanExpanded ? 'Show fewer weeks' : `Show all ${data.learning_plan.weeks.length} weeks`}
+              {/* Feature 2: Role-Aware Learning Item Filters */}
+              <RoleFilterTabs
+                selectedRole={selectedRole}
+                onSelectRole={setSelectedRole}
+                counts={roleCounts}
+              />
+
+              <div className="divide-y divide-hairline pt-2">
+                <AnimatePresence initial={false}>
+                  {visibleGaps.map((gap, index) => (
+                    <div key={gap.skill} id={`skill-${gap.skill.toLowerCase().replace(/\s+/g, '-')}`} className="py-5 first:pt-0">
+                      <SkillCard
+                        index={index}
+                        analysisId={data.share_token}
+                        role={data.role_label || 'Software Engineer'}
+                        seniority="entry"
+                        companyType={data.company_type}
+                        gap={decorateGapForCard(data, gap)}
+                        initialResources={data.generated_resources?.[gap.skill]}
+                        autoGenerate={(index === 0 && gap.in_mvc) || gap.skill === targetSkill}
+                        colorVariant={['pink', 'teal', 'lavender', 'peach', 'ochre', 'cream'][index % 6]}
+                        trackingState={activeJob?.skills?.find((item) => item.skill === gap.skill)?.state}
+                        onTrackingChange={handleTrackingChange}
+                        trackingColor={activeJob?.color}
+                        confidenceLevel={assessments[gap.skill]}
+                        onConfidenceChange={handleConfidenceChange}
+                        onResumeAction={() => setStarModalSkill(gap.skill)}
+                      />
+                    </div>
+                  ))}
+                </AnimatePresence>
+              </div>
+
+              {activeGaps.length > 5 && (
+                <button
+                  type="button"
+                  onClick={() => setIsListExpanded((value) => !value)}
+                  className="mt-6 min-h-11 w-full rounded-xl border border-hairline bg-surface-card px-4 py-3 font-sans text-button font-semibold text-muted hover:text-ink hover:bg-surface-soft transition-colors active:scale-[0.99]"
+                >
+                  {isListExpanded ? 'Show fewer gaps' : `View ${activeGaps.length - 5} more skill gaps`}
                 </button>
               )}
-            </div>
-          ) : (
-            <p className="mt-6 rounded-xl bg-surface-soft px-4 py-4 font-sans text-body-sm text-muted">Your plan will be generated from the evidence-backed cards above.</p>
-          )}
             </section>
 
-            <section id="progress" className="scroll-mt-28 mt-8 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-            <div className="flex items-center gap-5">
-              {activeJob && <ReadinessRing score={readinessScore} color={activeJob.color} size={80} strokeWidth={7} />}
-              <div>
-                <p className="font-sans text-[10px] text-muted uppercase tracking-widest font-bold">Progress</p>
-                <h2 className="font-display text-title-md mt-1">{activeJob ? `${readinessScore}% ready for this role` : 'Personalize your estimate'}</h2>
-                <p className="font-sans text-body-sm text-muted mt-1">{masteredSkills.length ? `${masteredSkills.length} skills marked strong.` : 'Rate your confidence to adjust your plan.'}</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <button type="button" onClick={() => setShowAssessmentModal(true)} className="min-h-11 px-4 rounded-xl border border-hairline font-sans text-button font-semibold text-ink hover:bg-surface-soft transition-colors active:scale-[0.96]">Rate my skills</button>
-              {!activeJob && <span className="inline-flex items-center px-3 text-body-xs text-muted">Pin this analysis to track progress.</span>}
-            </div>
-          </div>
-          <div className="mt-6"><ProgressBar progress={readinessScore} className="h-2" /></div>
-            </section>
-          </div>
-
-          <aside id="feature-rail" className="order-first min-w-0 space-y-4 xl:order-last xl:sticky xl:top-[88px] xl:max-h-[calc(100dvh-112px)] xl:overflow-y-auto xl:pr-1" aria-label="Feature rail">
-            <section className="rounded-2xl border border-hairline bg-surface-card p-5 shadow-sm">
-              <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-brand-teal">Tools at a glance</p>
-              <h2 className="mt-2 font-display text-title-md text-ink">Everything within reach</h2>
-              <p className="mt-1 font-sans text-body-sm text-muted">Jump to the part of your analysis you want to work on next.</p>
-
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                <a href="#priority-gaps" className="rounded-xl border border-hairline bg-surface-soft px-3 py-3 transition-colors hover:bg-surface-strong">
-                  <span className="block font-display text-xl tabular-nums text-ink">{activeGaps.length}</span>
-                  <span className="mt-1 block font-sans text-[10px] font-semibold uppercase tracking-wider text-muted">Priority gaps</span>
-                </a>
-                <a href="#learning-roadmap" className="rounded-xl border border-hairline bg-surface-soft px-3 py-3 transition-colors hover:bg-surface-strong">
-                  <span className="block font-display text-xl tabular-nums text-ink">{data.learning_plan?.weeks?.length || 'Not set'}</span>
-                  <span className="mt-1 block font-sans text-[10px] font-semibold uppercase tracking-wider text-muted">Roadmap weeks</span>
-                </a>
-              </div>
-
-              <div className="mt-4 space-y-2">
-                <a href="#more-tools" className="flex min-h-11 items-center justify-between rounded-xl border border-hairline px-3 py-2 font-sans text-body-sm font-semibold text-ink transition-colors hover:bg-surface-soft">
-                  <span>Resume and recruiter checks</span>
-                  <span className="text-muted">Open</span>
-                </a>
-                <a href="#career-tools" className="flex min-h-11 items-center justify-between rounded-xl border border-hairline px-3 py-2 font-sans text-body-sm font-semibold text-ink transition-colors hover:bg-surface-soft">
-                  <span>Career tools and market context</span>
-                  <span className="text-muted">Open</span>
-                </a>
-              </div>
-            </section>
-
-            <section id="more-tools" className="scroll-mt-28 rounded-2xl border border-hairline bg-surface-card p-4 shadow-sm" aria-label="Optional analysis tools">
-              <button
-                type="button"
-                onClick={() => setShowOptionalTools((value) => !value)}
-                aria-expanded={showOptionalTools}
-                className="flex min-h-14 w-full items-center justify-between gap-4 text-left"
-              >
-                <span>
-                  <span className="block font-display text-title-md text-ink">Resume and recruiter checks</span>
-                  <span className="mt-1 block font-sans text-body-xs text-muted">Open these after you understand your main gaps.</span>
-                </span>
-                <ChevronDown size={18} className={`shrink-0 text-muted transition-transform ${showOptionalTools ? 'rotate-180' : ''}`} />
-              </button>
-
-              {showOptionalTools && (
-                <div className="mt-4 space-y-6">
-                  <RecruiterRedFlagRadar data={data} />
-                  <JDSynonymMatcher data={data} />
-                  <InlineDiffEditor />
-                  <ShowYourWorkScore data={data} />
-                  <SeniorityCalibrator />
-                  <JargonTranslator />
-                  <MultiFormatExporter data={data} />
+            {/* Progress Reweighter */}
+            <section id="progress" className="scroll-mt-28 rounded-3xl border border-hairline bg-surface-card p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                <div className="flex items-center gap-5">
+                  {activeJob && <ReadinessRing score={readinessScore} color={activeJob.color} size={80} strokeWidth={7} />}
+                  <div>
+                    <p className="font-sans text-[10px] text-muted uppercase tracking-widest font-bold">Progress</p>
+                    <h2 className="font-display text-title-md mt-1">{activeJob ? `${readinessScore}% ready for this role` : 'Personalize your estimate'}</h2>
+                    <p className="font-sans text-body-sm text-muted mt-1">{masteredSkills.length ? `${masteredSkills.length} skills marked strong.` : 'Rate your confidence to adjust your plan.'}</p>
+                  </div>
                 </div>
-              )}
+                <div className="flex flex-wrap gap-3">
+                  <button type="button" onClick={() => setShowAssessmentModal(true)} className="min-h-11 px-4 rounded-xl border border-hairline font-sans text-button font-semibold text-ink hover:bg-surface-soft transition-colors active:scale-[0.96]">Rate my skills</button>
+                  {!activeJob && (
+                    <PinJobButton
+                      analysisId={data.share_token}
+                      jobTitle={data.role_label || 'Target Role'}
+                      companyType={data.company_type || 'startup'}
+                      role={data.role_label || ''}
+                      seniority={seniorityLevel || 'senior'}
+                      skillGaps={filteredGaps}
+                      resumeSkills={data.resume_skills || data.matched_skills}
+                      readinessScore={readinessScore}
+                      isPinned={false}
+                      onPinned={handlePinned}
+                      variant="inline"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="mt-6"><ProgressBar progress={readinessScore} className="h-2" /></div>
             </section>
 
-            <SecondaryTools data={data} activeGaps={activeGaps} freshnessResult={freshnessResult} />
-          </aside>
+            {/* Unified AI Career & Optimization Toolkit */}
+            <UnifiedToolkit
+              data={data}
+              activeGaps={activeGaps}
+              freshnessResult={freshnessResult}
+              onSeniorityChange={setSeniorityLevel}
+            />
+          </div>
         </div>
       </div>
+      <OpenJobModal
+        isOpen={showOpenJobModal}
+        onClose={() => setShowOpenJobModal(false)}
+        jobTitle={data.role_label || 'Target Role'}
+        readinessScore={readinessScore}
+        companyType={data.company_type}
+        analysisId={data.share_token}
+      />
     </main>
   );
 }
