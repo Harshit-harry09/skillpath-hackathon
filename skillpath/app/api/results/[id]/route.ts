@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/firebase-admin";
 import { requestId, withRequestId } from "@/lib/request-guard";
+export const runtime = 'nodejs';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;

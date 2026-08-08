@@ -4,6 +4,8 @@ import { getDb } from '@/lib/firebase-admin';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 import { todayISO } from '@/lib/profile-utils';
 import type { UserProfile } from '@/types/profile';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const user = await getAuthUserSafe(req);

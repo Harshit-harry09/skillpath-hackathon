@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callGemini } from '@/lib/gemini';
 import { guardAiRequest } from '@/lib/request-guard';
+export const runtime = 'nodejs';
 
 export const dynamic = 'force-dynamic';
 

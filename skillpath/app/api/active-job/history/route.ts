@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/firebase-admin';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 import type { ArchivedJob } from '@/types/active-job';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const user = await getAuthUserSafe(req);

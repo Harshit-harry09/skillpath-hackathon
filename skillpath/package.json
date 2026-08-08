@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "node --test",
+    "test": "node --import tsx/esm --test tests/engineering-contract.test.mjs tests/ats-pipeline.test.ts",
     "tunnel": "ngrok http 3000",
     "dev:tunnel": "concurrently \"npm run dev\" \"npm run tunnel\""
   },
@@ -50,6 +50,7 @@
     "ngrok": "^5.0.0-beta.2",
     "postcss": "^8.5.12",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.23.11",
     "typescript": "^5"
   },
   "overrides": {

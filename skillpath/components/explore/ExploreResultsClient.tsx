@@ -11,6 +11,10 @@ import { Footer } from '@/components/landing/CtaSection';
 
 import Link from 'next/link';
 
+// Module-level in-memory cache — gives instant loads within a page session
+// without writing raw analysis payloads to browser storage.
+const exploreCache = new Map<string, unknown>();
+
 export default function ExploreResultsClient({
   shareToken,
   initialData,
@@ -22,18 +26,12 @@ export default function ExploreResultsClient({
   const [loading, setLoading] = useState(!initialData);
 
   useEffect(() => {
-    // 1. Try reading from sessionStorage cache first (instant 0ms)
-    try {
-      const cached = sessionStorage.getItem(`explore_${shareToken}`);
-      if (cached) {
-        const json = JSON.parse(cached);
-        console.log('[Explore] Loaded instantly from sessionStorage cache:', shareToken);
-        setData(json);
-        setLoading(false);
-        return;
-      }
-    } catch (e) {
-      console.warn('[Explore] SessionStorage read error:', e);
+    // 1. Try reading from in-memory cache first (instant 0ms)
+    const cached = exploreCache.get(shareToken);
+    if (cached) {
+      setData(cached);
+      setLoading(false);
+      return;
     }
 
     if (initialData) {
@@ -49,9 +47,7 @@ export default function ExploreResultsClient({
         if (res.ok) {
           const json = await res.json();
           setData(json);
-          try {
-            sessionStorage.setItem(`explore_${shareToken}`, JSON.stringify(json));
-          } catch { /* ignore */ }
+          exploreCache.set(shareToken, json);
         }
       } catch (err) {
         console.error('[Explore] Fetch error:', err);

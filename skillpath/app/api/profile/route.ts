@@ -4,6 +4,7 @@ import { getDb, getAdminAuth } from '@/lib/firebase-admin';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 import { nameToColor } from '@/lib/profile-utils';
 import type { UserProfile } from '@/types/profile';
+export const runtime = 'nodejs';
 
 export const dynamic = 'force-dynamic';
 

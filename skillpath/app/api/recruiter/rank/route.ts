@@ -10,6 +10,7 @@ import { calculateCompositeATSScore } from '@/lib/ats-composite-scorer';
 import { guardAiRequest, requestId, withRequestId } from '@/lib/request-guard';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
 
 export interface CandidatePayload {

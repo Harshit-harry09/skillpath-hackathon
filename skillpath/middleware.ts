@@ -7,7 +7,7 @@ import { checkGuestRateLimit } from '@/lib/rate-limit';
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  // Only apply rate limiting to API routes
+  // Rate limiting applies only to the most expensive AI analysis route.
   if (path.startsWith('/api/analyze')) {
     const rateCheck = checkGuestRateLimit(req, 15, 60_000);
     if (!rateCheck.success) {
@@ -23,19 +23,18 @@ export function middleware(req: NextRequest) {
 
   const response = NextResponse.next();
 
-  // Edge & Security Performance Headers
+  // Security & performance headers applied to every response (HTML + API).
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-DNS-Prefetch-Control', 'on');
-  
-  if (req.method === 'GET' && !path.startsWith('/api/')) {
-    response.headers.set('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
-  }
 
   return response;
 }
 
 export const config = {
-  matcher: ['/api/:path*'],
+  // Apply middleware to all routes so security headers reach HTML pages.
+  // Static Next.js internals (_next/static, favicon etc.) are excluded
+  // by default by the runtime before this matcher is evaluated.
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

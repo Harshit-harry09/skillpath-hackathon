@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/firebase-admin';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 import type { TimelineEntry } from '@/types/profile';
+export const runtime = 'nodejs';
 
 export const dynamic = 'force-dynamic';
 

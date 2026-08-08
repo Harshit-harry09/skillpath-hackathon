@@ -3,6 +3,7 @@ import { getDb } from '@/lib/firebase-admin';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 import { computeReadiness, nextPinColor } from '@/lib/readiness';
 import type { ActiveJob, TrackedSkill, SkillState, AppRole } from '@/types/active-job';
+export const runtime = 'nodejs';
 
 export const dynamic = 'force-dynamic';
 

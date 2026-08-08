@@ -9,17 +9,16 @@ export type GeminiModel =
   | "gemini-3.5-flash"
   | "gemini-3.5-flash-lite"
   | "gemini-2.5-flash"
-  | "gemini-2.0-flash"
-  | "gemini-1.5-flash";
+  | "gemini-2.0-flash";
 
-// Map aliases to verified working models (gemini-2.5-flash)
+// Map aliases to verified working models.
+// Only endpoints confirmed active on the v1beta REST API are listed here.
 const MODEL_ENDPOINTS: Record<string, string> = {
   "gemini-3.6-flash": "gemini-2.5-flash",
   "gemini-3.5-flash": "gemini-2.5-flash",
   "gemini-3.5-flash-lite": "gemini-2.5-flash",
   "gemini-2.5-flash": "gemini-2.5-flash",
-  "gemini-2.0-flash": "gemini-2.5-flash",
-  "gemini-1.5-flash": "gemini-2.5-flash",
+  "gemini-2.0-flash": "gemini-2.0-flash",
 };
 
 let keyIndex = 0;
@@ -59,8 +58,9 @@ export async function callGemini(
   }
 
   const requestedModel: GeminiModel = options?.model ?? "gemini-3.5-flash-lite";
-  const primaryModel = MODEL_ENDPOINTS[requestedModel] || "gemini-3.5-flash-lite";
-  const modelsToTry = [primaryModel, "gemini-2.5-flash", "gemini-2.0-flash"];
+  const primaryModel = MODEL_ENDPOINTS[requestedModel] || "gemini-2.5-flash";
+  // Only use verified active endpoints in the fallback chain.
+  const modelsToTry = Array.from(new Set([primaryModel, "gemini-2.5-flash", "gemini-2.0-flash"]));
 
   const temperature = options?.temperature ?? 0.2;
   const maxTokens = options?.maxTokens ?? 2048;

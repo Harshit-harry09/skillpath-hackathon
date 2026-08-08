@@ -151,6 +151,9 @@ export default function ResultsPage({
   const [activeJob, setActiveJob] = useState<ActiveJobState | null>(null);
   const [seniorityLevel, setSeniorityLevel] = useState<import('@/components/results/SeniorityCalibrator').SeniorityLevel>('senior');
   const [selectedRole, setSelectedRole] = useState<AppRole | 'all'>('all');
+  // Track whether the high-readiness job modal has already been shown this
+  // page load. Using a ref avoids browser-storage side-effects.
+  const jobModalShownRef = useRef(false);
 
   const handleConfidenceChange = useCallback((skill: string, level: ConfidenceLevel) => {
     setAssessments((previous) => ({ ...previous, [skill]: level }));
@@ -260,14 +263,11 @@ export default function ResultsPage({
     ? formatDate(new Date(Date.now() + adjustedWeeks * 7 * 24 * 60 * 60 * 1000).toISOString())
     : formatDate(data?.ready_by_date);
 
-  // Auto popup OpenJobModal once when readiness score reaches 80%+
+  // Auto popup OpenJobModal once per page load when readiness score reaches 80%+
   useEffect(() => {
-    if (readinessScore >= 80 && id) {
-      const storageKey = `open_job_modal_popped_results_${id}`;
-      if (!sessionStorage.getItem(storageKey)) {
-        setShowOpenJobModal(true);
-        sessionStorage.setItem(storageKey, 'true');
-      }
+    if (readinessScore >= 80 && id && !jobModalShownRef.current) {
+      jobModalShownRef.current = true;
+      setShowOpenJobModal(true);
     }
   }, [readinessScore, id]);
 

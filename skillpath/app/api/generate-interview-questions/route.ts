@@ -4,6 +4,7 @@ import { callGeminiJSON } from '@/lib/gemini';
 import { getAuthUserSafe } from '@/lib/auth-helpers';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {

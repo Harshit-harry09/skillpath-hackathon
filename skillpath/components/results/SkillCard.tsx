@@ -1,10 +1,12 @@
 'use client';
+// updated
 
 import React, { useState } from 'react';
 import {
   Play, Sparkles, CheckCircle2, AlertCircle,
   ChevronDown, Clock, RotateCcw, Layers, Zap,
-  DollarSign, FileText, Save, Check, Shield, User, UserCheck, Stethoscope, Search, FileCheck
+  DollarSign, FileText, Save, Check, Shield, User, UserCheck, Stethoscope, Search, FileCheck,
+  ThumbsUp, ThumbsDown, PlusCircle, BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import { ResourceCard } from './ResourceCard';
@@ -74,7 +76,7 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
   gap, index, analysisId, role, seniority, companyType,
   initialResources, autoGenerate = false,
   trackingState = 'not_started', onTrackingChange, trackingColor,
-  confidenceLevel, onConfidenceChange
+  confidenceLevel, onConfidenceChange, onResumeAction
 }) => {
   const [status, setStatus] = useState<Status>(initialResources ? 'done' : 'idle');
   const [skillResources, setSkillResources] = useState<SkillResources | null>(() => {
@@ -98,9 +100,25 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
   const [savingNote, setSavingNote] = useState(false);
   const [savedNoteSuccess, setSavedNoteSuccess] = useState(false);
 
+  const [feedbackSent, setFeedbackSent] = useState<boolean | null>(null);
+
   const level = LEVELS[Math.min(clickCount, 3)];
   const cfg = statusConfig[status];
   const roleBadge = gap.role_category ? ROLE_BADGES[gap.role_category] : null;
+
+  const sendAccuracyFeedback = async (accurate: boolean) => {
+    if (feedbackSent !== null) return;
+    setFeedbackSent(accurate);
+    try {
+      await fetch(`/api/results/${analysisId}/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skill: gap.skill, accurate }),
+      });
+    } catch {
+      // Non-critical — fire and forget
+    }
+  };
 
   const generate = async (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -274,6 +292,70 @@ const SkillCardComponent: React.FC<SkillCardProps> = ({
           <p className="font-sans text-body-md text-muted leading-relaxed mt-4 max-w-2xl">
             {gap.reason}
           </p>
+
+          {/* Evidence metadata — shows resume quotes that surfaced this gap */}
+          {gap.evidence_details && gap.evidence_details.length > 0 ? (
+            <div className="mt-4 pt-4 border-t border-hairline/50">
+              <div className="flex items-center gap-1.5 mb-2">
+                <BookOpen size={12} className="text-primary" />
+                <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted">
+                  Evidence metadata
+                </span>
+              </div>
+              <ul className="space-y-1.5">
+                {gap.evidence_details.slice(0, 2).map((ev, ei) => (
+                  <li key={ei} className="font-sans text-[11px] text-muted leading-snug italic pl-3 border-l-2 border-primary/20">
+                    &ldquo;{ev.quote}&rdquo;
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            /* Next proof — guide user to provide evidence for unverified gaps */
+            <div className="mt-4 pt-4 border-t border-hairline/50 flex items-center gap-2">
+              <PlusCircle size={12} className="text-brand-teal shrink-0" />
+              <span className="font-sans text-[11px] text-brand-teal font-semibold">
+                Next proof: Add resume evidence to verify this gap
+              </span>
+              {onResumeAction && (
+                <button
+                  onClick={onResumeAction}
+                  className="ml-auto font-mono text-[9px] text-muted hover:text-ink uppercase tracking-widest transition-colors"
+                >
+                  Add resume evidence
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Accuracy feedback — Is this gap accurate? */}
+          <div className="mt-3 flex items-center gap-2">
+            <span className="font-sans text-[11px] text-muted">
+              Is this gap accurate?
+            </span>
+            <button
+              onClick={() => sendAccuracyFeedback(true)}
+              disabled={feedbackSent !== null}
+              className={`flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all border ${
+                feedbackSent === true
+                  ? 'bg-brand-teal/15 border-brand-teal/30 text-brand-teal'
+                  : 'border-hairline text-muted hover:text-ink hover:border-ink/20'
+              }`}
+            >
+              <ThumbsUp size={9} /> Yes
+            </button>
+            <button
+              onClick={() => sendAccuracyFeedback(false)}
+              disabled={feedbackSent !== null}
+              className={`flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all border ${
+                feedbackSent === false
+                  ? 'bg-brand-pink/15 border-brand-pink/30 text-brand-pink'
+                  : 'border-hairline text-muted hover:text-ink hover:border-ink/20'
+              }`}
+            >
+              <ThumbsDown size={9} /> No
+            </button>
+          </div>
 
           {/* Confidence Self-Assessment Strip */}
           {onConfidenceChange && (

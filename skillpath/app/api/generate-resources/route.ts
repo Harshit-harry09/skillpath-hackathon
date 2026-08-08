@@ -43,6 +43,7 @@ function sanitizeString(val: string, maxLen = 100): string {
 
 import { getAuthUserSafe } from "@/lib/auth-helpers";
 import { checkGuestRateLimit } from "@/lib/rate-limit";
+export const runtime = 'nodejs';
 
 // ─── Route ────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
