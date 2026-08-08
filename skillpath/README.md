@@ -11,7 +11,6 @@
 ![Gemini](https://img.shields.io/badge/Google_Gemini_2.5-4285F4?style=for-the-badge&logo=google&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-> **Nehru Hackathon 2026** — Closing the gap between talent and opportunity with deterministic AI-hybrid career intelligence.
 
 </div>
 
@@ -706,8 +705,8 @@ skillpath/
 
 <div align="center">
 
-**Built for Nehru Hackathon 2026**
 
 *SkillPath — Close Your Skill Gap. Master Any Role.*
 
 </div>
+

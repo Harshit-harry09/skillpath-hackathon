@@ -17,7 +17,6 @@
 
 <br/>
 
-> 🏆 **Nehru Hackathon 2026** — Deterministic AI-hybrid career intelligence that gives every candidate an exact, evidence-backed roadmap.
 
 <br/>
 
@@ -350,10 +349,10 @@ skillpath-hackathon/
 
 <div align="center">
 
-**Built for Nehru Hackathon 2026**
 
 *SkillPath — Close Your Skill Gap. Master Any Role.*
 
 [![GitHub Stars](https://img.shields.io/github/stars/Harshit-harry09/skillpath-hackathon?style=social)](https://github.com/Harshit-harry09/skillpath-hackathon)
 
 </div>
+
