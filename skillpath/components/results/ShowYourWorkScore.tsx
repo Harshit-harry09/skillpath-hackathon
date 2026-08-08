@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, PlusCircle, MinusCircle, HelpCircle, ChevronDown, CheckCircle2 } from 'lucide-react';
-import type { AnalysisResult } from '@/types/analysis';
+import type { AnalysisResult, AnalysisMatch, AnalysisEvidence } from '@/types/analysis';
 
 interface CitationPoint {
   id: string;
@@ -19,60 +19,131 @@ interface ShowYourWorkScoreProps {
   data: AnalysisResult;
 }
 
+/**
+ * Derives honest citation points from real backend evidence + match data.
+ * Falls back to ATS composite breakdown when no AI enrichment is present.
+ */
+function buildCitations(data: AnalysisResult): CitationPoint[] {
+  const citations: CitationPoint[] = [];
+
+  // --- Use real AI evidence + match data when available ---
+  if (data.evidence?.length && data.matches?.length) {
+    const evidenceMap = new Map<string, AnalysisEvidence>();
+    for (const ev of data.evidence) evidenceMap.set(ev.id, ev);
+
+    const requirementMap = new Map<string, string>();
+    for (const req of data.requirements || []) {
+      requirementMap.set(req.id, req.canonical_skill || req.skill);
+    }
+
+    for (const match of data.matches) {
+      if (citations.length >= 6) break;
+      const skill = requirementMap.get(match.requirement_id) || match.requirement_id;
+
+      if (match.status === 'matched' || match.status === 'partially_matched' || match.status === 'transferable') {
+        const ev = match.evidence_ids.map(id => evidenceMap.get(id)).find(Boolean);
+        const pts = match.status === 'matched' ? 15
+          : match.status === 'partially_matched' ? 9
+          : 6;
+        citations.push({
+          id: `match-${match.requirement_id}`,
+          type: 'gain',
+          points: pts,
+          lineOrSection: ev?.section ? `${ev.section} Section` : 'Resume',
+          quote: ev?.quote || `Evidence found for "${skill}"`,
+          reason: match.reason || `${match.status.replace('_', ' ')} for "${skill}" requirement.`,
+        });
+      } else if (match.status === 'missing' || match.status === 'contradicted') {
+        const penalty = match.status === 'missing' ? -10 : -12;
+        citations.push({
+          id: `miss-${match.requirement_id}`,
+          type: 'deduction',
+          points: penalty,
+          lineOrSection: 'Required Skills',
+          quote: `"${skill}" not evidenced in resume.`,
+          reason: match.reason || `No verified evidence for required skill "${skill}".`,
+        });
+      }
+    }
+  }
+
+  // --- Use composite ATS score breakdown when AI evidence is absent ---
+  if (citations.length === 0 && data.composite_ats_score) {
+    const { breakdown, strengths, penalties } = data.composite_ats_score;
+    const sections: Array<{ name: string; score: number; weight: number }> = [
+      { name: 'Skills Coverage', score: breakdown.skills_score, weight: 0.3 },
+      { name: 'Experience Depth', score: breakdown.experience_score, weight: 0.3 },
+      { name: 'Education Fit', score: breakdown.education_score, weight: 0.15 },
+      { name: 'Role Title Alignment', score: breakdown.title_score, weight: 0.15 },
+      { name: 'Resume Formatting', score: breakdown.formatting_score, weight: 0.1 },
+    ];
+
+    sections.forEach(({ name, score, weight }, i) => {
+      const maxPts = Math.round(weight * 100);
+      const earnedPts = Math.round((score / 100) * maxPts);
+      const lostPts = maxPts - earnedPts;
+
+      citations.push({
+        id: `ats-${i}`,
+        type: earnedPts >= Math.round(maxPts * 0.6) ? 'gain' : 'deduction',
+        points: earnedPts,
+        lineOrSection: `${name} (${earnedPts}/${maxPts} pts)`,
+        quote: (earnedPts >= Math.round(maxPts * 0.6) ? strengths[i] : penalties[i]) || `${score}% Sub-Score (${earnedPts}/${maxPts} ATS weight)`,
+        reason: `ATS 5-Pillar evaluation: ${score}% match score contributing ${earnedPts} out of ${maxPts} total composite points.`,
+      });
+    });
+  }
+
+  return citations;
+}
+
 export function ShowYourWorkScore({ data }: ShowYourWorkScoreProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // DEMO DATA — VISIBLE TO JUDGES
-  // The citations array below is populated from real AI evidence when the enrichment
-  // pipeline completes. In a hackathon demo, judges will see evidence pulled directly
-  // from the submitted resume, with exact quote + section references.
-  //
-  // Each citation point shows:
-  //   id            — unique key for the accordion
-  //   type          — 'gain' (resume has evidence) | 'deduction' (gap or contradiction)
-  //   points        — score contribution (+gain / –deduction)
-  //   lineOrSection — where in the resume the evidence was found
-  //   quote         — verbatim excerpt from the candidate's resume
-  //   reason        — explanation of why this quote counts for or against the role requirement
-  //
-  // In this "Show your work" panel, judges can inspect the AI's reasoning at citation level.
-  const citations: CitationPoint[] = [
-    {
-      id: 'cit-1',
-      type: 'gain',
-      points: +15,
-      lineOrSection: 'Experience Section • Bullet 2',
-      quote: 'Engineered high-throughput Postgres database indexing reducing latency by 35%.',
-      reason: 'Direct evidence match for required skill "PostgreSQL" with quantified metric.',
-    },
-    {
-      id: 'cit-2',
-      type: 'gain',
-      points: +12,
-      lineOrSection: 'Projects Section • Line 4',
-      quote: 'Deployed containerized K8s clusters on AWS EC2.',
-      reason: 'Semantic alias match for "Kubernetes" and "Amazon Web Services".',
-    },
-    {
-      id: 'cit-3',
-      type: 'deduction',
-      points: -10,
-      lineOrSection: 'Summary Section',
-      quote: 'Responsible for managing software development lifecycle.',
-      reason: 'Passive phrasing without direct technical ownership or active verbs.',
-    },
-    {
-      id: 'cit-4',
-      type: 'deduction',
-      points: -8,
-      lineOrSection: 'Required Skills Matrix',
-      quote: 'Missing explicit evidence for Docker containerization.',
-      reason: 'Job description marks Docker as a "Must Have" requirement.',
-    },
-  ];
+  const citations = buildCitations(data);
+  const hasRealData = Boolean(data.evidence?.length || data.composite_ats_score);
 
-  const totalGain = citations.filter((c) => c.type === 'gain').reduce((acc, c) => acc + c.points, 0);
+  const totalGain = citations.filter((c) => c.type === 'gain').reduce((acc, c) => acc + Math.abs(c.points), 0);
   const totalDeduction = citations.filter((c) => c.type === 'deduction').reduce((acc, c) => acc + Math.abs(c.points), 0);
+
+  // No data at all — show pending state
+  if (!hasRealData) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
+        <div className="flex items-center gap-2 border-b border-hairline pb-4">
+          <span className="inline-flex items-center gap-1 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
+            <FileText className="h-3 w-3" />
+            Line-by-Line Score Breakdown
+          </span>
+        </div>
+        <div className="flex flex-col items-center justify-center py-10 text-center gap-3">
+          <CheckCircle2 className="h-8 w-8 text-muted" />
+          <p className="text-body-sm text-muted max-w-xs">
+            Evidence-backed score breakdown will appear once AI analysis completes. Your deterministic gap score is shown in the overview above.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (citations.length === 0) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
+        <div className="flex items-center gap-2 border-b border-hairline pb-4">
+          <span className="inline-flex items-center gap-1 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
+            <FileText className="h-3 w-3" />
+            Line-by-Line Score Breakdown
+          </span>
+        </div>
+        <div className="flex flex-col items-center justify-center py-10 text-center gap-3">
+          <CheckCircle2 className="h-8 w-8 text-brand-teal" />
+          <p className="text-body-sm text-muted max-w-xs">
+            No requirement matches to cite yet. Complete the analysis and enable AI enrichment for detailed evidence quotes.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
@@ -81,21 +152,22 @@ export function ShowYourWorkScore({ data }: ShowYourWorkScoreProps) {
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
               <FileText className="h-3 w-3" />
-              Show-Your-Work Citation Audit
+              {data.evidence?.length ? 'AI Evidence Citation Audit' : 'ATS Score Breakdown'}
             </span>
-            <span className="text-xs font-medium text-text-subtle">Feature #2</span>
           </div>
           <h3 className="mt-1 text-base font-bold text-text-primary">
-            Line-by-Line Match Score Breakdown
+            {data.evidence?.length ? 'Line-by-Line Match Score Breakdown' : 'ATS Composite Score Breakdown'}
           </h3>
           <p className="text-xs text-text-muted">
-            No black-box math. Every point gained or deducted is linked directly to a specific sentence in your resume.
+            {data.evidence?.length
+              ? 'Every point gained or deducted is linked to a verified sentence in your resume.'
+              : 'Score breakdown from local deterministic ATS pipeline analysis.'}
           </p>
         </div>
 
         <div className="flex items-center gap-3 text-xs font-mono">
-          <span className="text-emerald-400 font-bold">+{totalGain} pts gained</span>
-          <span className="text-rose-400 font-bold">-{totalDeduction} pts lost</span>
+          <span className="text-emerald-800 dark:text-emerald-400 font-bold">+{totalGain} pts gained</span>
+          <span className="text-rose-800 dark:text-rose-400 font-bold">-{totalDeduction} pts lost</span>
         </div>
       </div>
 
@@ -111,14 +183,16 @@ export function ShowYourWorkScore({ data }: ShowYourWorkScoreProps) {
               onClick={() => setExpandedId(isExpanded ? null : c.id)}
               className={`group cursor-pointer rounded-xl border p-3.5 transition-all ${
                 isGain
-                  ? 'border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/40'
-                  : 'border-rose-500/20 bg-rose-950/10 hover:border-rose-500/40'
+                  ? 'border-emerald-300 bg-emerald-50/80 hover:border-emerald-400 dark:border-emerald-800/40 dark:bg-emerald-950/20'
+                  : 'border-rose-300 bg-rose-50/80 hover:border-rose-400 dark:border-rose-800/40 dark:bg-rose-950/20'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-bold ${
-                    isGain ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                    isGain
+                      ? 'bg-emerald-200 text-emerald-900 dark:bg-emerald-500/20 dark:text-emerald-400'
+                      : 'bg-rose-200 text-rose-900 dark:bg-rose-500/20 dark:text-rose-400'
                   }`}>
                     {isGain ? `+${c.points}` : `${c.points}`}
                   </div>
@@ -128,7 +202,7 @@ export function ShowYourWorkScore({ data }: ShowYourWorkScoreProps) {
                       {c.lineOrSection}
                     </span>
                     <p className="text-[11px] text-text-subtle italic line-clamp-1">
-                      "{c.quote}"
+                      &ldquo;{c.quote}&rdquo;
                     </p>
                   </div>
                 </div>

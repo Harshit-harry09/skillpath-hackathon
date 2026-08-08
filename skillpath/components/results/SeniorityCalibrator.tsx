@@ -1,9 +1,8 @@
 'use client';
-// updated
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, UserCheck, Briefcase, ChevronRight } from 'lucide-react';
+import { Award } from 'lucide-react';
 
 export type SeniorityLevel = 'entry' | 'mid' | 'senior' | 'staff' | 'executive';
 
@@ -28,42 +27,42 @@ export function SeniorityCalibrator({ onLevelChange }: SeniorityCalibratorProps)
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-xs font-semibold text-purple-400">
-          <Award className="h-3 w-3" />
+    <div className="relative overflow-hidden rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-purple-300 dark:border-purple-800 bg-purple-100 dark:bg-purple-950/40 px-3 py-1 text-xs font-bold text-purple-900 dark:text-purple-300">
+          <Award className="h-3.5 w-3.5" />
           Seniority-Aware Rubric Calibration
         </span>
-        <span className="text-xs font-medium text-text-subtle">Feature #6</span>
+        <span className="text-[11px] font-mono font-bold text-muted">Feature #6</span>
       </div>
 
-      <h3 className="text-base font-bold text-text-primary">
+      <h3 className="text-base font-bold text-ink">
         Target Seniority Tier Calibration
       </h3>
-      <p className="text-xs text-text-muted mt-0.5">
+      <p className="text-xs text-muted mt-1 leading-relaxed">
         Prevents applying Senior/Staff metric expectations to Junior applicants.
       </p>
 
-      {/* Seniority Selector Pills */}
-      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+      {/* Seniority Selector Pills (2-column layout to prevent cramped text overlap) */}
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
         {levels.map((lvl) => {
           const isSelected = activeLevel === lvl.id;
           return (
             <motion.button
               key={lvl.id}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleSelect(lvl.id)}
-              className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
+              className={`flex flex-col items-start p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                 isSelected
-                  ? 'border-purple-500 bg-purple-950/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
-                  : 'border-border-subtle bg-surface-soft/60 hover:border-hairline'
+                  ? 'border-purple-600 bg-purple-100 dark:bg-purple-950/60 dark:border-purple-500 shadow-xs'
+                  : 'border-hairline bg-surface-soft/60 hover:bg-surface-soft hover:border-purple-300'
               }`}
             >
-              <span className={`text-xs font-bold ${isSelected ? 'text-purple-300' : 'text-text-primary'}`}>
+              <span className={`text-xs font-bold ${isSelected ? 'text-purple-950 dark:text-purple-100' : 'text-ink'}`}>
                 {lvl.label}
               </span>
-              <span className="mt-1 text-[10px] text-text-muted leading-tight line-clamp-2">
+              <span className={`mt-1 text-[11px] leading-tight ${isSelected ? 'text-purple-900 dark:text-purple-300 font-medium' : 'text-muted'}`}>
                 {lvl.desc}
               </span>
             </motion.button>
