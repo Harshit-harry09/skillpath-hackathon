@@ -117,3 +117,13 @@ export async function extractTextFromPDF(buffer: ArrayBuffer): Promise<string> {
     'Please paste your resume text directly.'
   );
 }
+
+export function isScannedPdf(buffer: ArrayBuffer): boolean {
+  try {
+    const text = extractRawText(buffer);
+    return text.length < 50;
+  } catch {
+    return true;
+  }
+}
+
