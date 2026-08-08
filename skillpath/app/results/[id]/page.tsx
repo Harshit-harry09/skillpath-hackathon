@@ -692,23 +692,6 @@ export default function ResultsPage({
                 <p className="max-w-md font-sans text-body-sm text-muted md:text-right">Use the overview to orient yourself, then work through the priority cards in order.</p>
               </div>
 
-<<<<<<< HEAD
-          {/* SUMMARY PANEL — four at-a-glance metric cards
-              Gap score    : 0–100 coverage of JD requirements (higher = better match)
-              Readiness    : adjusted score that respects user self-assessments and active-job tracking
-              Priority gaps: count of skills the user still needs to close
-              Ready by     : estimated date when all gaps could be closed given weekly study hours
-
-              These four numbers are the first thing judges see after a resume is analyzed.
-              They are deterministic on the critical path — no AI call is needed to render them. */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
-            <div className="rounded-xl bg-surface-card border border-hairline px-4 py-4">
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] text-muted uppercase tracking-widest font-bold">Gap score</span>
-                <span className="group relative inline-flex">
-                  <button type="button" aria-label="Explain Gap score" title="Higher score means stronger resume coverage." className="min-h-10 min-w-10 -my-2 -mr-2 inline-flex items-center justify-center text-muted hover:text-ink transition-colors">
-                    <Info size={13} />
-=======
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
                 <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
                   <div className="mb-4 flex items-center gap-2">
@@ -770,70 +753,10 @@ export default function ResultsPage({
                     className="min-h-11 px-5 rounded-xl bg-primary text-on-primary font-sans text-button font-semibold hover:bg-primary-active transition-colors active:scale-[0.96] disabled:opacity-50"
                   >
                     {generatingPlan ? 'Creating plan…' : 'Create learning plan'}
->>>>>>> 21582d5 (feat: update results page and time machine page)
                   </button>
                 )}
               </div>
 
-<<<<<<< HEAD
-          {/* COUNTS BY STATUS/TOPIC — requirement coverage strip
-              Shows total JD requirements checked and breaks them down by match status.
-              Matched (teal) — exact or strong evidence in the resume
-              Partial (ochre) — some evidence but not full coverage
-              Transferable (lavender) — adjacent skill the model accepted as a proxy
-              Missing (pink) — no supporting evidence found
-              Need review (muted) — contradicted or unclear evidence
-
-              This strip lets judges immediately gauge overall coverage depth
-              without needing to scroll through individual skill cards. */}
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl bg-surface-soft/70 border border-hairline px-4 py-3">
-            <span className="font-sans text-[10px] font-bold uppercase tracking-widest text-ink">{requirementSummary.total} requirements checked</span>
-            <span className="font-sans text-[10px] font-semibold text-brand-teal">{requirementSummary.matched} matched</span>
-            {requirementSummary.partial > 0 && <span className="font-sans text-[10px] font-semibold text-brand-ochre">{requirementSummary.partial} partial</span>}
-            {requirementSummary.transferable > 0 && <span className="font-sans text-[10px] font-semibold text-brand-lavender">{requirementSummary.transferable} transferable</span>}
-            {requirementSummary.missing > 0 && <span className="font-sans text-[10px] font-semibold text-brand-pink">{requirementSummary.missing} missing</span>}
-            {requirementSummary.review > 0 && <span className="font-sans text-[10px] font-semibold text-muted">{requirementSummary.review} need review</span>}
-          </div>
-        </header>
-
-        <nav aria-label="Results sections" className="sticky top-[72px] z-20 -mx-1 mt-4 mb-2 overflow-x-auto rounded-2xl border border-hairline bg-canvas/90 p-1.5 backdrop-blur-md">
-          <div className="flex min-w-max items-center gap-1">
-            <a href="#results-overview" className="rounded-xl bg-surface-card px-3 py-2 font-sans text-body-xs font-semibold text-ink shadow-sm transition-colors hover:bg-surface-soft">Overview</a>
-            <a href="#priority-gaps" className="rounded-xl px-3 py-2 font-sans text-body-xs font-semibold text-muted transition-colors hover:bg-surface-soft hover:text-ink">Priority gaps <span className="ml-1 tabular-nums">{activeGaps.length}</span></a>
-            <a href="#learning-roadmap" className="rounded-xl px-3 py-2 font-sans text-body-xs font-semibold text-muted transition-colors hover:bg-surface-soft hover:text-ink">Roadmap</a>
-            <a href="#more-tools" className="rounded-xl px-3 py-2 font-sans text-body-xs font-semibold text-muted transition-colors hover:bg-surface-soft hover:text-ink">More tools</a>
-          </div>
-        </nav>
-
-        <div className="mt-7 grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="order-last min-w-0 xl:order-first">
-            <section className="pt-0 pb-8" aria-labelledby="readout-heading">
-          <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-brand-teal">Your readout</p>
-              <h2 id="readout-heading" className="mt-1 font-display text-title-lg md:text-display-sm tracking-tight">Start with the gaps that matter most.</h2>
-            </div>
-            <p className="max-w-md font-sans text-body-sm text-muted md:text-right">Use the overview to orient yourself, then work through the priority cards in order.</p>
-          </div>
-
-          {/* NEXT-STEP RECOMMENDATION — two-column decision summary
-              Left card  "What you already show": up to 3 confirmed skill strengths
-              Right card "Start here": the 3 highest-priority gaps, each linking
-                         directly to its full skill card below for drill-down
-
-              This is the primary judge-facing demo moment: the system surfaces
-              a personalized, evidence-backed action queue so users know exactly
-              what to learn next — no digging through a long list required. */}
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-brand-teal" />
-                <h3 className="font-sans text-[11px] font-bold uppercase tracking-widest text-muted">What you already show</h3>
-              </div>
-              {topStrengths.length ? (
-                <div className="flex flex-wrap gap-2">
-                  {topStrengths.map((strength) => <Chip key={strength.skill} variant="filled">{strength.skill}</Chip>)}
-=======
               {data.learning_plan?.weeks?.length ? (
                 <div className="mt-6 space-y-2">
                   {(isPlanExpanded ? data.learning_plan.weeks : data.learning_plan.weeks.slice(0, 4)).map((week) => (
@@ -853,7 +776,6 @@ export default function ResultsPage({
                       {isPlanExpanded ? 'Show fewer weeks' : `Show all ${data.learning_plan.weeks.length} weeks`}
                     </button>
                   )}
->>>>>>> 21582d5 (feat: update results page and time machine page)
                 </div>
               ) : (
                 <p className="mt-6 rounded-xl bg-surface-soft px-4 py-4 font-sans text-body-sm text-muted">Your plan will be generated from the evidence-backed cards above.</p>
