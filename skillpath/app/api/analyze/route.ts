@@ -31,6 +31,12 @@ import { getAuthUserSafe } from "@/lib/auth-helpers";
 import crypto from "crypto";
 import { guardAiRequest, requestId, withRequestId } from "@/lib/request-guard";
 import { deleteEnrichmentPayload, isEnrichmentConfigured, storeEnrichmentPayload } from "@/lib/analyze-enrichment-store";
+import { extractContactInfo } from "@/lib/ats-contact-extractor";
+import { parseWorkExperience } from "@/lib/ats-experience-parser";
+import { extractEducationAndCerts } from "@/lib/ats-education-extractor";
+import { auditFraudAndFormatting } from "@/lib/ats-fraud-detector";
+import { analyzeJobDescription } from "@/lib/ats-jd-analyzer";
+import { calculateCompositeATSScore } from "@/lib/ats-composite-scorer";
 
 export async function POST(req: NextRequest) {
   const traceId = requestId(req);
@@ -43,6 +49,7 @@ export async function POST(req: NextRequest) {
 
     let jd_text = "";
     let resume_text = "";
+    let rawPdfBuffer: ArrayBuffer | undefined = undefined;
     let dreamRole = "";
     let currentRole = "";
     let experienceLevel = "";
@@ -87,6 +94,7 @@ export async function POST(req: NextRequest) {
         }
         console.log(`[Analyze] Processing PDF: ${resumeFile.name} (${resumeFile.size} bytes)`);
         const buffer = await resumeFile.arrayBuffer();
+        rawPdfBuffer = buffer;
         const signature = Buffer.from(buffer).subarray(0, 5).toString('ascii');
         if (resumeFile.type !== 'application/pdf' || signature !== '%PDF-') {
           return withRequestId(NextResponse.json(
@@ -212,6 +220,22 @@ export async function POST(req: NextRequest) {
       )
     );
 
+    // ---- Step 7b: Full Deterministic ATS Analysis Pipeline ----
+    const contactInfo = extractContactInfo(resume_text);
+    const experienceAnalysis = parseWorkExperience(resume_text, jdSkills);
+    const { education_info: educationInfo, certifications } = extractEducationAndCerts(resume_text);
+    const fraudAudit = auditFraudAndFormatting(resume_text, rawPdfBuffer);
+    const jdRequirements = analyzeJobDescription(jd_text, jdSkills);
+
+    const compositeATSScore = calculateCompositeATSScore({
+      gapScore: gapResult.gapScore,
+      experience: experienceAnalysis,
+      jdReqs: jdRequirements,
+      education: educationInfo,
+      certifications,
+      fraudAudit,
+    });
+
     const analysisDoc = {
       share_token: shareToken,
       gap_score: gapResult.gapScore,
@@ -235,6 +259,14 @@ export async function POST(req: NextRequest) {
       analysis_version: 'deterministic-v2',
       enrichment_status: isEnrichmentConfigured() ? 'pending' : 'not_configured',
       summary_source: 'local_pipeline',
+      // ATS Reference Model Extensions
+      contact_info: contactInfo,
+      experience_analysis: experienceAnalysis,
+      education_info: educationInfo,
+      certifications,
+      fraud_audit: fraudAudit,
+      jd_requirements: jdRequirements,
+      composite_ats_score: compositeATSScore,
       // Dream context metadata (if present)
       ...(typeof dreamRole === 'string' && dreamRole ? {
         dream_context: {
