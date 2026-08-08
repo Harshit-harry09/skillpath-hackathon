@@ -104,12 +104,12 @@ export function DeslopifyModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md" data-lenis-prevent>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="bg-surface-card border border-emerald-500/30 rounded-3xl p-6 md:p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+          className="bg-surface-card border border-emerald-500/30 rounded-3xl p-6 md:p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-hairline shrink-0">
@@ -135,7 +135,10 @@ export function DeslopifyModal({
           </div>
 
           {/* Scrollable Body */}
-          <div className="overflow-y-auto py-5 space-y-6 flex-1 pr-1">
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y py-5 space-y-6 pr-2 scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent"
+            data-lenis-prevent
+          >
             <p className="text-body-xs text-muted leading-relaxed">
               Recruiters immediately skip candidates who overuse passive phrases like "responsible for" or corporate buzzwords like "synergized". Convert your bullets to active engineering verbs.
             </p>
@@ -158,25 +161,25 @@ export function DeslopifyModal({
               <button
                 type="button"
                 onClick={handleCleanText}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 px-4 py-2.5 text-xs font-bold text-emerald-300 hover:bg-emerald-500/30 transition-colors"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 border border-emerald-600 px-4 py-2.5 text-xs font-bold transition-colors cursor-pointer"
               >
                 <Sparkles size={14} />
                 <span>Replace Passive Slop with Active Verbs</span>
               </button>
 
               {hasCleaned && (
-                <div className="mt-3 p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-xs space-y-2">
-                  <span className="text-emerald-400 font-bold flex items-center gap-1.5">
+                <div className="mt-3 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800/40 text-xs space-y-2">
+                  <span className="text-emerald-800 dark:text-emerald-400 font-bold flex items-center gap-1.5">
                     <Check size={14} /> Cleaned Active Engineering Verbs:
                   </span>
-                  <p className="font-mono text-[11px] text-emerald-200 leading-relaxed bg-canvas p-2.5 rounded-lg border border-hairline">
+                  <p className="font-mono text-[11px] text-emerald-950 dark:text-emerald-200 leading-relaxed bg-canvas p-2.5 rounded-lg border border-hairline font-semibold">
                     "{cleanedText}"
                   </p>
                   <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() => handleCopy(cleanedText, 999)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition-colors cursor-pointer"
                     >
                       {copiedIndex === 999 ? <Check size={14} /> : <Copy size={14} />}
                       <span>{copiedIndex === 999 ? 'Copied!' : 'Copy De-Slopified Text'}</span>
@@ -193,18 +196,18 @@ export function DeslopifyModal({
               </h4>
 
               <div className="grid grid-cols-1 gap-3">
-                {BUZZWORD_CATALOG.map((item, idx) => (
+                {BUZZWORD_CATALOG.map((item) => (
                   <div
                     key={item.buzzword}
                     className="p-4 rounded-2xl bg-canvas border border-hairline space-y-2 hover:border-emerald-500/30 transition-all"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-400 font-mono text-[11px] font-bold line-through">
+                        <span className="px-2 py-0.5 rounded-md bg-rose-100 border border-rose-300 text-rose-800 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-400 font-mono text-[11px] font-bold line-through">
                           {item.buzzword}
                         </span>
                         <ArrowRight size={12} className="text-muted" />
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-100 border border-emerald-300 text-emerald-800 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-400 font-mono text-[11px] font-bold">
                           {item.replacement}
                         </span>
                       </div>
@@ -216,10 +219,10 @@ export function DeslopifyModal({
                     <p className="text-xs text-muted">{item.reason}</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1 text-[11px]">
-                      <div className="p-2 rounded-lg bg-surface-soft border border-hairline text-muted font-mono line-through">
+                      <div className="p-2.5 rounded-lg bg-surface-soft border border-hairline text-muted font-mono line-through">
                         ❌ {item.exampleOriginal}
                       </div>
-                      <div className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-emerald-300 font-mono">
+                      <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-200 font-mono font-medium">
                         ✅ {item.exampleImproved}
                       </div>
                     </div>
