@@ -53,58 +53,5 @@ SkillPath uses a **Hybrid Analysis Pipeline** to ensure instant core analysis wi
 2. **Deterministic Pipeline**: Local extraction and scoring via `pdf2json` and regex-based synthesis.
 3. **AI Synthesis**: Strategic use of Gemini for contextual resource generation and semantic reasoning.
 
----
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (Latest LTS)
-- Firebase Account
-- Gemini API Key
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/shauryap9006/Skillpath.git
-   cd Skillpath
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   # Root dependencies (ML & Tools)
-   pip install -r scripts/requirements-ml.txt
-
-   # Application dependencies
-   cd skillpath
-   npm install
-   ```
-
-3. **Environment Setup**
-   Create a `.env.local` in the `skillpath` directory:
-   ```env
-   NEXT_PUBLIC_FIREBASE_API_KEY=...
-   GEMINI_API_KEY=...
-   ```
-
-4. **Run the Development Server**
-   ```bash
-   npm run dev
-   ```
-
----
-
-## 📂 Project Structure
-
-```text
-├── skillpath/              # Main Next.js Application
-│   ├── app/                # App Router (Pages & API)
-│   ├── components/         # UI Components
-│   ├── context/            # Auth & Global State
-│   └── lib/                # Shared Utilities & Datasets
-├── scripts/                # Model Training & Evaluation Scripts
-└── README.md               # Documentation
-```
-
----
 
