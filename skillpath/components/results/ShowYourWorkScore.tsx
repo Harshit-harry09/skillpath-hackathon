@@ -44,7 +44,7 @@ function buildCitations(data: AnalysisResult): CitationPoint[] {
         const ev = match.evidence_ids.map(id => evidenceMap.get(id)).find(Boolean);
         const pts = match.status === 'matched' ? 15
           : match.status === 'partially_matched' ? 9
-          : 6;
+            : 6;
         citations.push({
           id: `match-${match.requirement_id}`,
           type: 'gain',
@@ -181,19 +181,17 @@ export function ShowYourWorkScore({ data }: ShowYourWorkScoreProps) {
             <div
               key={c.id}
               onClick={() => setExpandedId(isExpanded ? null : c.id)}
-              className={`group cursor-pointer rounded-xl border p-3.5 transition-all ${
-                isGain
+              className={`group cursor-pointer rounded-xl border p-3.5 transition-all ${isGain
                   ? 'border-emerald-300 bg-emerald-50/80 hover:border-emerald-400 dark:border-emerald-800/40 dark:bg-emerald-950/20'
                   : 'border-rose-300 bg-rose-50/80 hover:border-rose-400 dark:border-rose-800/40 dark:bg-rose-950/20'
-              }`}
+                }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-bold ${
-                    isGain
+                  <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-bold ${isGain
                       ? 'bg-emerald-200 text-emerald-900 dark:bg-emerald-500/20 dark:text-emerald-400'
                       : 'bg-rose-200 text-rose-900 dark:bg-rose-500/20 dark:text-rose-400'
-                  }`}>
+                    }`}>
                     {isGain ? `+${c.points}` : `${c.points}`}
                   </div>
 
