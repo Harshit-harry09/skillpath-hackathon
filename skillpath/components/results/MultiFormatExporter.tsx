@@ -1,127 +1,153 @@
 'use client';
-// updated
 
 import React, { useState } from 'react';
-import { Download, FileCode, FileText, Check, Unlock, Sparkles } from 'lucide-react';
+import { FileCode, FileText, Check, Unlock, Sparkles, Printer } from 'lucide-react';
 import type { AnalysisResult } from '@/types/analysis';
 
 interface MultiFormatExporterProps {
   data: AnalysisResult;
 }
 
-// SUMMARY PANEL — DOWNLOAD
-// MultiFormatExporter renders the "Export resume" panel in the optional analysis rail.
-// It assembles a plain-text or markdown snapshot of the analysis — role label, technical
-// summary, extracted skills, and AI evidence quotes — and triggers a browser download.
-//
-// DEMO DATA VISIBLE TO JUDGES:
-//   data.role_label        — the target role (e.g. "Senior Software Engineer")
-//   data.summary           — one-sentence analysis result or AI-generated summary
-//   data.resume_skills[]   — skills extracted from the candidate's resume
-//   data.evidence[]        — AI-verified evidence quotes with skill labels
-//
-// This is the export surface judges can use to take the analysis offline.
+function buildMarkdownContent(data: AnalysisResult): string {
+  const roleName = data.role_label || 'Target Role';
+  let content = `# Resume — Tailored for ${roleName}\n\n`;
+  content += `## Technical Summary\n${data.summary || 'Tailored technical professional.'}\n\n`;
+  content += `## Key Competencies\n${(data.resume_skills || []).map((s) => `- ${s}`).join('\n')}\n\n`;
+  if (data.evidence?.length) {
+    content += `## Verified Project Evidence\n`;
+    content += data.evidence.map((e) => `- **${e.skill}**: ${e.quote}`).join('\n');
+    content += '\n\n';
+  }
+  if (data.matched_skills?.length) {
+    content += `## Matched Requirements\n${data.matched_skills.map((s) => `- ${s}`).join('\n')}\n\n`;
+  }
+  return content;
+}
+
+function buildPlainTextContent(data: AnalysisResult): string {
+  const roleName = data.role_label || 'Target Role';
+  let content = `RESUME — TAILORED FOR ${roleName.toUpperCase()}\n${'='.repeat(50)}\n\n`;
+  content += `TECHNICAL SUMMARY\n${data.summary || 'Tailored technical professional.'}\n\n`;
+  content += `KEY COMPETENCIES\n${(data.resume_skills || []).map((s) => `• ${s}`).join('\n')}\n\n`;
+  if (data.matched_skills?.length) {
+    content += `MATCHED REQUIREMENTS\n${data.matched_skills.map((s) => `• ${s}`).join('\n')}\n\n`;
+  }
+  return content;
+}
 export function MultiFormatExporter({ data }: MultiFormatExporterProps) {
   const [downloadedFormat, setDownloadedFormat] = useState<string | null>(null);
 
-  const handleDownload = (format: 'pdf' | 'text' | 'markdown') => {
+  const handleDownload = (format: 'text' | 'markdown') => {
     setDownloadedFormat(format);
     setTimeout(() => setDownloadedFormat(null), 3000);
 
-    const roleName = data.role_label || 'Target_Role';
-    let content = `# Resume — Tailored for ${roleName}\n\n`;
-    content += `## Technical Summary\n${data.summary || 'Tailored technical professional.'}\n\n`;
-    content += `## Key Competencies\n- ${ (data.resume_skills || []).join('\n- ') }\n\n`;
-    content += `## Verified Project Evidence\n${ (data.evidence || []).map((e) => `- ${e.skill}: ${e.quote}`).join('\n') }\n`;
+    const roleName = (data.role_label || 'Target_Role').replace(/\s+/g, '_');
+    const content = format === 'markdown' ? buildMarkdownContent(data) : buildPlainTextContent(data);
+    const mimeType = 'text/plain;charset=utf-8';
+    const extension = format === 'markdown' ? 'md' : 'txt';
 
-    const blob = new Blob([content], { type: format === 'pdf' ? 'application/pdf' : 'text/plain' });
+    const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `SkillPath_Resume_${roleName}.${format === 'markdown' ? 'md' : format === 'text' ? 'txt' : 'pdf'}`;
+    a.download = `SkillPath_Resume_${roleName}.${extension}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
+  const handlePrintToPDF = () => {
+    setDownloadedFormat('pdf');
+    setTimeout(() => setDownloadedFormat(null), 3000);
+    // Open system print dialog — user can Save as PDF from there
+    window.print();
+  };
+
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-hairline pb-4">
+    <div className="relative overflow-hidden rounded-2xl border border-hairline bg-surface-card p-6 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-hairline pb-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-400">
-              <Unlock className="h-3 w-3" />
-              Features #9 & #10 • 100% Free Multi-Format Export
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 dark:border-emerald-800 bg-emerald-100 dark:bg-emerald-950/40 px-3 py-1 text-xs font-bold text-emerald-900 dark:text-emerald-300">
+              <Unlock className="h-3.5 w-3.5" />
+              Multi-Format Export • 100% Free
             </span>
           </div>
-          <h3 className="mt-1 text-base font-bold text-text-primary">
+          <h3 className="text-base font-bold text-ink">
             Export Resume in ATS-Safe Formats
           </h3>
-          <p className="text-xs text-text-muted">
-            No credit card paywalls. Download clean PDF, plain text, or linear Markdown formats instantly.
+          <p className="text-xs text-muted mt-0.5">
+            Download clean plain text or Markdown. Use &ldquo;Print to PDF&rdquo; to save a browser-rendered PDF.
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1.5 rounded-xl">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-900 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800/80 px-3 py-1.5 rounded-xl shrink-0 self-start sm:self-center">
           <Sparkles className="h-3.5 w-3.5" />
           <span>Zero Gatekeeping</span>
         </div>
       </div>
 
-      {/* Export Options */}
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {/* Export Options Stack */}
+      <div className="mt-5 flex flex-col gap-3">
+        {/* Print to PDF */}
         <button
           type="button"
-          onClick={() => handleDownload('pdf')}
-          className="group flex items-center justify-between p-3.5 rounded-xl border border-hairline bg-surface-soft/80 hover:border-brand-teal hover:bg-surface-soft transition-all text-left"
+          onClick={handlePrintToPDF}
+          className="group flex items-center justify-between p-4 rounded-xl border border-hairline bg-surface-soft/60 hover:border-brand-teal hover:bg-surface-soft transition-all text-left cursor-pointer shadow-xs"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-teal/10 text-brand-teal border border-brand-teal/20 group-hover:bg-brand-teal group-hover:text-black transition-colors">
-              <Download className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal/10 text-brand-teal border border-brand-teal/20 group-hover:bg-brand-teal group-hover:text-slate-950 transition-colors shrink-0">
+              <Printer className="h-5 w-5" />
             </div>
             <div>
-              <span className="text-xs font-bold text-text-primary block">ATS-Safe PDF</span>
-              <span className="text-[10px] text-text-muted">Vector PDF Layout</span>
+              <span className="text-xs font-bold text-ink block">Print to PDF</span>
+              <span className="text-[11px] text-muted">Via browser print dialog</span>
             </div>
           </div>
-          {downloadedFormat === 'pdf' && <Check className="h-4 w-4 text-emerald-400" />}
+          {downloadedFormat === 'pdf' && <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />}
         </button>
 
+        {/* Plain Text .txt */}
         <button
           type="button"
           onClick={() => handleDownload('text')}
-          className="group flex items-center justify-between p-3.5 rounded-xl border border-hairline bg-surface-soft/80 hover:border-brand-teal hover:bg-surface-soft transition-all text-left"
+          className="group flex items-center justify-between p-4 rounded-xl border border-hairline bg-surface-soft/60 hover:border-brand-teal hover:bg-surface-soft transition-all text-left cursor-pointer shadow-xs"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-lavender/10 text-brand-lavender border border-brand-lavender/20 group-hover:bg-brand-lavender group-hover:text-black transition-colors">
-              <FileText className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-lavender/10 text-brand-lavender border border-brand-lavender/20 group-hover:bg-brand-lavender group-hover:text-slate-950 transition-colors shrink-0">
+              <FileText className="h-5 w-5" />
             </div>
             <div>
-              <span className="text-xs font-bold text-text-primary block">Plain Text (.txt)</span>
-              <span className="text-[10px] text-text-muted">100% Linear ATS Form</span>
+              <span className="text-xs font-bold text-ink block">Plain Text (.txt)</span>
+              <span className="text-[11px] text-muted">100% Linear ATS Form</span>
             </div>
           </div>
-          {downloadedFormat === 'text' && <Check className="h-4 w-4 text-emerald-400" />}
+          {downloadedFormat === 'text' && <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />}
         </button>
 
+        {/* Markdown .md */}
         <button
           type="button"
           onClick={() => handleDownload('markdown')}
-          className="group flex items-center justify-between p-3.5 rounded-xl border border-hairline bg-surface-soft/80 hover:border-brand-teal hover:bg-surface-soft transition-all text-left"
+          className="group flex items-center justify-between p-4 rounded-xl border border-hairline bg-surface-soft/60 hover:border-brand-teal hover:bg-surface-soft transition-all text-left cursor-pointer shadow-xs"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-ochre/10 text-brand-ochre border border-brand-ochre/20 group-hover:bg-brand-ochre group-hover:text-black transition-colors">
-              <FileCode className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-ochre/10 text-brand-ochre border border-brand-ochre/20 group-hover:bg-brand-ochre group-hover:text-slate-950 transition-colors shrink-0">
+              <FileCode className="h-5 w-5" />
             </div>
             <div>
-              <span className="text-xs font-bold text-text-primary block">Markdown (.md)</span>
-              <span className="text-[10px] text-text-muted">Developer Standard</span>
+              <span className="text-xs font-bold text-ink block">Markdown (.md)</span>
+              <span className="text-[11px] text-muted">Developer Standard</span>
             </div>
           </div>
-          {downloadedFormat === 'markdown' && <Check className="h-4 w-4 text-emerald-400" />}
+          {downloadedFormat === 'markdown' && <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />}
         </button>
       </div>
+
+      <p className="mt-4 text-[11px] text-muted leading-relaxed">
+        <strong>PDF note:</strong> Use your browser&apos;s &ldquo;Print → Save as PDF&rdquo; option for a rendered PDF. Direct PDF generation from Markdown is not supported in-browser without a PDF library.
+      </p>
     </div>
   );
 }

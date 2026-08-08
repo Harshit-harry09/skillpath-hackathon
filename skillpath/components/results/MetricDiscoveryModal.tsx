@@ -13,41 +13,57 @@ interface MetricDiscoveryModalProps {
 }
 
 export function MetricDiscoveryModal({
-  bulletText = "Managed server infrastructure and database deployment.",
+  bulletText = '',
   isOpen,
   onClose,
   onApplyMetric,
 }: MetricDiscoveryModalProps) {
-  const [userAnswer1, setUserAnswer1] = useState('50,000');
-  const [userAnswer2, setUserAnswer2] = useState('35%');
+  const [userAnswer1, setUserAnswer1] = useState('');  
+  const [userAnswer2, setUserAnswer2] = useState('');
 
   if (!isOpen) return null;
 
-  const generatedBullet = `Engineered PostgreSQL database cluster and automated EC2 deployment handling over ${userAnswer1} daily active requests, improving query throughput by ${userAnswer2}.`;
+  // Build a real preview from what the user actually typed
+  const baseBullet = bulletText.trim() || 'Delivered project outcome';
+  const hasMetrics = userAnswer1.trim() || userAnswer2.trim();
+  const metricParts: string[] = [];
+  if (userAnswer1.trim()) metricParts.push(`handling over ${userAnswer1.trim()} daily requests/users`);
+  if (userAnswer2.trim()) metricParts.push(`improving performance by ${userAnswer2.trim()}`);
+  const generatedBullet = hasMetrics
+    ? `${baseBullet.replace(/\.$/, '')}, ${metricParts.join(', ')}.`
+    : baseBullet;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="w-full max-w-lg overflow-hidden rounded-2xl border border-brand-teal/40 bg-surface-card p-6 shadow-2xl"
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal/20 text-brand-teal border border-brand-teal/30">
-            <Calculator className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-brand-teal/10 px-2 py-0.5 text-[10px] font-bold text-brand-teal uppercase">
-                Feature #8 • Metric Uncover
-              </span>
+    <AnimatePresence>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" data-lenis-prevent>
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          className="w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden rounded-2xl border border-brand-teal/40 bg-surface-card p-6 shadow-2xl"
+        >
+          {/* Header */}
+          <div className="flex items-center gap-3 shrink-0 pb-3 border-b border-hairline">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal/20 text-brand-teal border border-brand-teal/30">
+              <Calculator className="h-5 w-5" />
             </div>
-            <h4 className="text-base font-bold text-text-primary">
-              Uncover Real Metrics (No AI Lies)
-            </h4>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-brand-teal/10 px-2 py-0.5 text-[10px] font-bold text-brand-teal uppercase">
+                  Feature #8 • Metric Uncover
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-text-primary">
+                Uncover Real Metrics (No AI Lies)
+              </h4>
+            </div>
           </div>
-        </div>
+
+          {/* Scrollable Body */}
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y py-4 space-y-4 pr-1 scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent"
+            data-lenis-prevent
+          >
 
         <p className="mt-3 text-xs text-text-muted">
           SkillPath never fabricates numbers. Answer these 2 quick questions to calculate your true metric impact:
@@ -84,36 +100,40 @@ export function MetricDiscoveryModal({
         </div>
 
         {/* Real-time Quantified Bullet Preview */}
-        <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-3.5 text-xs text-emerald-200">
-          <span className="font-bold text-emerald-400 flex items-center gap-1">
+        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-800/40 p-3.5 text-xs text-emerald-950 dark:text-emerald-200">
+          <span className="font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1">
             <Sparkles className="h-3.5 w-3.5" /> Generated Verified Metric Bullet:
           </span>
-          <p className="mt-1 font-mono text-[11px] leading-relaxed">
+          <p className="mt-1 font-mono text-[11px] leading-relaxed font-semibold">
             "{generatedBullet}"
           </p>
         </div>
 
-        <div className="mt-5 flex items-center justify-end gap-2.5">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl border border-hairline bg-surface-soft px-4 py-2 text-xs font-semibold text-text-muted hover:text-text-primary transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              navigator.clipboard.writeText(generatedBullet);
-              onApplyMetric(generatedBullet);
-              onClose();
-            }}
-            className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/20 px-4 py-2 text-xs font-bold text-emerald-300 hover:bg-emerald-500/30 transition-colors"
-          >
-            <Check className="h-3.5 w-3.5" /> Apply & Copy Metric
-          </button>
-        </div>
-      </motion.div>
-    </div>
+          </div>
+
+          {/* Footer */}
+          <div className="pt-4 mt-2 border-t border-hairline flex items-center justify-end gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-xl border border-hairline bg-surface-soft px-4 py-2 text-xs font-semibold text-muted hover:text-ink transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(generatedBullet);
+                onApplyMetric(generatedBullet);
+                onClose();
+              }}
+              className="flex items-center gap-1.5 rounded-xl border border-emerald-700 bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-500 transition-colors cursor-pointer shadow-xs"
+            >
+              <Check className="h-3.5 w-3.5" /> Apply & Copy Metric
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    </AnimatePresence>
   );
 }
