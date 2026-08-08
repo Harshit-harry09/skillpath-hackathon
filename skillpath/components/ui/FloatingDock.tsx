@@ -1,5 +1,4 @@
 'use client';
-// updated
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -8,55 +7,55 @@ import {
   Home,
   Compass,
   Target,
-  Briefcase
+  Briefcase,
+  Swords,
+  History,
+  User,
 } from 'lucide-react';
 
 export function FloatingDock() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const items = [
+    { href: '/', label: 'Home', icon: Home, matchExact: true },
+    { href: '/analyze', label: 'Analyze', icon: Target },
+    { href: '/explore', label: 'Explore Roles', icon: Compass },
+    { href: '/battle', label: 'Skill Battle', icon: Swords },
+    { href: '/jobs', label: 'Job Tracker', icon: Briefcase },
+    { href: '/history', label: 'Past Analyses', icon: History },
+    { href: '/profile', label: 'Profile & Growth', icon: User },
+  ];
+
   return (
     <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto max-w-[96vw] px-1 sm:px-2">
-      <Dock>
-        <DockIcon
-          onClick={() => router.push('/')}
-          aria-label="Home"
-          role="button"
-          tabIndex={0}
-          className={pathname === '/' ? 'bg-brand-pink/20 text-brand-pink border border-brand-pink/40' : ''}
-        >
-          <Home className="w-5 h-5" />
-        </DockIcon>
+      <Dock className="shadow-2xl border-bold-border bg-surface-card/90 backdrop-blur-xl">
+        {items.map(({ href, label, icon: Icon, matchExact }) => {
+          const active = matchExact ? pathname === href : pathname.startsWith(href);
 
-        <DockIcon
-          onClick={() => router.push('/analyze')}
-          aria-label="Analyze Resume and Skills"
-          role="button"
-          tabIndex={0}
-          className={pathname === '/analyze' ? 'bg-brand-pink/20 text-brand-pink border border-brand-pink/40' : ''}
-        >
-          <Target className="w-5 h-5" />
-        </DockIcon>
-
-        <DockIcon
-          onClick={() => router.push('/explore')}
-          aria-label="Explore Roles"
-          role="button"
-          tabIndex={0}
-          className={pathname.startsWith('/explore') ? 'bg-brand-pink/20 text-brand-pink border border-brand-pink/40' : ''}
-        >
-          <Compass className="w-5 h-5" />
-        </DockIcon>
-
-        <DockIcon
-          onClick={() => router.push('/jobs')}
-          aria-label="Live Job Tracker"
-          role="button"
-          tabIndex={0}
-          className={pathname.startsWith('/jobs') ? 'bg-brand-pink/20 text-brand-pink border border-brand-pink/40' : ''}
-        >
-          <Briefcase className="w-5 h-5" />
-        </DockIcon>
+          return (
+            <DockIcon
+              key={href}
+              onClick={() => router.push(href)}
+              aria-label={label}
+              title={label}
+              role="button"
+              tabIndex={0}
+              className={[
+                'transition-all duration-300 relative group',
+                active
+                  ? 'bg-brand-pink text-white border-2 border-ink shadow-md'
+                  : 'text-muted hover:text-ink hover:bg-surface-soft',
+              ].join(' ')}
+            >
+              <Icon className="w-5 h-5" />
+              {/* Floating Tooltip */}
+              <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-ink text-on-primary font-mono text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-lg">
+                {label}
+              </span>
+            </DockIcon>
+          );
+        })}
       </Dock>
     </div>
   );
