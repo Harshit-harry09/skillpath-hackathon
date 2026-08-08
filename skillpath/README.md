@@ -1,4 +1,7 @@
-﻿<div align="center">
+<div align="center">
+
+<img src="./public/logo.svg" alt="SkillPath Logo" width="650" />
+<br/><br/>
 
 # ⚡ SkillPath
 ### *AI-Powered Career Intelligence & Skill Gap Analysis Platform*

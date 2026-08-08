@@ -1,6 +1,7 @@
-﻿<div align="center">
+<div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=40&duration=3000&pause=1000&color=6EE7B7&center=true&vCenter=true&width=600&lines=⚡+SkillPath;AI+Career+Intelligence;Close+Your+Skill+Gap" alt="SkillPath" />
+<img src="./public/logo.svg" alt="SkillPath Logo" width="650" />
+<br/><br/>
 
 ### *AI-Powered Career Intelligence & Skill Gap Analysis Platform*
 
