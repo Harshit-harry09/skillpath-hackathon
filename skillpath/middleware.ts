@@ -2,27 +2,15 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Edge-compatible sliding window IP tracker map
-const rateLimitMap = new Map<string, number[]>();
+import { checkGuestRateLimit } from '@/lib/rate-limit';
 
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
   // Only apply rate limiting to API routes
   if (path.startsWith('/api/analyze')) {
-    const ip =
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-      req.headers.get('x-real-ip') ||
-      '127.0.0.1';
-
-    const windowMs = 60 * 1000; // 1 minute
-    const maxRequests = 15; // 15 requests per minute per IP for analysis
-    const now = Date.now();
-
-    const timestamps = rateLimitMap.get(ip) || [];
-    const validTimestamps = timestamps.filter((t) => now - t < windowMs);
-
-    if (validTimestamps.length >= maxRequests) {
+    const rateCheck = checkGuestRateLimit(req, 15, 60_000);
+    if (!rateCheck.success) {
       return NextResponse.json(
         {
           error: 'rate_limit_exceeded',
@@ -30,18 +18,6 @@ export function middleware(req: NextRequest) {
         },
         { status: 429, headers: { 'Retry-After': '60' } }
       );
-    }
-
-    validTimestamps.push(now);
-    rateLimitMap.set(ip, validTimestamps);
-
-    // Clean up stale entries periodically if map grows large
-    if (rateLimitMap.size > 2000) {
-      for (const [k, ts] of rateLimitMap.entries()) {
-        if (ts.every((t) => now - t >= windowMs)) {
-          rateLimitMap.delete(k);
-        }
-      }
     }
   }
 
