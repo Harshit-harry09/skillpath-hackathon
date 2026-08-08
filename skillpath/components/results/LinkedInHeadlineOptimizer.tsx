@@ -1,5 +1,4 @@
 'use client';
-// updated
 
 import React, { useState } from 'react';
 import { Link2, Copy, Check, Loader2 } from 'lucide-react';
@@ -54,12 +53,17 @@ export function LinkedInHeadlineOptimizer({ roleLabel, topSkills }: LinkedInHead
       <div>
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-lg bg-[#0077b5]/10 text-[#0077b5]"><Link2 size={18} /></span>
-            <span className="text-[11px] font-bold text-muted uppercase tracking-widest">LinkedIn Headline Optimizer</span>
+            <span className="p-2 rounded-xl bg-[#0077b5]/10 text-[#0077b5] border border-[#0077b5]/20">
+              <Link2 size={18} />
+            </span>
+            <span className="text-xs font-bold text-ink uppercase tracking-wider">LinkedIn Headline Optimizer</span>
           </div>
           {headlines.length > 0 && (
-            <button onClick={generate} disabled={loading}
-              className="text-body-xs text-muted hover:text-ink transition-colors font-semibold"
+            <button
+              type="button"
+              onClick={generate}
+              disabled={loading}
+              className="text-xs text-muted hover:text-ink transition-colors font-bold cursor-pointer"
             >
               Regenerate ↺
             </button>
@@ -68,11 +72,14 @@ export function LinkedInHeadlineOptimizer({ roleLabel, topSkills }: LinkedInHead
 
         {headlines.length === 0 ? (
           <div className="text-center py-6 my-auto">
-            <p className="text-body-sm text-muted mb-6">
-              Generate 3 data-driven LinkedIn headlines for <strong className="text-ink">{roleLabel}</strong> based on your top matched skills.
+            <p className="text-xs text-muted mb-6 leading-relaxed max-w-xs mx-auto">
+              Generate 3 data-driven LinkedIn headlines for <strong className="text-ink font-semibold">{roleLabel}</strong> based on your top matched skills.
             </p>
-            <button onClick={generate} disabled={loading}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0077b5] text-white font-sans font-semibold text-button hover:bg-[#005a8e] transition-all disabled:opacity-50"
+            <button
+              type="button"
+              onClick={generate}
+              disabled={loading}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#0077b5] text-white font-bold text-xs hover:bg-[#005a8e] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
             >
               {loading
                 ? <><Loader2 size={16} className="animate-spin" /> Generating...</>
@@ -81,17 +88,19 @@ export function LinkedInHeadlineOptimizer({ roleLabel, topSkills }: LinkedInHead
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3.5">
             {headlines.map((h, i) => (
-              <div key={i} className="p-4 rounded-xl bg-canvas border border-hairline flex items-center gap-3">
+              <div key={i} className="p-4 rounded-xl bg-surface-soft/60 border border-hairline flex items-center gap-3">
                 <span className="shrink-0 w-5 h-5 rounded-full bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] text-[10px] font-bold flex items-center justify-center">
                   {i + 1}
                 </span>
-                <p className="text-body-sm text-ink flex-1 font-medium">{h}</p>
-                <button onClick={() => handleCopy(h, i)}
-                  className="shrink-0 p-1.5 rounded-lg text-muted hover:text-brand-teal hover:bg-brand-teal/10 transition-colors"
+                <p className="text-xs text-ink flex-1 font-medium leading-relaxed">{h}</p>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(h, i)}
+                  className="shrink-0 p-1.5 rounded-lg text-muted hover:text-brand-teal hover:bg-brand-teal/10 transition-colors cursor-pointer"
                 >
-                  {copied === i ? <Check size={14} className="text-brand-teal" /> : <Copy size={14} />}
+                  {copied === i ? <Check size={14} className="text-emerald-600 dark:text-emerald-400" /> : <Copy size={14} />}
                 </button>
               </div>
             ))}
@@ -99,7 +108,7 @@ export function LinkedInHeadlineOptimizer({ roleLabel, topSkills }: LinkedInHead
         )}
       </div>
 
-      <p className="text-[10px] text-muted mt-4">
+      <p className="text-[11px] text-muted mt-4 leading-relaxed">
         Optimized headlines improve LinkedIn search visibility & recruiter inbound messages.
       </p>
     </div>
