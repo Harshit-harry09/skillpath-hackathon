@@ -22,15 +22,110 @@ export interface RedFlagItem {
 export function RecruiterRedFlagRadar({ data }: RecruiterRedFlagRadarProps) {
   const [selectedFlag, setSelectedFlag] = useState<RedFlagItem | null>(null);
 
-  // Derives or synthesizes realistic recruiter red flags based on analysis data
+  // Derive flags exclusively from real backend audit fields
   const { redFlags, riskScore, riskLevel, gaugeColor } = useMemo(() => {
     const flags: RedFlagItem[] = [];
 
-    // Analyze evidence and gaps for red flag signals
-    const resumeSkillsCount = data.resume_skills?.length || 0;
+    // 1. Real fraud/formatting flags from the ATS fraud detector
+    const fraudAudit = data.fraud_audit;
+    if (fraudAudit) {
+      if (fraudAudit.hidden_text_detected) {
+        flags.push({
+          id: 'rf-hidden-text',
+          category: 'formatting',
+          severity: 'high',
+          title: 'Hidden Text Detected in Resume',
+          description: 'White text or zero-opacity text was found in the PDF. ATS systems flag this as keyword stuffing, which triggers automatic rejection at most enterprise applicant tracking systems.',
+          recommendation: 'Remove all hidden text layers from your PDF. Rebuild the resume from scratch in a single-column Word document or Google Docs.',
+        });
+      }
+
+      if (fraudAudit.keyword_stuffing_score > 0.6) {
+        flags.push({
+          id: 'rf-keyword-stuffing',
+          category: 'formatting',
+          severity: 'high',
+          title: `High Keyword Stuffing Score (${Math.round(fraudAudit.keyword_stuffing_score * 100)}%)`,
+          description: 'Your resume appears to contain an unusually dense repetition of keywords relative to its natural text length, which ATS fraud detectors flag.',
+          recommendation: 'Reduce keyword repetition. Each skill should appear organically in context, not listed multiple times in a hidden section.',
+        });
+      }
+
+      for (const issue of fraudAudit.formatting_issues.slice(0, 2)) {
+        flags.push({
+          id: `rf-fmt-${flags.length}`,
+          category: 'formatting',
+          severity: 'medium',
+          title: 'Formatting Issue Detected',
+          description: issue,
+          recommendation: 'Reformat using a clean ATS-safe template: single column, standard section headers, no tables or text boxes.',
+        });
+      }
+
+      for (const flagText of fraudAudit.fraud_flags.slice(0, 1)) {
+        flags.push({
+          id: `rf-fraud-${flags.length}`,
+          category: 'formatting',
+          severity: 'high',
+          title: 'Potential Fraud Flag',
+          description: flagText,
+          recommendation: 'Review and correct the flagged section. Recruiters are trained to spot fabricated or inflated credentials.',
+        });
+      }
+    }
+
+    // 2. Career gaps from real experience analysis
+    const expAnalysis = data.experience_analysis;
+    if (expAnalysis) {
+      const longGaps = (expAnalysis.employment_gaps || []).filter((g) => g.months >= 4);
+      if (longGaps.length > 0) {
+        const longest = longGaps.reduce((a, b) => (a.months > b.months ? a : b));
+        flags.push({
+          id: 'rf-career-gap',
+          category: 'career_gap',
+          severity: longest.months >= 8 ? 'high' : 'medium',
+          title: `${longest.months}-Month Employment Gap Detected`,
+          description: `A ${longest.months}-month gap (${longest.start} – ${longest.end}) was detected in your work history. Unexplained gaps trigger manual recruiter review holds.`,
+          recommendation: 'Add a brief explanation in your resume (freelance projects, upskilling, caregiving). Use exact month/year dates to reduce ambiguity.',
+        });
+      }
+
+      if (expAnalysis.career_progression === 'flat') {
+        flags.push({
+          id: 'rf-flat-career',
+          category: 'seniority_mismatch',
+          severity: 'medium',
+          title: 'Flat Career Progression Detected',
+          description: 'Your work history shows similar titles across multiple roles without visible growth in seniority or scope, which may signal stagnation to a recruiter.',
+          recommendation: 'Emphasize expanding scope in each role — team size grown, budget owned, system scale increased. Reframe titles if they underrepresent your actual responsibilities.',
+        });
+      }
+    }
+
+    // 3. Missing contact fields from real contact info
+    const contact = data.contact_info;
+    if (contact) {
+      const missingFields: string[] = [];
+      if (!contact.linkedin_url) missingFields.push('LinkedIn URL');
+      if (!contact.email) missingFields.push('Email');
+      if (!contact.github_url && (data.role_category?.includes('engineer') || data.role_category?.includes('developer'))) {
+        missingFields.push('GitHub URL');
+      }
+      if (missingFields.length > 0) {
+        flags.push({
+          id: 'rf-missing-contact',
+          category: 'formatting',
+          severity: missingFields.includes('Email') ? 'high' : 'low',
+          title: `Missing Contact Fields: ${missingFields.join(', ')}`,
+          description: `The following contact fields were not found in your resume header: ${missingFields.join(', ')}. Recruiters expect these to be immediately visible.`,
+          recommendation: `Add ${missingFields.join(' and ')} to your resume header section.`,
+        });
+      }
+    }
+
+    // 4. Missing must-have skills gap (from real skill data)
     const gaps = data.skill_gaps || [];
     const missingMustHaves = gaps.filter((g) => g.importance === 'must_have');
-
     if (missingMustHaves.length >= 2) {
       flags.push({
         id: 'rf-musthave',
@@ -42,92 +137,73 @@ export function RecruiterRedFlagRadar({ data }: RecruiterRedFlagRadarProps) {
       });
     }
 
-    if (resumeSkillsCount < 6) {
-      flags.push({
-        id: 'rf-thin-skills',
-        category: 'formatting',
-        severity: 'medium',
-        title: 'Unusually Low Skill Density',
-        description: 'Fewer than 6 technical skills were detected. Executive recruiters may perceive this as a thin technical portfolio.',
-        recommendation: 'Expand your skills matrix to include primary frameworks, databases, and workflow tools.',
-      });
+    // Take top 3 most severe flags
+    const sorted = [...flags].sort((a, b) => {
+      const order = { high: 0, medium: 1, low: 2 };
+      return order[a.severity] - order[b.severity];
+    });
+    const topFlags = sorted.slice(0, 3);
+
+    // Calculate composite rejection risk score
+    if (topFlags.length === 0) {
+      return {
+        redFlags: [],
+        riskScore: 0,
+        riskLevel: 'Low Risk' as const,
+        gaugeColor: '#10B981',
+      };
     }
 
-    // Default high-value red flags if resume text analysis is clean
-    if (flags.length < 3) {
-      flags.push({
-        id: 'rf-metrics',
-        category: 'missing_metrics',
-        severity: 'high',
-        title: 'Unquantified Achievement Bullets',
-        description: 'Over 60% of experience bullet points describe responsibilities without clear numeric impact ($ revenue, % latency, # users).',
-        recommendation: 'Convert qualitative statements into quantified outcomes (e.g., "Reduced page load time by 35%").',
-      });
-    }
-
-    if (flags.length < 3) {
-      flags.push({
-        id: 'rf-passive',
-        category: 'passive_voice',
-        severity: 'medium',
-        title: 'Over-reliance on Passive Phrasing',
-        description: 'Frequent use of "responsible for" and "assisted with" weakens executive impression of technical ownership.',
-        recommendation: 'Replace passive phrases with direct action verbs ("Architected", "Engineered", "Optimized").',
-      });
-    }
-
-    if (flags.length < 3) {
-      flags.push({
-        id: 'rf-gap',
-        category: 'career_gap',
-        severity: 'low',
-        title: 'Unexplained Timeline Multi-Year Gap',
-        description: 'Recruiters scan for employment continuity; vague year-only dates can trigger manual review holds.',
-        recommendation: 'Use Month Year formatting (e.g., "Mar 2022 – Oct 2023") to eliminate ambiguity.',
-      });
-    }
-
-    // Calculate composite rejection risk score (0 - 100%)
-    const highCount = flags.filter((f) => f.severity === 'high').length;
-    const medCount = flags.filter((f) => f.severity === 'medium').length;
+    const highCount = topFlags.filter((f) => f.severity === 'high').length;
+    const medCount = topFlags.filter((f) => f.severity === 'medium').length;
     const score = Math.min(85, Math.max(12, highCount * 28 + medCount * 14 + 10));
 
     let level: 'Low Risk' | 'Moderate Risk' | 'High Risk' = 'Low Risk';
-    let color = '#10B981'; // Green
+    let color = '#10B981';
+    if (score >= 60) { level = 'High Risk'; color = '#EF4444'; }
+    else if (score >= 35) { level = 'Moderate Risk'; color = '#F59E0B'; }
 
-    if (score >= 60) {
-      level = 'High Risk';
-      color = '#EF4444'; // Red
-    } else if (score >= 35) {
-      level = 'Moderate Risk';
-      color = '#F59E0B'; // Amber
-    }
-
-    return { redFlags: flags.slice(0, 3), riskScore: score, riskLevel: level, gaugeColor: color };
+    return { redFlags: topFlags, riskScore: score, riskLevel: level, gaugeColor: color };
   }, [data]);
 
-  // SVG Gauge calculations
   const radius = 65;
-  const circumference = Math.PI * radius; // Semi-circle
+  const circumference = Math.PI * radius;
   const strokeDashoffset = circumference - (riskScore / 100) * circumference;
+
+  // No real flags detected
+  if (redFlags.length === 0) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-400">
+            <AlertTriangle className="h-3 w-3" />
+            Recruiter Simulation Audit
+          </span>
+        </div>
+        <div className="flex flex-col items-center justify-center py-8 text-center gap-3">
+          <CheckCircle className="h-10 w-10 text-emerald-400" />
+          <div>
+            <h3 className="text-base font-bold text-text-primary">No Recruiter Red Flags Detected</h3>
+            <p className="text-xs text-text-muted mt-1 max-w-sm mx-auto">
+              {data.fraud_audit
+                ? 'Your resume passed fraud detection, formatting checks, and contact field verification.'
+                : 'Complete the analysis with AI enrichment enabled for a full recruiter simulation audit.'}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border-card bg-surface-card p-5 md:p-6 shadow-xl">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        
+
         {/* Left: Interactive Semi-Circle Gauge */}
         <div className="flex flex-col items-center justify-center rounded-xl bg-surface-soft/60 p-4 lg:w-64 border border-border-subtle">
           <div className="relative flex h-32 w-48 items-end justify-center overflow-hidden">
             <svg className="h-36 w-48" viewBox="0 0 160 90">
-              {/* Background semi-circle track */}
-              <path
-                d="M 15 80 A 65 65 0 0 1 145 80"
-                fill="none"
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="14"
-                strokeLinecap="round"
-              />
-              {/* Animated risk score semi-circle arc */}
+              <path d="M 15 80 A 65 65 0 0 1 145 80" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="14" strokeLinecap="round" />
               <motion.path
                 d="M 15 80 A 65 65 0 0 1 145 80"
                 fill="none"
@@ -140,15 +216,9 @@ export function RecruiterRedFlagRadar({ data }: RecruiterRedFlagRadarProps) {
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               />
             </svg>
-
-            {/* Score display inside semi-circle */}
             <div className="absolute bottom-1 flex flex-col items-center text-center">
-              <span className="text-2xl font-extrabold tracking-tight text-text-primary">
-                {riskScore}%
-              </span>
-              <span className="text-[11px] font-semibold tracking-wide uppercase text-text-muted">
-                Rejection Risk
-              </span>
+              <span className="text-2xl font-extrabold tracking-tight text-text-primary">{riskScore}%</span>
+              <span className="text-[11px] font-semibold tracking-wide uppercase text-text-muted">Rejection Risk</span>
             </div>
           </div>
 
@@ -158,18 +228,18 @@ export function RecruiterRedFlagRadar({ data }: RecruiterRedFlagRadarProps) {
           </div>
         </div>
 
-        {/* Right: Top 3 Recruiter Red Flags List */}
+        {/* Right: Red Flags List */}
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-400">
               <AlertTriangle className="h-3 w-3" />
               Recruiter Simulation Audit
             </span>
-            <span className="text-xs text-text-muted">6-Second Scan Friction Points</span>
+            <span className="text-xs text-text-muted">Derived from real resume analysis</span>
           </div>
 
           <h3 className="mt-1 text-lg font-bold text-text-primary">
-            Top 3 Rejection Risk Factors
+            Top {redFlags.length} Rejection Risk Factor{redFlags.length > 1 ? 's' : ''}
           </h3>
 
           <div className="mt-3.5 flex flex-col gap-2.5">
@@ -233,30 +303,26 @@ export function RecruiterRedFlagRadar({ data }: RecruiterRedFlagRadarProps) {
               className="w-full max-w-md overflow-hidden rounded-2xl border border-amber-500/30 bg-surface-card p-6 shadow-2xl"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-400 dark:border-amber-500/30">
                   <AlertCircle className="h-5 w-5" />
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-text-primary">
-                    {selectedFlag.title}
-                  </h4>
-                  <span className="text-xs font-semibold text-amber-400">
-                    Recruiter Friction Analysis
-                  </span>
+                  <h4 className="text-base font-bold text-ink">{selectedFlag.title}</h4>
+                  <span className="text-xs font-bold text-amber-800 dark:text-amber-400">Recruiter Friction Analysis</span>
                 </div>
               </div>
 
-              <div className="mt-4 rounded-xl border border-border-card bg-surface-soft p-3.5 text-xs text-text-secondary">
-                <span className="font-semibold text-text-primary">Why recruiters reject:</span>
+              <div className="mt-4 rounded-xl border border-hairline bg-surface-soft p-3.5 text-xs text-muted">
+                <span className="font-semibold text-ink">Why recruiters reject:</span>
                 <p className="mt-1">{selectedFlag.description}</p>
               </div>
 
-              <div className="mt-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/30 p-3.5 text-xs text-emerald-300">
-                <div className="flex items-center gap-1.5 font-bold text-emerald-400">
+              <div className="mt-3.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/30 dark:border-emerald-800/40 dark:text-emerald-300 p-3.5 text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-400">
                   <CheckCircle className="h-4 w-4" />
                   <span>Actionable Fix:</span>
                 </div>
-                <p className="mt-1">{selectedFlag.recommendation}</p>
+                <p className="mt-1 font-medium">{selectedFlag.recommendation}</p>
               </div>
 
               <div className="mt-5 flex justify-end">

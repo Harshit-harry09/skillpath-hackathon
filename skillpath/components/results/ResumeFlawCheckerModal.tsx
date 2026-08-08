@@ -75,20 +75,20 @@ export function ResumeFlawCheckerModal({
 
   const score = analysis?.overall_score ?? 80;
   const getScoreBadge = (s: number) => {
-    if (s >= 85) return { label: 'High Quality', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' };
-    if (s >= 70) return { label: 'Minor Flaws Found', color: 'text-amber-400 bg-amber-500/10 border-amber-500/30' };
-    return { label: 'Critical Errors Found', color: 'text-rose-400 bg-rose-500/10 border-rose-500/30' };
+    if (s >= 85) return { label: 'High Quality', color: 'text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30' };
+    if (s >= 70) return { label: 'Minor Flaws Found', color: 'text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-500/10 border-amber-300 dark:border-amber-500/30' };
+    return { label: 'Critical Errors Found', color: 'text-rose-800 dark:text-rose-300 bg-rose-100 dark:bg-rose-500/10 border-rose-300 dark:border-rose-500/30' };
   };
   const scoreBadge = getScoreBadge(score);
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md" data-lenis-prevent>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="bg-surface-card border border-hairline rounded-3xl p-6 md:p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+          className="bg-surface-card border border-hairline rounded-3xl p-6 md:p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-hairline shrink-0">
@@ -114,7 +114,10 @@ export function ResumeFlawCheckerModal({
           </div>
 
           {/* Body Content */}
-          <div className="overflow-y-auto py-5 space-y-6 flex-1 pr-1">
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y py-5 space-y-6 pr-2 scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent"
+            data-lenis-prevent
+          >
             {/* Score & Summary Banner */}
             {analysis && !loading && (
               <div className="p-4 rounded-2xl bg-surface-soft/60 border border-hairline flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -210,10 +213,10 @@ export function ResumeFlawCheckerModal({
                         <span
                           className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                             flaw.severity === 'high'
-                              ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                              ? 'bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20'
                               : flaw.severity === 'medium'
-                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                              : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                              ? 'bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20'
+                              : 'bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20'
                           }`}
                         >
                           {flaw.severity}
@@ -227,8 +230,8 @@ export function ResumeFlawCheckerModal({
 
                     {/* Original Flaw Text */}
                     {flaw.original_text && (
-                      <div className="p-2.5 rounded-xl bg-rose-500/5 border border-rose-500/15 text-[11px] text-rose-300 font-mono">
-                        <span className="text-[10px] text-rose-400 font-bold block mb-0.5">Issue Excerpt:</span>
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-950 dark:bg-rose-950/40 dark:border-rose-800/40 dark:text-rose-200 font-mono">
+                        <span className="text-[10px] text-rose-700 dark:text-rose-400 font-bold block mb-1">Issue Excerpt:</span>
                         "{flaw.original_text}"
                       </div>
                     )}
@@ -237,19 +240,19 @@ export function ResumeFlawCheckerModal({
 
                     {/* 1-Click Suggested Fix */}
                     {flaw.suggested_fix && (
-                      <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-start justify-between gap-3">
+                      <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800/40 flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                          <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1">
                             <Sparkles size={12} /> Suggested 1-Click Fix:
                           </span>
-                          <p className="text-xs text-emerald-200 font-medium font-sans">
+                          <p className="text-xs text-emerald-950 dark:text-emerald-200 font-semibold font-sans leading-relaxed">
                             {flaw.suggested_fix}
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleCopyFix(flaw.suggested_fix, flaw.id)}
-                          className="shrink-0 p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-colors"
+                          className="shrink-0 p-2 rounded-lg bg-emerald-100 border border-emerald-300 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-500/20 dark:border-emerald-500/30 dark:text-emerald-300 transition-colors cursor-pointer"
                           title="Copy fix"
                         >
                           {copiedId === flaw.id ? <Check size={15} /> : <Copy size={15} />}
