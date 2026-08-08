@@ -47,7 +47,7 @@ export function SelfAssessmentModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 md:p-8">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 md:p-8" data-lenis-prevent>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -62,7 +62,7 @@ export function SelfAssessmentModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-4xl max-h-[90vh] bg-surface-card border border-hairline rounded-[2rem] overflow-hidden shadow-2xl flex flex-col"
+            className="relative w-full max-w-4xl max-h-[85vh] bg-surface-card border border-hairline rounded-[2rem] overflow-hidden shadow-2xl flex flex-col"
           >
             {/* Header */}
             <div className="p-8 border-b border-hairline bg-surface-soft/50 shrink-0">
@@ -103,7 +103,7 @@ export function SelfAssessmentModal({
 
             {/* Scrollable Content */}
             <div 
-              className="flex-1 overflow-y-auto min-h-0 p-8 overscroll-contain scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent"
+              className="flex-1 overflow-y-auto min-h-0 p-8 overscroll-contain touch-pan-y scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent"
               data-lenis-prevent
             >
               <div className="space-y-12 pb-8">

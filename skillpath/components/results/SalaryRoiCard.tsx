@@ -1,8 +1,7 @@
 'use client';
-// updated
 
 import React from 'react';
-import { TrendingUp, DollarSign, Award, Zap } from 'lucide-react';
+import { TrendingUp, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface SalaryRoiCardProps {
@@ -35,48 +34,46 @@ export function SalaryRoiCard({ roleCategory, roleLabel, gapCount, mvcSkills }: 
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-brand-teal/10 via-surface-card to-surface-card border border-brand-teal/20 relative overflow-hidden shadow-sm"
+      className="p-6 md:p-8 rounded-2xl bg-surface-card border border-hairline relative overflow-hidden shadow-sm"
     >
-      <div className="absolute top-0 right-0 w-64 h-64 bg-brand-teal/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <span className="p-2 rounded-lg bg-brand-teal/10 text-brand-teal">
+          <span className="p-2 rounded-xl bg-brand-teal/10 text-brand-teal border border-brand-teal/20">
             <TrendingUp size={20} />
           </span>
-          <span className="text-[11px] font-bold text-brand-teal uppercase tracking-widest">
+          <span className="text-xs font-bold text-ink uppercase tracking-wider">
             Salary ROI Predictor
           </span>
         </div>
-        <span className="px-3 py-1 rounded-full bg-brand-teal/10 border border-brand-teal/20 text-brand-teal text-[10px] font-bold uppercase tracking-wider">
+        <span className="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
           Market Verified
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-        <div className="p-4 rounded-xl bg-canvas border border-hairline">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="p-4 rounded-xl bg-surface-soft/60 border border-hairline">
           <span className="text-[10px] text-muted font-bold uppercase tracking-wider block mb-1">
             Current Matched Baseline
           </span>
-          <span className="text-2xl font-display font-semibold text-ink">
+          <span className="text-2xl font-display font-bold text-ink">
             ${baseline.currentAvg.toLocaleString()}<span className="text-xs text-muted font-sans font-normal">/yr</span>
           </span>
         </div>
 
-        <div className="p-4 rounded-xl bg-brand-teal/10 border border-brand-teal/20">
-          <span className="text-[10px] text-brand-teal font-bold uppercase tracking-wider block mb-1">
+        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60">
+          <span className="text-[10px] text-emerald-800 dark:text-emerald-400 font-bold uppercase tracking-wider block mb-1">
             Projected Post-Gap Market Value
           </span>
-          <span className="text-2xl font-display font-bold text-brand-teal">
-            ${projectedSalary.toLocaleString()}<span className="text-xs font-sans font-normal">/yr</span>
+          <span className="text-2xl font-display font-bold text-emerald-900 dark:text-emerald-300">
+            ${projectedSalary.toLocaleString()}<span className="text-xs font-sans font-normal text-emerald-700 dark:text-emerald-400">/yr</span>
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas/80 border border-hairline text-body-sm text-ink/80">
+      <div className="flex items-center gap-3 p-3.5 rounded-xl bg-surface-soft/60 border border-hairline text-xs text-muted leading-relaxed">
         <Zap size={16} className="text-brand-teal shrink-0" />
         <span>
-          Closing your top gaps (including <strong className="text-ink font-semibold">{topSkill}</strong>) yields an estimated <strong className="text-brand-teal font-bold">+${baseline.topSkillLift.toLocaleString()}/yr</strong> market value boost.
+          Closing your top gaps (including <strong className="text-ink font-semibold">{topSkill}</strong>) yields an estimated <strong className="text-emerald-800 dark:text-emerald-400 font-bold">+${baseline.topSkillLift.toLocaleString()}/yr</strong> market value boost.
         </span>
       </div>
     </motion.div>
