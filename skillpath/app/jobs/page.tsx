@@ -88,19 +88,27 @@ export default function JobsTrackerPage() {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const [compRes, jobsRes] = await Promise.all([
-        fetch('/api/jobs/companies'),
-        fetch('/api/jobs'),
+      const [compResult, jobsResult] = await Promise.allSettled([
+        fetch('/api/jobs/companies').catch(() => null),
+        fetch('/api/jobs').catch(() => null),
       ]);
 
-      const compData = await compRes.json();
-      const jobsData = await jobsRes.json();
-
-      if (compData.success) {
-        setCompanies(compData.companies || []);
+      if (compResult.status === 'fulfilled' && compResult.value && compResult.value.ok) {
+        try {
+          const compData = await compResult.value.json();
+          if (compData.success) {
+            setCompanies(compData.companies || []);
+          }
+        } catch { /* ignore JSON parse error */ }
       }
-      if (jobsData.success) {
-        setJobs(jobsData.jobs || []);
+
+      if (jobsResult.status === 'fulfilled' && jobsResult.value && jobsResult.value.ok) {
+        try {
+          const jobsData = await jobsResult.value.json();
+          if (jobsData.success) {
+            setJobs(jobsData.jobs || []);
+          }
+        } catch { /* ignore JSON parse error */ }
       }
     } catch (err) {
       console.error('Failed to load job tracker data:', err);
@@ -108,6 +116,7 @@ export default function JobsTrackerPage() {
       setLoading(false);
     }
   }, []);
+
 
   useEffect(() => {
     fetchData();
@@ -117,10 +126,12 @@ export default function JobsTrackerPage() {
   const handleRefreshAll = async () => {
     try {
       setRefreshing(true);
-      const res = await fetch('/api/jobs/refresh', { method: 'POST' });
-      const data = await res.json();
-      if (data.success) {
-        await fetchData();
+      const res = await fetch('/api/jobs/refresh', { method: 'POST' }).catch(() => null);
+      if (res && res.ok) {
+        const data = await res.json().catch(() => null);
+        if (data && data.success) {
+          await fetchData();
+        }
       }
     } catch (err) {
       console.error('Error refreshing jobs:', err);
@@ -128,6 +139,7 @@ export default function JobsTrackerPage() {
       setRefreshing(false);
     }
   };
+
 
   // Handle Add Company
   const handleAddCompany = async (e: React.FormEvent) => {

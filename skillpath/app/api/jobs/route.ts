@@ -18,8 +18,21 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search')?.trim().toLowerCase();
     const limit = Math.min(Number(searchParams.get('limit')) || 300, 1000);
 
-    const db = getDb();
+    let db;
+    try {
+      db = getDb();
+    } catch (e: any) {
+      console.warn('[API /jobs GET] Database unavailable:', e?.message || e);
+      return NextResponse.json({
+        success: true,
+        count: 0,
+        jobs: [],
+        message: 'Database connection unavailable',
+      });
+    }
+
     let query: FirebaseFirestore.Query = db.collection('job_postings');
+
 
     // Query single equality field if provided to avoid requiring Firestore composite indexes
     if (company) {

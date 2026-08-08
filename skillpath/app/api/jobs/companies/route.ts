@@ -12,8 +12,19 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET() {
   try {
-    const db = getDb();
+    let db;
+    try {
+      db = getDb();
+    } catch (e: any) {
+      console.warn('[API /jobs/companies GET] Database unavailable:', e?.message || e);
+      return NextResponse.json({
+        success: true,
+        companies: [],
+        message: 'Database connection unavailable',
+      });
+    }
     const snapshot = await db.collection('tracked_companies').orderBy('added_at', 'desc').get();
+
     
     const companies = snapshot.docs.map((doc) => ({
       id: doc.id,
