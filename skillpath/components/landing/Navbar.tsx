@@ -1,15 +1,13 @@
 'use client';
-// updated
 
 import React from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Zap } from 'lucide-react';
+import { Zap, Target } from 'lucide-react';
 
 export function Navbar() {
-  const router = useRouter();
   const pathname = usePathname();
   const { user, openAuthModal } = useAuth();
   const [mounted, setMounted] = React.useState(false);
@@ -20,16 +18,16 @@ export function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 h-[64px] z-[90] flex justify-center px-4 sm:px-8 lg:px-24"
+      className="fixed top-0 left-0 right-0 h-[64px] z-[90] flex justify-center px-4 sm:px-8 lg:px-16"
       style={{
         background: 'var(--color-surface-card)',
         borderBottom: '3px solid var(--bold-border)',
         boxShadow: '0 4px 0 var(--bold-border), 0 6px 20px rgba(0,0,0,0.1)',
       }}
     >
-      <div className="max-w-[1280px] w-full flex items-center justify-between">
+      <div className="max-w-[1280px] w-full flex items-center justify-between gap-4">
         {/* Brand Logo */}
-        <Link href="/" aria-label="SkillPath Home Page" className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:outline-none rounded-lg">
+        <Link href="/" aria-label="SkillPath Home Page" className="flex items-center gap-3 cursor-pointer group shrink-0">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center"
             style={{
@@ -45,14 +43,12 @@ export function Navbar() {
           </span>
         </Link>
 
-
-
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <ThemeToggle />
           <Link
             href="/analyze"
-            className="text-[13px] font-black uppercase tracking-wider px-5 py-2 rounded-md transition-all duration-150 active:translate-y-[2px]"
+            className="text-[12px] sm:text-[13px] font-black uppercase tracking-wider px-4 sm:px-5 py-2 rounded-md transition-all duration-150 active:translate-y-[2px] flex items-center gap-2"
             style={{
               background: 'var(--color-brand-pink)',
               color: '#fff',
@@ -61,7 +57,8 @@ export function Navbar() {
               letterSpacing: '0.06em',
             }}
           >
-            Analyze Resume
+            <Target size={14} />
+            <span>Analyze Resume</span>
           </Link>
         </div>
       </div>
