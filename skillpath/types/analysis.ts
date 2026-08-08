@@ -80,6 +80,10 @@ export interface SkillGap {
   confidence_level?: ConfidenceLevel;
   confidence_weight?: number;
   adjusted_priority?: number;
+  // Feature 1 & 2 extensions
+  note?: string;
+  note_updated_at?: string;
+  role_category?: import('./active-job').AppRole;
 }
 
 export interface Resource {
@@ -125,6 +129,82 @@ export interface TrajectoryInfo {
   }>;
 }
 
+export interface ContactInfo {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  location: string | null;
+  linkedin_url: string | null;
+  github_url: string | null;
+  portfolio_url: string | null;
+}
+
+export interface WorkExperienceItem {
+  id: string;
+  company: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  duration_months: number;
+  is_current: boolean;
+  bullet_points: string[];
+}
+
+export interface ExperienceAnalysis {
+  total_yoe: number;
+  relevant_yoe: number;
+  seniority_level: 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
+  career_progression: 'accelerated' | 'steady' | 'flat' | 'unclear';
+  employment_gaps: Array<{ start: string; end: string; months: number }>;
+  parsed_history: WorkExperienceItem[];
+}
+
+export interface EducationItem {
+  degree: string;
+  field_of_study: string;
+  institution: string;
+  grad_year: number | null;
+  gpa?: string;
+}
+
+export interface CertificationItem {
+  name: string;
+  issuer: string;
+  year: number | null;
+  validity_status: 'valid' | 'expired' | 'unknown';
+}
+
+export interface FraudAuditResult {
+  is_flagged: boolean;
+  risk_level: 'clean' | 'low' | 'medium' | 'high';
+  hidden_text_detected: boolean;
+  keyword_stuffing_score: number;
+  fraud_flags: string[];
+  formatting_issues: string[];
+}
+
+export interface JDRequirements {
+  required_yoe: number;
+  location_type: 'remote' | 'hybrid' | 'on_site' | 'unspecified';
+  visa_required: boolean;
+  required_degree: string;
+  must_have_skills: string[];
+  nice_to_have_skills: string[];
+}
+
+export interface CompositeATSScore {
+  overall_score: number;
+  breakdown: {
+    skills_score: number;
+    experience_score: number;
+    education_score: number;
+    title_score: number;
+    formatting_score: number;
+  };
+  penalties: string[];
+  strengths: string[];
+}
+
 export interface AnalysisResult {
   share_token: string;
   gap_score: number;
@@ -160,6 +240,14 @@ export interface AnalysisResult {
   ai_explanation?: AnalysisExplanation;
   resume_text?: string;
   jd_text?: string;
+  // Extended ATS properties
+  contact_info?: ContactInfo;
+  experience_analysis?: ExperienceAnalysis;
+  education_info?: EducationItem[];
+  certifications?: CertificationItem[];
+  fraud_audit?: FraudAuditResult;
+  jd_requirements?: JDRequirements;
+  composite_ats_score?: CompositeATSScore;
 }
 
 export interface AnalysisRequest {

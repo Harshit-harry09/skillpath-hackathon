@@ -1,9 +1,10 @@
-// updated
 // types/active-job.ts
 
 export type SkillState = 'not_started' | 'in_progress' | 'learned';
 
 export type ConfidenceLevel = 'never_used' | 'heard_of_it' | 'used_it' | 'comfortable' | 'strong';
+
+export type AppRole = 'user' | 'admin' | 'authority' | 'hospital' | 'investigator' | 'reviewer';
 
 export interface TrackedSkill {
   skill: string;
@@ -14,6 +15,13 @@ export interface TrackedSkill {
   state: SkillState;
   learned_at?: string;
   resources_generated: boolean;
+  // Feature 1: User reflection note
+  note?: string;
+  note_updated_at?: string;
+  // Feature 2: Role-aware categorization
+  role_category?: AppRole;
+  // Salary premium boost
+  premium?: number;
   // Confidence self-assessment (optional)
   confidence_level?: ConfidenceLevel;
   confidence_weight?: number;
@@ -32,9 +40,13 @@ export interface ActiveJob {
   color: string;
   skills: TrackedSkill[];
   readiness_score: number;
+  baseline_score?: number;
+  current_role_filter?: AppRole;
+  resume_skills?: string[];
 }
 
 export interface ArchivedJob extends ActiveJob {
   archived_at: string;
   final_score: number;
 }
+
