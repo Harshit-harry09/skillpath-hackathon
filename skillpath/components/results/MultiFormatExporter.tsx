@@ -50,14 +50,14 @@ function buildPlainTextContent(data: AnalysisResult): string {
 export function MultiFormatExporter({ data }: MultiFormatExporterProps) {
   const [downloadedFormat, setDownloadedFormat] = useState<string | null>(null);
 
-  const handleDownload = (format: 'text' | 'markdown') => {
+  const handleDownload = (format: 'text' | 'markdown' | 'json') => {
     setDownloadedFormat(format);
     setTimeout(() => setDownloadedFormat(null), 3000);
 
     const roleName = (data.role_label || 'Target_Role').replace(/\s+/g, '_');
-    const content = format === 'markdown' ? buildMarkdownContent(data) : buildPlainTextContent(data);
-    const mimeType = 'text/plain;charset=utf-8';
-    const extension = format === 'markdown' ? 'md' : 'txt';
+    const content = format === 'markdown' ? buildMarkdownContent(data) : format === 'json' ? JSON.stringify({ role: data.role_label, summary: data.summary, skills: data.resume_skills, evidence: data.evidence, matchedSkills: data.matched_skills }, null, 2) : buildPlainTextContent(data);
+    const mimeType = format === 'json' ? 'application/json;charset=utf-8' : 'text/plain;charset=utf-8';
+    const extension = format === 'markdown' ? 'md' : format === 'json' ? 'json' : 'txt';
 
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
@@ -155,6 +155,24 @@ export function MultiFormatExporter({ data }: MultiFormatExporterProps) {
             </div>
           </div>
           {downloadedFormat === 'markdown' && <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />}
+        </button>
+
+        {/* JSON facts */}
+        <button
+          type="button"
+          onClick={() => handleDownload('json')}
+          className="group flex items-center justify-between p-4 rounded-xl border border-hairline bg-surface-soft/60 hover:border-brand-teal hover:bg-surface-soft transition-all text-left cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal/10 text-brand-teal border border-brand-teal/20 group-hover:bg-brand-teal group-hover:text-white transition-colors shrink-0">
+              <FileCode className="h-5 w-5" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-ink block">Structured JSON (.json)</span>
+              <span className="text-[11px] text-muted">Portable analysis facts</span>
+            </div>
+          </div>
+          {downloadedFormat === 'json' && <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />}
         </button>
       </div>
 

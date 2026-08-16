@@ -68,6 +68,15 @@ export function ResumeFlawCheckerModal({
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const flaws = analysis?.flaws || [];
@@ -83,7 +92,13 @@ export function ResumeFlawCheckerModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md" data-lenis-prevent>
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="flaw-checker-title"
+        data-lenis-prevent
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -100,7 +115,7 @@ export function ResumeFlawCheckerModal({
                 <span className="text-[10px] font-bold text-brand-pink uppercase tracking-widest block">
                   AI Quality & Grammar Guard
                 </span>
-                <h3 className="font-display text-title-md text-ink">
+                <h3 id="flaw-checker-title" className="font-display text-title-md text-ink">
                   Resume Flaw & Grammar Auditor
                 </h3>
               </div>

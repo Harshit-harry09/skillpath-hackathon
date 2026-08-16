@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <linearGradient id="bg_communication" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#380A22" />
+      <stop offset="100%" stop-color="#1C0511" />
+    </linearGradient>
+    <filter id="glow_communication" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect x="8" y="8" width="224" height="224" rx="36" fill="url(#bg_communication)" stroke="#FF4D8B" stroke-width="3" stroke-opacity="0.6" />
+  
+  <!-- Subtle inner shadow ring -->
+  <rect x="12" y="12" width="216" height="216" rx="32" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.12" />
+
+  <!-- Top Category Tag -->
+  <rect x="28" y="24" width="76" height="22" rx="11" fill="#FF4D8B" fill-opacity="0.25" />
+  <text x="66" y="39" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="900" fill="#FF4D8B" text-anchor="middle" letter-spacing="1.5">SOFT SKILL</text>
+
+  <!-- Center Graphic -->
+  <g filter="url(#glow_communication)">
+    
+            <g transform="translate(120, 115)">
+                <rect x="-55" y="-40" width="110" height="70" rx="22" fill="#FF4D8B" />
+                <polygon points="15,30 35,52 0,30" fill="#FF4D8B" />
+                <!-- Audio Sound Wave Inside -->
+                <line x1="-30" y1="-5" x2="-30" y2="-5" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+                <line x1="-15" y1="-20" x2="-15" y2="10" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+                <line x1="0" y1="-28" x2="0" y2="18" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+                <line x1="15" y1="-18" x2="15" y2="8" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+                <line x1="30" y1="-6" x2="30" y2="-4" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+            </g>
+        
+  </g>
+
+  <!-- Bottom Skill Name -->
+  <text x="120" y="210" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">Strategic Pitching</text>
+</svg>

@@ -1,0 +1,7 @@
+import { Scale, ShieldAlert } from 'lucide-react';
+
+export function EmployerCourt({ readiness }: { readiness?: { exclusionaryTermsFlagged?: Array<{ term?: string; explanation?: string }>; readinessSummary?: string } }) {
+  const flags = readiness?.exclusionaryTermsFlagged || [];
+  return <section className="rounded-3xl border-2 border-hairline bg-surface-card p-6 shadow-sm"><div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-pink"><Scale className="h-4 w-4" /> Market truth</div><h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink">Employer Court</h2><p className="mt-1 text-sm leading-6 text-muted">Audit the opportunity and its constraints, not your worth.</p><p className="mt-5 rounded-2xl bg-surface-soft p-4 text-sm leading-6 text-ink">{readiness?.readinessSummary || 'Atlas will review role language for rigid requirements, degree proxies, and accessibility concerns.'}</p>{flags.length ? <div className="mt-4 space-y-2">{flags.slice(0, 3).map((flag, index) => <div key={`${flag.term}-${index}`} className="flex gap-2 rounded-xl border border-brand-ochre/25 bg-brand-ochre/10 p-3 text-xs text-ink"><ShieldAlert className="h-4 w-4 shrink-0 text-brand-ochre" /><span><strong>{flag.term || 'Review item'}:</strong> {flag.explanation || 'Review this requirement before applying.'}</span></div>)}</div> : <div className="mt-4 text-xs font-semibold text-brand-teal">No exclusionary language surfaced in the current audit.</div>}</section>;
+}
+

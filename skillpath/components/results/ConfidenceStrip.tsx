@@ -30,31 +30,40 @@ export function ConfidenceStrip({ skill, value, onChange, accentColor }: Confide
       </div>
 
       <div className="flex gap-1.5 flex-wrap">
-        {CONFIDENCE_LEVELS.map((level, idx) => {
+        {CONFIDENCE_LEVELS.map((level) => {
           const isActive = level.key === value;
           const isStrong = level.key === 'strong';
+          const sanitizedSkill = skill.replace(/[^a-zA-Z0-9]/g, '_');
 
           return (
             <motion.button
               key={level.key}
+              type="button"
               onClick={() => onChange(skill, level.key)}
-              whileTap={{ scale: 0.94 }}
+              whileTap={{ scale: 0.95 }}
               className={[
                 'relative px-3 py-1.5 rounded-md font-sans text-[11px] font-semibold',
-                'border transition-all duration-200 select-none',
+                'border transition-colors duration-150 select-none cursor-pointer',
                 isActive
-                  ? isStrong
-                    ? 'bg-brand-teal text-on-primary border-brand-teal shadow-sm'
-                    : 'bg-ink text-on-primary border-ink shadow-sm'
+                  ? 'text-on-primary border-transparent'
                   : 'bg-surface-soft text-muted border-hairline hover:border-muted/40 hover:text-ink',
               ].join(' ')}
-              style={
-                isActive && accentColor && !isStrong
-                  ? { backgroundColor: accentColor, borderColor: accentColor }
-                  : undefined
-              }
             >
-              {level.label}
+              {isActive && (
+                <motion.div
+                  layoutId={`confidence-pill-${sanitizedSkill}`}
+                  className={`absolute inset-0 rounded-md ${
+                    isStrong ? 'bg-brand-teal' : 'bg-ink'
+                  }`}
+                  style={
+                    accentColor && !isStrong
+                      ? { backgroundColor: accentColor }
+                      : undefined
+                  }
+                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                />
+              )}
+              <span className="relative z-10">{level.label}</span>
             </motion.button>
           );
         })}

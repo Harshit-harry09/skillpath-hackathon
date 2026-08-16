@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <!-- Clean Card Base with Subtle Border -->
+  <rect x="6" y="6" width="228" height="228" rx="32" fill="#FDF3F1" stroke="#CE412B" stroke-width="2.5" stroke-opacity="0.8" />
+  
+  <!-- Inner White Card Inset for contrast -->
+  <rect x="12" y="12" width="216" height="216" rx="26" fill="#FFFFFF" fill-opacity="0.85" />
+
+  <!-- Top Category Tag -->
+  <rect x="24" y="24" width="80" height="20" rx="10" fill="#CE412B" fill-opacity="0.15" />
+  <text x="64" y="38" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="800" fill="#CE412B" text-anchor="middle" letter-spacing="1.2">SYSTEMS</text>
+
+  <!-- Central Graphic Icon -->
+  <g>
+    
+            <g transform="translate(120, 115)">
+                <circle r="56" fill="none" stroke="#CE412B" stroke-width="10" stroke-dasharray="14 6" />
+                <circle r="42" fill="#CE412B" />
+                <text x="0" y="18" font-family="-apple-system, system-ui, sans-serif" font-weight="900" font-size="52" fill="#FFFFFF" text-anchor="middle">R</text>
+            </g>
+        
+  </g>
+
+  <!-- Bottom Skill Label -->
+  <text x="120" y="208" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="800" fill="#1E293B" text-anchor="middle" letter-spacing="-0.3">Rust</text>
+</svg>

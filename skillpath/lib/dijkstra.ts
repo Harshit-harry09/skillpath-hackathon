@@ -171,13 +171,80 @@ export function findBestCareerMoves(
     .map(([slug, totalDifficulty]) => {
       const slugPath = reconstructPath(prev, start, slug);
       const path = slugPath
-        .map(s => graph[s])
+        .map((s) => graph[s])
         .filter(Boolean)
-        .map(n => ({ slug: n.slug, label: n.label, baseSalary: n.baseSalary }));
+        .map((n) => ({ slug: n.slug, label: n.label, baseSalary: n.baseSalary }));
       return {
         target: { slug: graph[slug].slug, label: graph[slug].label, baseSalary: graph[slug].baseSalary },
         path,
         totalDifficulty,
       };
     });
+}
+
+/**
+ * A* (A-Star) Career Path Algorithm with Landmark Heuristics
+ *
+ * Uses F(n) = G(n) + H(n) where G(n) is transition difficulty cost
+ * and H(n) is the salary/role distance heuristic to target role.
+ */
+export function aStarCareerPath(
+  graph: RoleAdjacencyGraph,
+  start: string,
+  target: string
+): RoleNode[] {
+  if (start === target) {
+    const node = graph[start];
+    return node ? [{ slug: node.slug, label: node.label, baseSalary: node.baseSalary }] : [];
+  }
+
+  if (!graph[start] || !graph[target]) return [];
+
+  const targetNode = graph[target];
+  const targetSalary = targetNode.baseSalary || 100000;
+
+  // Heuristic function H(n): Estimate remaining salary distance
+  const heuristic = (slug: string): number => {
+    const n = graph[slug];
+    if (!n) return 0;
+    const diff = Math.max(0, targetSalary - (n.baseSalary || 50000));
+    return (diff / 25000); // Scale factor
+  };
+
+  const gScore: Record<string, number> = { [start]: 0 };
+  const fScore: Record<string, number> = { [start]: heuristic(start) };
+  const prev: Record<string, string | null> = { [start]: null };
+  const visited = new Set<string>();
+
+  const pq = new MinHeap();
+  pq.push({ slug: start, dist: fScore[start] });
+
+  while (!pq.isEmpty()) {
+    const { slug } = pq.pop();
+    if (visited.has(slug)) continue;
+    visited.add(slug);
+
+    if (slug === target) break;
+
+    for (const edge of graph[slug]?.adjacentRoles ?? []) {
+      if (!graph[edge.targetSlug]) continue;
+
+      const tentativeG = (gScore[slug] ?? Infinity) + edge.transitionDifficulty;
+      if (tentativeG < (gScore[edge.targetSlug] ?? Infinity)) {
+        prev[edge.targetSlug] = slug;
+        gScore[edge.targetSlug] = tentativeG;
+        const f = tentativeG + heuristic(edge.targetSlug);
+        fScore[edge.targetSlug] = f;
+        pq.push({ slug: edge.targetSlug, dist: f });
+      }
+    }
+  }
+
+  if (!(target in prev)) return [];
+
+  const slugPath = reconstructPath(prev, start, target);
+  return slugPath
+    .map((slug) => graph[slug])
+    .filter(Boolean)
+    .map((node) => ({ slug: node.slug, label: node.label, baseSalary: node.baseSalary }));
 }

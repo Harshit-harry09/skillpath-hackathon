@@ -16,7 +16,7 @@ export function CoverLetterGenerator({ roleLabel, topSkills }: CoverLetterGenera
   const generate = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/generate-cover-lines', {
+      const res = await fetch('/api/generate/cover-lines', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: roleLabel, topSkills: topSkills.slice(0, 5) }),

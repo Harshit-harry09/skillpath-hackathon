@@ -3,9 +3,19 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: "class",
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
     extend: {
+      screens: {
+        "android-sm": "360px",
+        iphone: "390px",
+        ipad: "768px",
+        "desktop-sm": "1280px",
+      },
       colors: {
         border: "var(--color-hairline)",
         primary: {
@@ -61,10 +71,16 @@ const config: Config = {
         xl: "24px",
       },
       fontFamily: {
-        display: ["var(--font-plain-black)", "Inter", "sans-serif"],
+        britney: ["Britney", "cursive", "serif"],
+        comico: ["Comico", "cursive", "sans-serif"],
+        zodiak: ["Zodiak", "Georgia", "serif"],
+        display: ["Britney", "Comico", "var(--font-plain-black)", "Inter", "sans-serif"],
         sans: ["var(--font-inter)", "sans-serif"],
+        serif: ["Zodiak", "Georgia", "serif"],
         mono: ["var(--font-geist-mono)", "JetBrains Mono", "monospace"],
         "irish-grover": ["var(--font-irish-grover)", "sans-serif"],
+        "helvetica-neue": ["Helvetica Neue", "Inter", "sans-serif"],
+        redhat: ["Red Hat Display", "Inter", "sans-serif"],
       },
       fontSize: {
         "display-xl": ["72px", { lineHeight: "1", letterSpacing: "-2.5px", fontWeight: "500" }],
@@ -95,9 +111,14 @@ const config: Config = {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        "ring-rotate": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         shimmer: "shimmer 2s infinite",
+        "ring-rotate": "ring-rotate 32s linear infinite",
       },
     },
   },

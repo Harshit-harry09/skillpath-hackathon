@@ -110,4 +110,28 @@ Must be US Citizen with security clearance. Remote role.
     assert.strictEqual(score.breakdown.skills_score, 80);
     assert.strictEqual(score.breakdown.experience_score, 100);
   });
+
+  test('aStarCareerPath calculates optimal path using landmark heuristics', async () => {
+    const { aStarCareerPath } = await import('../lib/dijkstra');
+    const mockGraph = {
+      'sde-1': { slug: 'sde-1', label: 'SDE 1', baseSalary: 60000, adjacentRoles: [{ targetSlug: 'sde-2', transitionDifficulty: 2 }] },
+      'sde-2': { slug: 'sde-2', label: 'SDE 2', baseSalary: 90000, adjacentRoles: [{ targetSlug: 'staff-eng', transitionDifficulty: 3 }] },
+      'staff-eng': { slug: 'staff-eng', label: 'Staff Engineer', baseSalary: 140000, adjacentRoles: [] },
+    };
+
+    const path = aStarCareerPath(mockGraph as any, 'sde-1', 'staff-eng');
+    assert.strictEqual(path.length, 3);
+    assert.strictEqual(path[0].slug, 'sde-1');
+    assert.strictEqual(path[2].slug, 'staff-eng');
+  });
+
+  test('HNSW vector search returns semantic skill matches', async () => {
+    const { searchHnswSemanticSkills, generateSkillEmbedding } = await import('../lib/matching/hnsw-vector-matcher');
+    const embedding = generateSkillEmbedding('React.js');
+    assert.strictEqual(embedding.length, 128);
+
+    const matches = searchHnswSemanticSkills('React.js', 3);
+    assert.ok(matches.length > 0);
+    assert.ok(matches[0].similarityScore > 0);
+  });
 });

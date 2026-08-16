@@ -1,0 +1,195 @@
+{
+  "master_summary": {
+    "total_clean_job_postings": 4983070,
+    "total_clean_resumes": 4544470,
+    "total_combined_records": 9527540,
+    "total_skill_entities_extracted": 2971425,
+    "total_unique_canonical_skills": 64,
+    "remote_jobs_identified": 1821,
+    "fraudulent_jobs_flagged": 866,
+    "total_data_volume_gb": 3.84
+  },
+  "top_skills_by_market_frequency": {
+    "SQL": 583033,
+    "Python": 511823,
+    "Java": 226515,
+    "AWS": 213218,
+    "Azure": 173705,
+    "HTML/CSS": 166969,
+    "R": 163237,
+    "Apache Spark": 159543,
+    "JavaScript": 141965,
+    "Agile / Scrum": 117636,
+    "Data Warehousing": 98755,
+    "Machine Learning": 75437,
+    "Go": 71431,
+    "MySQL": 70428,
+    "Linux": 70099,
+    "Spring Boot": 68275,
+    "GCP": 64839,
+    "Scala": 63046,
+    "Shell/Bash": 61573,
+    "Docker": 61507,
+    "Angular": 57169,
+    "Apache Kafka": 56721,
+    "Kubernetes": 52757,
+    "React": 49871,
+    "Airflow": 47425,
+    "MongoDB": 45921,
+    "TensorFlow": 45621,
+    "C#": 37881,
+    "C++": 37474,
+    "Pandas": 37285,
+    "PyTorch": 36618,
+    "CI/CD": 35380,
+    "PostgreSQL": 31864,
+    "Django": 31260,
+    "Node.js": 30612,
+    "Terraform": 30035,
+    "NumPy": 24729,
+    "SOC Analyst": 23238,
+    "PHP": 21744,
+    "Cybersecurity": 21452,
+    "Ruby": 18586,
+    "Vue.js": 15330,
+    "UI/UX Design": 14285,
+    "TypeScript": 11819,
+    "Elasticsearch": 11656,
+    "REST API": 11525,
+    "Flask": 9752,
+    "Deep Learning": 9660,
+    "Penetration Testing": 9322,
+    "Redis": 7894
+  },
+  "top_market_job_titles": {
+    "data engineer": 66950,
+    "data analyst": 62125,
+    "data scientist": 51937,
+    "ux/ui designer": 48555,
+    "software engineer": 30118,
+    "digital marketing specialist": 27994,
+    "network engineer": 24601,
+    "executive assistant": 21010,
+    "software tester": 20949,
+    "financial advisor": 20778,
+    "procurement manager": 20751,
+    "senior data engineer": 20696,
+    "sales representative": 17791,
+    "administrative assistant": 17747,
+    "social media manager": 17648,
+    "network administrator": 17600,
+    "event planner": 17390,
+    "procurement specialist": 17378,
+    "systems administrator": 17305,
+    "purchasing agent": 17296,
+    "customer support specialist": 17273,
+    "hr coordinator": 17264,
+    "marketing analyst": 14811,
+    "research analyst": 14651,
+    "project manager": 14293,
+    "legal assistant": 14107,
+    "account manager": 14063,
+    "operations manager": 14049,
+    "mechanical engineer": 14010,
+    "customer success manager": 14002
+  },
+  "all_datasets_inventory": [
+    {
+      "name": "LinkedIn Job Postings 2023-2024",
+      "records": 123849,
+      "type": "Job Postings",
+      "size_mb": 530.72
+    },
+    {
+      "name": "Job Description Dataset (Kaggle)",
+      "records": 1615940,
+      "type": "Job Descriptions",
+      "size_mb": 1662.41
+    },
+    {
+      "name": "Data Jobs HuggingFace Corpus",
+      "records": 785741,
+      "type": "Job Postings",
+      "size_mb": 231.2
+    },
+    {
+      "name": "Online Job Postings",
+      "records": 1684181,
+      "type": "Job Postings",
+      "size_mb": 92.3
+    },
+    {
+      "name": "Data Science Job Postings 2024",
+      "records": 485394,
+      "type": "Job Postings",
+      "size_mb": 61.5
+    },
+    {
+      "name": "AI-Powered Job Market Insights",
+      "records": 501,
+      "type": "Job Postings",
+      "size_mb": 0.05
+    },
+    {
+      "name": "Resume Job Description Fit",
+      "records": 138552,
+      "type": "Job Postings",
+      "size_mb": 65.4
+    },
+    {
+      "name": "Resume and Job Description",
+      "records": 104028,
+      "type": "Job Postings",
+      "size_mb": 57.3
+    },
+    {
+      "name": "Indeed India Jobs",
+      "records": 5004,
+      "type": "Job Postings",
+      "size_mb": 32.3
+    },
+    {
+      "name": "Naukri Job Sample",
+      "records": 22000,
+      "type": "Job Postings",
+      "size_mb": 52.1
+    },
+    {
+      "name": "Real/Fake Job Posting Prediction",
+      "records": 17880,
+      "fake_flagged": 866,
+      "type": "Fraud Detection",
+      "size_mb": 47.74
+    },
+    {
+      "name": "54K Resume Dataset Structured",
+      "records": 4325951,
+      "type": "Resumes",
+      "size_mb": 129.68
+    },
+    {
+      "name": "Saugataroyarghya Resume Dataset",
+      "records": 217473,
+      "type": "Resumes",
+      "size_mb": 16.22
+    },
+    {
+      "name": "Candidate Job Role Dataset",
+      "records": 1001,
+      "type": "Resumes",
+      "size_mb": 0.09
+    },
+    {
+      "name": "Datasetmaster Resumes",
+      "records": 20,
+      "type": "Resumes",
+      "size_mb": 15.58
+    },
+    {
+      "name": "Annotated NER PDF Resumes",
+      "records": 25,
+      "type": "Resumes",
+      "size_mb": 574.91
+    }
+  ]
+}

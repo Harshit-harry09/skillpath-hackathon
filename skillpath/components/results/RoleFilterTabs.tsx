@@ -34,7 +34,7 @@ export function RoleFilterTabs({ selectedRole, onSelectRole, counts }: RoleFilte
         </span>
       </div>
 
-      <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-2 pt-1 no-scrollbar">
+      <div data-lenis-prevent className="flex flex-nowrap items-center gap-2 overflow-x-auto overscroll-contain touch-pan-x pb-2 pt-1 no-scrollbar">
         {ROLES_CONFIG.map(({ id, label, icon: Icon, color }) => {
           const active = selectedRole === id;
           const count = counts[id] ?? 0;

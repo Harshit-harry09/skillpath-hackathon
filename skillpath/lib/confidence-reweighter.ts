@@ -37,25 +37,28 @@ export const CONFIDENCE_WEIGHTS: Record<ConfidenceLevel, number> = {
  * - Output is sorted by adjusted priority (highest urgency first).
  */
 export function reweightGaps(
-  gaps: SkillGap[],
-  assessments: Record<string, ConfidenceLevel>
+  gaps: SkillGap[] = [],
+  assessments: Record<string, ConfidenceLevel> = {}
 ): {
   activeGaps: SkillGap[];
   masteredSkills: SkillGap[];
 } {
+  const safeGaps = Array.isArray(gaps) ? gaps : [];
+  const safeAssessments = assessments || {};
   const activeGaps: SkillGap[] = [];
   const masteredSkills: SkillGap[] = [];
 
-  for (const gap of gaps) {
-    const level  = assessments[gap.skill] ?? 'never_used';
-    const weight = CONFIDENCE_WEIGHTS[level];
+  for (const gap of safeGaps) {
+    if (!gap || typeof gap !== 'object') continue;
+    const level  = safeAssessments[gap.skill] ?? 'never_used';
+    const weight = CONFIDENCE_WEIGHTS[level] ?? 1.0;
 
     const adjustedGap: SkillGap = {
       ...gap,
       confidence_level:  level,
       confidence_weight: weight,
-      adjusted_priority: Math.round(gap.priority * weight * 10) / 10,
-      weeks_to_learn:    Math.max(1, Math.ceil(gap.weeks_to_learn * weight)),
+      adjusted_priority: Math.round((gap.priority || 3) * weight * 10) / 10,
+      weeks_to_learn:    Math.max(1, Math.ceil((gap.weeks_to_learn || 1) * weight)),
     };
 
     if (weight === 0) {
@@ -80,19 +83,23 @@ export function reweightGaps(
  * A user who marks everything "Never used" gets the original score.
  */
 export function recomputeReadinessWithConfidence(
-  gaps: SkillGap[],
-  resumeSkills: string[],
-  assessments: Record<string, ConfidenceLevel>
+  gaps: SkillGap[] = [],
+  resumeSkills: string[] = [],
+  assessments: Record<string, ConfidenceLevel> = {}
 ): number {
-  if (gaps.length === 0 && resumeSkills.length === 0) return 100;
+  const safeGaps = Array.isArray(gaps) ? gaps : [];
+  const safeResumeSkills = Array.isArray(resumeSkills) ? resumeSkills : [];
+  const safeAssessments = assessments || {};
+
+  if (safeGaps.length === 0 && safeResumeSkills.length === 0) return 100;
 
   // Identify all required role skills: gaps + matched resume skills
-  const gapSkillsSet = new Set(gaps.map(g => g.skill.toLowerCase()));
-  const matchedResumeSkills = resumeSkills.filter(s => !gapSkillsSet.has(s.toLowerCase()));
+  const gapSkillsSet = new Set(safeGaps.filter(g => g?.skill).map(g => g.skill.toLowerCase()));
+  const matchedResumeSkills = safeResumeSkills.filter(s => typeof s === 'string' && !gapSkillsSet.has(s.toLowerCase()));
 
   const allRequired: { skill: string; priority: number; isGap: boolean }[] = [
-    ...gaps.map(g => ({ skill: g.skill, priority: g.priority || 3, isGap: true })),
-    ...matchedResumeSkills.map((s, i) => ({ skill: s, priority: 3, isGap: false }))
+    ...safeGaps.filter(g => g?.skill).map(g => ({ skill: g.skill, priority: g.priority || 3, isGap: true })),
+    ...matchedResumeSkills.map((s) => ({ skill: s, priority: 3, isGap: false }))
   ];
 
   if (allRequired.length === 0) return 100;
@@ -104,8 +111,8 @@ export function recomputeReadinessWithConfidence(
     const baseWeight = Math.max(1, 6 - Math.min(5, item.priority));
     maxPossible += baseWeight;
 
-    const level = assessments[item.skill] ?? (item.isGap ? 'never_used' : 'strong');
-    const gapMultiplier = CONFIDENCE_WEIGHTS[level];
+    const level = safeAssessments[item.skill] ?? (item.isGap ? 'never_used' : 'strong');
+    const gapMultiplier = CONFIDENCE_WEIGHTS[level] ?? 1.0;
     remainingGapWeight += baseWeight * gapMultiplier;
   }
 
@@ -117,13 +124,17 @@ export function recomputeReadinessWithConfidence(
  * Recalculate total weeks remaining after confidence adjustments.
  */
 export function recomputeWeeks(
-  gaps: SkillGap[],
-  assessments: Record<string, ConfidenceLevel>
+  gaps: SkillGap[] = [],
+  assessments: Record<string, ConfidenceLevel> = {}
 ): number {
-  return gaps.reduce((sum, g) => {
-    const level  = assessments[g.skill] ?? 'never_used';
-    const weight = CONFIDENCE_WEIGHTS[level];
+  const safeGaps = Array.isArray(gaps) ? gaps : [];
+  const safeAssessments = assessments || {};
+
+  return safeGaps.reduce((sum, g) => {
+    if (!g || typeof g !== 'object') return sum;
+    const level  = safeAssessments[g.skill] ?? 'never_used';
+    const weight = CONFIDENCE_WEIGHTS[level] ?? 1.0;
     if (weight === 0) return sum; // Strong → skip
-    return sum + Math.max(1, Math.ceil(g.weeks_to_learn * weight));
+    return sum + Math.max(1, Math.ceil((g.weeks_to_learn || 1) * weight));
   }, 0);
 }

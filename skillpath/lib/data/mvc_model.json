@@ -8,18 +8,18 @@
     "top_locations": [],
     "skills": [
       {
-        "skill": "Python",
-        "count": 36890,
-        "frequency_pct": 67
+        "skill": "SQL",
+        "count": 39055,
+        "frequency_pct": 71
       },
       {
-        "skill": "SQL",
-        "count": 36294,
-        "frequency_pct": 66
+        "skill": "Python",
+        "count": 37744,
+        "frequency_pct": 68
       },
       {
         "skill": "AWS",
-        "count": 25301,
+        "count": 25308,
         "frequency_pct": 46
       },
       {
@@ -98,11 +98,6 @@
         "frequency_pct": 9
       },
       {
-        "skill": "Go",
-        "count": 4571,
-        "frequency_pct": 8
-      },
-      {
         "skill": "MongoDB",
         "count": 4442,
         "frequency_pct": 8
@@ -139,12 +134,12 @@
       },
       {
         "skill": "Linux",
-        "count": 2814,
+        "count": 2802,
         "frequency_pct": 5
       },
       {
         "skill": "JavaScript",
-        "count": 1979,
+        "count": 1995,
         "frequency_pct": 4
       },
       {
@@ -160,6 +155,11 @@
       {
         "skill": "DynamoDB",
         "count": 1712,
+        "frequency_pct": 3
+      },
+      {
+        "skill": "TypeScript",
+        "count": 1642,
         "frequency_pct": 3
       },
       {
@@ -203,8 +203,13 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 515,
+        "skill": "Go",
+        "count": 692,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 649,
         "frequency_pct": 1
       },
       {
@@ -251,11 +256,6 @@
         "skill": "Rust",
         "count": 354,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Android Development",
-        "count": 315,
-        "frequency_pct": 1
       }
     ]
   },
@@ -269,12 +269,12 @@
     "skills": [
       {
         "skill": "SQL",
-        "count": 109035,
-        "frequency_pct": 48
+        "count": 111689,
+        "frequency_pct": 49
       },
       {
         "skill": "Python",
-        "count": 102753,
+        "count": 104145,
         "frequency_pct": 46
       },
       {
@@ -294,7 +294,7 @@
       },
       {
         "skill": "AWS",
-        "count": 18755,
+        "count": 18861,
         "frequency_pct": 8
       },
       {
@@ -323,13 +323,13 @@
         "frequency_pct": 5
       },
       {
-        "skill": "Oracle DB",
-        "count": 9375,
+        "skill": "TypeScript",
+        "count": 9699,
         "frequency_pct": 4
       },
       {
-        "skill": "Go",
-        "count": 9249,
+        "skill": "Oracle DB",
+        "count": 9375,
         "frequency_pct": 4
       },
       {
@@ -354,7 +354,7 @@
       },
       {
         "skill": "GCP",
-        "count": 6503,
+        "count": 6507,
         "frequency_pct": 3
       },
       {
@@ -363,18 +363,18 @@
         "frequency_pct": 3
       },
       {
+        "skill": "JavaScript",
+        "count": 6059,
+        "frequency_pct": 3
+      },
+      {
         "skill": "Scala",
         "count": 6038,
         "frequency_pct": 3
       },
       {
-        "skill": "JavaScript",
-        "count": 5954,
-        "frequency_pct": 3
-      },
-      {
         "skill": "C++",
-        "count": 5629,
+        "count": 5630,
         "frequency_pct": 2
       },
       {
@@ -389,12 +389,17 @@
       },
       {
         "skill": "Linux",
-        "count": 3884,
+        "count": 3866,
         "frequency_pct": 2
       },
       {
         "skill": "BigQuery",
         "count": 3837,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 3701,
         "frequency_pct": 2
       },
       {
@@ -419,7 +424,7 @@
       },
       {
         "skill": "C#",
-        "count": 2785,
+        "count": 2787,
         "frequency_pct": 1
       },
       {
@@ -434,7 +439,7 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 2244,
+        "count": 2250,
         "frequency_pct": 1
       },
       {
@@ -459,17 +464,12 @@
       },
       {
         "skill": "Vue",
-        "count": 1217,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 1100,
+        "count": 1224,
         "frequency_pct": 1
       },
       {
         "skill": "PHP",
-        "count": 1063,
+        "count": 1068,
         "frequency_pct": 1
       },
       {
@@ -488,13 +488,8 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 822,
-        "frequency_pct": 1
-      },
-      {
         "skill": "NLP",
-        "count": 779,
+        "count": 780,
         "frequency_pct": 1
       },
       {
@@ -513,6 +508,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "RAG",
+        "count": 571,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Terraform",
         "count": 437,
         "frequency_pct": 1
@@ -528,29 +528,34 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 14516,
+        "frequency_pct": 44
+      },
+      {
+        "skill": "SQL",
+        "count": 13585,
+        "frequency_pct": 41
+      },
+      {
         "skill": "Java",
         "count": 11588,
         "frequency_pct": 35
       },
       {
-        "skill": "SQL",
-        "count": 9858,
+        "skill": "AWS",
+        "count": 9857,
         "frequency_pct": 30
       },
       {
         "skill": "Python",
-        "count": 9301,
-        "frequency_pct": 28
-      },
-      {
-        "skill": "AWS",
-        "count": 9086,
-        "frequency_pct": 27
+        "count": 9792,
+        "frequency_pct": 29
       },
       {
         "skill": "JavaScript",
-        "count": 8540,
-        "frequency_pct": 26
+        "count": 9035,
+        "frequency_pct": 27
       },
       {
         "skill": "React",
@@ -566,6 +571,11 @@
         "skill": "Azure",
         "count": 5195,
         "frequency_pct": 16
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 4674,
+        "frequency_pct": 14
       },
       {
         "skill": "C#",
@@ -584,7 +594,7 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 3750,
+        "count": 3778,
         "frequency_pct": 11
       },
       {
@@ -593,23 +603,13 @@
         "frequency_pct": 11
       },
       {
-        "skill": "TypeScript",
-        "count": 3610,
-        "frequency_pct": 11
-      },
-      {
-        "skill": "Go",
-        "count": 3411,
-        "frequency_pct": 10
-      },
-      {
         "skill": "Node.js",
         "count": 3409,
         "frequency_pct": 10
       },
       {
         "skill": "Linux",
-        "count": 3371,
+        "count": 3351,
         "frequency_pct": 10
       },
       {
@@ -633,18 +633,23 @@
         "frequency_pct": 9
       },
       {
+        "skill": "RAG",
+        "count": 2833,
+        "frequency_pct": 9
+      },
+      {
         "skill": "Spark",
         "count": 2721,
         "frequency_pct": 8
       },
       {
         "skill": "GCP",
-        "count": 2675,
+        "count": 2679,
         "frequency_pct": 8
       },
       {
         "skill": "C++",
-        "count": 2571,
+        "count": 2581,
         "frequency_pct": 8
       },
       {
@@ -654,7 +659,7 @@
       },
       {
         "skill": "PHP",
-        "count": 1895,
+        "count": 1908,
         "frequency_pct": 6
       },
       {
@@ -699,7 +704,7 @@
       },
       {
         "skill": "Vue",
-        "count": 1315,
+        "count": 1325,
         "frequency_pct": 4
       },
       {
@@ -728,6 +733,16 @@
         "frequency_pct": 4
       },
       {
+        "skill": "Go",
+        "count": 1243,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "iOS Development",
+        "count": 1005,
+        "frequency_pct": 3
+      },
+      {
         "skill": "Rust",
         "count": 998,
         "frequency_pct": 3
@@ -753,11 +768,6 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Machine Learning",
-        "count": 806,
-        "frequency_pct": 2
-      },
-      {
         "skill": "RabbitMQ",
         "count": 772,
         "frequency_pct": 2
@@ -765,16 +775,6 @@
       {
         "skill": "DynamoDB",
         "count": 706,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "BigQuery",
-        "count": 704,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Kotlin",
-        "count": 672,
         "frequency_pct": 2
       }
     ]
@@ -789,13 +789,13 @@
     "skills": [
       {
         "skill": "SQL",
-        "count": 77437,
-        "frequency_pct": 64
+        "count": 82234,
+        "frequency_pct": 68
       },
       {
         "skill": "Python",
-        "count": 72485,
-        "frequency_pct": 60
+        "count": 74322,
+        "frequency_pct": 62
       },
       {
         "skill": "Azure",
@@ -804,7 +804,7 @@
       },
       {
         "skill": "AWS",
-        "count": 40046,
+        "count": 40086,
         "frequency_pct": 33
       },
       {
@@ -884,7 +884,7 @@
       },
       {
         "skill": "Linux",
-        "count": 7105,
+        "count": 7052,
         "frequency_pct": 6
       },
       {
@@ -913,13 +913,13 @@
         "frequency_pct": 5
       },
       {
-        "skill": "Go",
-        "count": 5756,
-        "frequency_pct": 5
-      },
-      {
         "skill": "C#",
         "count": 4712,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "JavaScript",
+        "count": 4405,
         "frequency_pct": 4
       },
       {
@@ -928,13 +928,13 @@
         "frequency_pct": 4
       },
       {
-        "skill": "JavaScript",
-        "count": 4325,
-        "frequency_pct": 4
-      },
-      {
         "skill": "Cassandra",
         "count": 3743,
+        "frequency_pct": 3
+      },
+      {
+        "skill": "TypeScript",
+        "count": 3712,
         "frequency_pct": 3
       },
       {
@@ -944,7 +944,7 @@
       },
       {
         "skill": "C++",
-        "count": 2827,
+        "count": 2828,
         "frequency_pct": 2
       },
       {
@@ -965,6 +965,11 @@
       {
         "skill": "Node.js",
         "count": 1632,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1570,
         "frequency_pct": 1
       },
       {
@@ -999,12 +1004,7 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 1135,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
-        "count": 964,
+        "count": 1136,
         "frequency_pct": 1
       },
       {
@@ -1024,7 +1024,7 @@
       },
       {
         "skill": "PHP",
-        "count": 824,
+        "count": 825,
         "frequency_pct": 1
       },
       {
@@ -1033,8 +1033,8 @@
         "frequency_pct": 1
       },
       {
-        "skill": "GraphQL",
-        "count": 706,
+        "skill": "Go",
+        "count": 709,
         "frequency_pct": 1
       }
     ]
@@ -1049,8 +1049,8 @@
     "skills": [
       {
         "skill": "Python",
-        "count": 44242,
-        "frequency_pct": 62
+        "count": 44944,
+        "frequency_pct": 63
       },
       {
         "skill": "Data Science",
@@ -1059,8 +1059,8 @@
       },
       {
         "skill": "SQL",
-        "count": 41051,
-        "frequency_pct": 58
+        "count": 42011,
+        "frequency_pct": 59
       },
       {
         "skill": "Tableau",
@@ -1074,7 +1074,7 @@
       },
       {
         "skill": "AWS",
-        "count": 10966,
+        "count": 10992,
         "frequency_pct": 15
       },
       {
@@ -1118,11 +1118,6 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Go",
-        "count": 4184,
-        "frequency_pct": 6
-      },
-      {
         "skill": "Snowflake",
         "count": 4183,
         "frequency_pct": 6
@@ -1153,6 +1148,11 @@
         "frequency_pct": 4
       },
       {
+        "skill": "TypeScript",
+        "count": 2406,
+        "frequency_pct": 3
+      },
+      {
         "skill": "Airflow",
         "count": 2110,
         "frequency_pct": 3
@@ -1174,17 +1174,22 @@
       },
       {
         "skill": "Linux",
-        "count": 1477,
+        "count": 1468,
         "frequency_pct": 2
       },
       {
         "skill": "JavaScript",
-        "count": 1439,
+        "count": 1452,
         "frequency_pct": 2
       },
       {
         "skill": "MySQL",
         "count": 1348,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1317,
         "frequency_pct": 2
       },
       {
@@ -1223,18 +1228,13 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 630,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Elasticsearch",
         "count": 598,
         "frequency_pct": 1
       },
       {
         "skill": "HTML/CSS",
-        "count": 542,
+        "count": 544,
         "frequency_pct": 1
       },
       {
@@ -1288,13 +1288,13 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 189,
+        "skill": "Django",
+        "count": 177,
         "frequency_pct": 1
       },
       {
-        "skill": "Django",
-        "count": 177,
+        "skill": "Swift",
+        "count": 176,
         "frequency_pct": 1
       }
     ]
@@ -1314,13 +1314,13 @@
       },
       {
         "skill": "Python",
-        "count": 1506,
-        "frequency_pct": 44
+        "count": 1522,
+        "frequency_pct": 45
       },
       {
         "skill": "SQL",
-        "count": 1395,
-        "frequency_pct": 41
+        "count": 1434,
+        "frequency_pct": 42
       },
       {
         "skill": "Tableau",
@@ -1339,7 +1339,7 @@
       },
       {
         "skill": "AWS",
-        "count": 362,
+        "count": 365,
         "frequency_pct": 11
       },
       {
@@ -1353,14 +1353,14 @@
         "frequency_pct": 7
       },
       {
+        "skill": "TypeScript",
+        "count": 203,
+        "frequency_pct": 6
+      },
+      {
         "skill": "TensorFlow",
         "count": 155,
         "frequency_pct": 5
-      },
-      {
-        "skill": "Go",
-        "count": 146,
-        "frequency_pct": 4
       },
       {
         "skill": "Scala",
@@ -1398,11 +1398,6 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Linux",
-        "count": 83,
-        "frequency_pct": 2
-      },
-      {
         "skill": "C++",
         "count": 82,
         "frequency_pct": 2
@@ -1413,13 +1408,23 @@
         "frequency_pct": 2
       },
       {
+        "skill": "Linux",
+        "count": 76,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Docker",
         "count": 76,
         "frequency_pct": 2
       },
       {
+        "skill": "Machine Learning",
+        "count": 72,
+        "frequency_pct": 2
+      },
+      {
         "skill": "JavaScript",
-        "count": 67,
+        "count": 68,
         "frequency_pct": 2
       },
       {
@@ -1513,6 +1518,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "RAG",
+        "count": 16,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Django",
         "count": 15,
         "frequency_pct": 1
@@ -1543,18 +1553,8 @@
         "frequency_pct": 1
       },
       {
-        "skill": "DynamoDB",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Computer Vision",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 5,
+        "skill": "iOS Development",
+        "count": 6,
         "frequency_pct": 1
       }
     ]
@@ -1568,14 +1568,24 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 2978,
+        "frequency_pct": 82
+      },
+      {
         "skill": "Java",
         "count": 1458,
         "frequency_pct": 40
       },
       {
         "skill": "SQL",
-        "count": 1128,
-        "frequency_pct": 31
+        "count": 1283,
+        "frequency_pct": 35
+      },
+      {
+        "skill": "JavaScript",
+        "count": 992,
+        "frequency_pct": 27
       },
       {
         "skill": "Selenium",
@@ -1583,14 +1593,19 @@
         "frequency_pct": 26
       },
       {
-        "skill": "JavaScript",
-        "count": 870,
-        "frequency_pct": 24
+        "skill": "Python",
+        "count": 926,
+        "frequency_pct": 25
       },
       {
-        "skill": "Python",
-        "count": 832,
-        "frequency_pct": 23
+        "skill": "RAG",
+        "count": 695,
+        "frequency_pct": 19
+      },
+      {
+        "skill": "iOS Development",
+        "count": 667,
+        "frequency_pct": 18
       },
       {
         "skill": "Jenkins",
@@ -1604,8 +1619,13 @@
       },
       {
         "skill": "AWS",
-        "count": 491,
-        "frequency_pct": 13
+        "count": 561,
+        "frequency_pct": 15
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 540,
+        "frequency_pct": 15
       },
       {
         "skill": "Docker",
@@ -1633,18 +1653,13 @@
         "frequency_pct": 9
       },
       {
-        "skill": "iOS Development",
-        "count": 289,
-        "frequency_pct": 8
-      },
-      {
         "skill": "Scala",
         "count": 288,
         "frequency_pct": 8
       },
       {
         "skill": "HTML/CSS",
-        "count": 263,
+        "count": 266,
         "frequency_pct": 7
       },
       {
@@ -1660,11 +1675,6 @@
       {
         "skill": "Kubernetes",
         "count": 236,
-        "frequency_pct": 6
-      },
-      {
-        "skill": "TypeScript",
-        "count": 234,
         "frequency_pct": 6
       },
       {
@@ -1685,11 +1695,6 @@
       {
         "skill": "MongoDB",
         "count": 160,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "Go",
-        "count": 159,
         "frequency_pct": 4
       },
       {
@@ -1729,12 +1734,7 @@
       },
       {
         "skill": "C++",
-        "count": 89,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 88,
+        "count": 90,
         "frequency_pct": 2
       },
       {
@@ -1759,7 +1759,7 @@
       },
       {
         "skill": "PHP",
-        "count": 63,
+        "count": 64,
         "frequency_pct": 2
       },
       {
@@ -1829,28 +1829,28 @@
     "skills": [
       {
         "skill": "Machine Learning",
-        "count": 4217,
-        "frequency_pct": 92
+        "count": 4437,
+        "frequency_pct": 97
       },
       {
         "skill": "Python",
-        "count": 3661,
-        "frequency_pct": 80
+        "count": 3816,
+        "frequency_pct": 83
+      },
+      {
+        "skill": "SQL",
+        "count": 1715,
+        "frequency_pct": 37
       },
       {
         "skill": "AWS",
-        "count": 1566,
+        "count": 1569,
         "frequency_pct": 34
       },
       {
         "skill": "TensorFlow",
         "count": 1547,
         "frequency_pct": 34
-      },
-      {
-        "skill": "SQL",
-        "count": 1512,
-        "frequency_pct": 33
       },
       {
         "skill": "PyTorch",
@@ -1913,11 +1913,6 @@
         "frequency_pct": 12
       },
       {
-        "skill": "Go",
-        "count": 458,
-        "frequency_pct": 10
-      },
-      {
         "skill": "NumPy",
         "count": 437,
         "frequency_pct": 10
@@ -1943,14 +1938,19 @@
         "frequency_pct": 7
       },
       {
-        "skill": "Linux",
-        "count": 290,
-        "frequency_pct": 6
-      },
-      {
         "skill": "MLOps",
         "count": 288,
         "frequency_pct": 6
+      },
+      {
+        "skill": "Linux",
+        "count": 286,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "TypeScript",
+        "count": 208,
+        "frequency_pct": 5
       },
       {
         "skill": "Jenkins",
@@ -1999,7 +1999,7 @@
       },
       {
         "skill": "JavaScript",
-        "count": 125,
+        "count": 126,
         "frequency_pct": 3
       },
       {
@@ -2048,6 +2048,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "Go",
+        "count": 72,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Deep Learning",
         "count": 72,
         "frequency_pct": 2
@@ -2071,11 +2076,6 @@
         "skill": "Ruby",
         "count": 50,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Rust",
-        "count": 44,
-        "frequency_pct": 1
       }
     ]
   },
@@ -2088,9 +2088,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 25319,
+        "frequency_pct": 37
+      },
+      {
         "skill": "SQL",
-        "count": 19058,
-        "frequency_pct": 28
+        "count": 25136,
+        "frequency_pct": 37
       },
       {
         "skill": "Java",
@@ -2099,22 +2104,27 @@
       },
       {
         "skill": "Python",
-        "count": 16460,
-        "frequency_pct": 24
+        "count": 17486,
+        "frequency_pct": 26
       },
       {
         "skill": "JavaScript",
-        "count": 15411,
-        "frequency_pct": 23
+        "count": 16266,
+        "frequency_pct": 24
       },
       {
         "skill": "AWS",
-        "count": 11707,
-        "frequency_pct": 17
+        "count": 13650,
+        "frequency_pct": 20
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 9881,
+        "frequency_pct": 15
       },
       {
         "skill": "HTML/CSS",
-        "count": 8248,
+        "count": 8304,
         "frequency_pct": 12
       },
       {
@@ -2129,7 +2139,7 @@
       },
       {
         "skill": "Linux",
-        "count": 7584,
+        "count": 7523,
         "frequency_pct": 11
       },
       {
@@ -2153,11 +2163,6 @@
         "frequency_pct": 8
       },
       {
-        "skill": "TypeScript",
-        "count": 5393,
-        "frequency_pct": 8
-      },
-      {
         "skill": "MySQL",
         "count": 5379,
         "frequency_pct": 8
@@ -2169,7 +2174,7 @@
       },
       {
         "skill": "Kubernetes",
-        "count": 5121,
+        "count": 5122,
         "frequency_pct": 8
       },
       {
@@ -2183,18 +2188,18 @@
         "frequency_pct": 7
       },
       {
-        "skill": "Go",
-        "count": 4531,
-        "frequency_pct": 7
+        "skill": "C++",
+        "count": 4195,
+        "frequency_pct": 6
       },
       {
-        "skill": "C++",
-        "count": 4179,
+        "skill": "RAG",
+        "count": 4101,
         "frequency_pct": 6
       },
       {
         "skill": "PHP",
-        "count": 4059,
+        "count": 4096,
         "frequency_pct": 6
       },
       {
@@ -2224,7 +2229,7 @@
       },
       {
         "skill": "GCP",
-        "count": 3206,
+        "count": 3209,
         "frequency_pct": 5
       },
       {
@@ -2249,7 +2254,7 @@
       },
       {
         "skill": "Vue",
-        "count": 2421,
+        "count": 2444,
         "frequency_pct": 4
       },
       {
@@ -2303,13 +2308,18 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 1546,
+        "skill": "iOS Development",
+        "count": 1617,
         "frequency_pct": 2
       },
       {
         "skill": "Databricks",
         "count": 1453,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "Go",
+        "count": 1434,
         "frequency_pct": 2
       },
       {
@@ -2326,16 +2336,6 @@
         "skill": "Webpack",
         "count": 1247,
         "frequency_pct": 2
-      },
-      {
-        "skill": "React Native",
-        "count": 1157,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "BigQuery",
-        "count": 1039,
-        "frequency_pct": 2
       }
     ]
   },
@@ -2349,13 +2349,13 @@
     "skills": [
       {
         "skill": "Python",
-        "count": 10813,
-        "frequency_pct": 49
+        "count": 10970,
+        "frequency_pct": 50
       },
       {
         "skill": "SQL",
-        "count": 9552,
-        "frequency_pct": 43
+        "count": 9851,
+        "frequency_pct": 45
       },
       {
         "skill": "Data Science",
@@ -2384,7 +2384,7 @@
       },
       {
         "skill": "AWS",
-        "count": 1500,
+        "count": 1507,
         "frequency_pct": 7
       },
       {
@@ -2394,7 +2394,7 @@
       },
       {
         "skill": "JavaScript",
-        "count": 1298,
+        "count": 1304,
         "frequency_pct": 6
       },
       {
@@ -2413,11 +2413,6 @@
         "frequency_pct": 5
       },
       {
-        "skill": "Go",
-        "count": 1096,
-        "frequency_pct": 5
-      },
-      {
         "skill": "C++",
         "count": 1043,
         "frequency_pct": 5
@@ -2425,6 +2420,11 @@
       {
         "skill": "NumPy",
         "count": 987,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "TypeScript",
+        "count": 974,
         "frequency_pct": 4
       },
       {
@@ -2463,6 +2463,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "Machine Learning",
+        "count": 424,
+        "frequency_pct": 2
+      },
+      {
         "skill": "BigQuery",
         "count": 396,
         "frequency_pct": 2
@@ -2479,7 +2484,7 @@
       },
       {
         "skill": "Linux",
-        "count": 342,
+        "count": 338,
         "frequency_pct": 2
       },
       {
@@ -2538,11 +2543,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 110,
-        "frequency_pct": 1
-      },
-      {
         "skill": "React",
         "count": 104,
         "frequency_pct": 1
@@ -2568,6 +2568,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "RAG",
+        "count": 50,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Vue",
         "count": 47,
         "frequency_pct": 1
@@ -2588,11 +2593,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 35,
-        "frequency_pct": 1
-      },
-      {
         "skill": "NLP",
         "count": 33,
         "frequency_pct": 1
@@ -2609,8 +2609,13 @@
     "skills": [
       {
         "skill": "AWS",
-        "count": 2173,
-        "frequency_pct": 62
+        "count": 2182,
+        "frequency_pct": 63
+      },
+      {
+        "skill": "TypeScript",
+        "count": 2053,
+        "frequency_pct": 59
       },
       {
         "skill": "Kubernetes",
@@ -2624,8 +2629,8 @@
       },
       {
         "skill": "Python",
-        "count": 1732,
-        "frequency_pct": 50
+        "count": 1767,
+        "frequency_pct": 51
       },
       {
         "skill": "Docker",
@@ -2634,7 +2639,7 @@
       },
       {
         "skill": "Linux",
-        "count": 1358,
+        "count": 1345,
         "frequency_pct": 39
       },
       {
@@ -2653,6 +2658,11 @@
         "frequency_pct": 34
       },
       {
+        "skill": "SQL",
+        "count": 1137,
+        "frequency_pct": 33
+      },
+      {
         "skill": "Ansible",
         "count": 1025,
         "frequency_pct": 29
@@ -2668,19 +2678,14 @@
         "frequency_pct": 21
       },
       {
-        "skill": "SQL",
-        "count": 635,
-        "frequency_pct": 18
-      },
-      {
-        "skill": "Go",
-        "count": 585,
-        "frequency_pct": 17
-      },
-      {
         "skill": "Scala",
         "count": 552,
         "frequency_pct": 16
+      },
+      {
+        "skill": "RAG",
+        "count": 472,
+        "frequency_pct": 14
       },
       {
         "skill": "Apache Kafka",
@@ -2694,13 +2699,18 @@
       },
       {
         "skill": "JavaScript",
-        "count": 381,
-        "frequency_pct": 11
+        "count": 406,
+        "frequency_pct": 12
       },
       {
         "skill": "MySQL",
         "count": 333,
         "frequency_pct": 10
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 324,
+        "frequency_pct": 9
       },
       {
         "skill": "Helm",
@@ -2748,6 +2758,11 @@
         "frequency_pct": 6
       },
       {
+        "skill": "Go",
+        "count": 199,
+        "frequency_pct": 6
+      },
+      {
         "skill": "Airflow",
         "count": 195,
         "frequency_pct": 6
@@ -2768,14 +2783,19 @@
         "frequency_pct": 4
       },
       {
+        "skill": "iOS Development",
+        "count": 140,
+        "frequency_pct": 4
+      },
+      {
         "skill": "Rust",
         "count": 136,
         "frequency_pct": 4
       },
       {
         "skill": "PHP",
-        "count": 122,
-        "frequency_pct": 3
+        "count": 124,
+        "frequency_pct": 4
       },
       {
         "skill": "Oracle DB",
@@ -2793,16 +2813,6 @@
         "frequency_pct": 3
       },
       {
-        "skill": "TypeScript",
-        "count": 113,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 111,
-        "frequency_pct": 3
-      },
-      {
         "skill": "Snowflake",
         "count": 101,
         "frequency_pct": 3
@@ -2813,12 +2823,12 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Android Development",
-        "count": 84,
+        "skill": "C++",
+        "count": 85,
         "frequency_pct": 2
       },
       {
-        "skill": "C++",
+        "skill": "Android Development",
         "count": 84,
         "frequency_pct": 2
       },
@@ -2846,16 +2856,6 @@
         "skill": "Kotlin",
         "count": 43,
         "frequency_pct": 1
-      },
-      {
-        "skill": "iOS Development",
-        "count": 42,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "HTML/CSS",
-        "count": 39,
-        "frequency_pct": 1
       }
     ]
   },
@@ -2869,13 +2869,18 @@
     "skills": [
       {
         "skill": "Machine Learning",
-        "count": 8666,
-        "frequency_pct": 88
+        "count": 9366,
+        "frequency_pct": 95
       },
       {
         "skill": "Python",
-        "count": 7652,
-        "frequency_pct": 78
+        "count": 8032,
+        "frequency_pct": 81
+      },
+      {
+        "skill": "SQL",
+        "count": 3308,
+        "frequency_pct": 34
       },
       {
         "skill": "TensorFlow",
@@ -2888,13 +2893,8 @@
         "frequency_pct": 32
       },
       {
-        "skill": "SQL",
-        "count": 2906,
-        "frequency_pct": 29
-      },
-      {
         "skill": "AWS",
-        "count": 2768,
+        "count": 2782,
         "frequency_pct": 28
       },
       {
@@ -2974,17 +2974,17 @@
       },
       {
         "skill": "Linux",
-        "count": 751,
+        "count": 750,
         "frequency_pct": 8
-      },
-      {
-        "skill": "Go",
-        "count": 656,
-        "frequency_pct": 7
       },
       {
         "skill": "Apache Kafka",
         "count": 583,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "TypeScript",
+        "count": 558,
         "frequency_pct": 6
       },
       {
@@ -3014,7 +3014,7 @@
       },
       {
         "skill": "JavaScript",
-        "count": 328,
+        "count": 330,
         "frequency_pct": 3
       },
       {
@@ -3069,7 +3069,7 @@
       },
       {
         "skill": "NLP",
-        "count": 191,
+        "count": 192,
         "frequency_pct": 2
       },
       {
@@ -3129,12 +3129,12 @@
     "skills": [
       {
         "skill": "SQL",
-        "count": 4354,
-        "frequency_pct": 66
+        "count": 4501,
+        "frequency_pct": 68
       },
       {
         "skill": "Python",
-        "count": 4147,
+        "count": 4187,
         "frequency_pct": 63
       },
       {
@@ -3149,8 +3149,8 @@
       },
       {
         "skill": "AWS",
-        "count": 1816,
-        "frequency_pct": 27
+        "count": 1818,
+        "frequency_pct": 28
       },
       {
         "skill": "Java",
@@ -3193,11 +3193,6 @@
         "frequency_pct": 10
       },
       {
-        "skill": "Go",
-        "count": 622,
-        "frequency_pct": 9
-      },
-      {
         "skill": "GCP",
         "count": 618,
         "frequency_pct": 9
@@ -3224,7 +3219,7 @@
       },
       {
         "skill": "JavaScript",
-        "count": 385,
+        "count": 391,
         "frequency_pct": 6
       },
       {
@@ -3293,6 +3288,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "TypeScript",
+        "count": 154,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Elasticsearch",
         "count": 129,
         "frequency_pct": 2
@@ -3305,6 +3305,11 @@
       {
         "skill": "Angular",
         "count": 124,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 109,
         "frequency_pct": 2
       },
       {
@@ -3358,6 +3363,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Go",
+        "count": 36,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Ruby",
         "count": 36,
         "frequency_pct": 1
@@ -3365,16 +3375,6 @@
       {
         "skill": "Django",
         "count": 35,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "FastAPI",
-        "count": 33,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "GraphQL",
-        "count": 26,
         "frequency_pct": 1
       }
     ]
@@ -3388,9 +3388,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 2018,
+        "frequency_pct": 90
+      },
+      {
         "skill": "JavaScript",
-        "count": 1836,
-        "frequency_pct": 82
+        "count": 1917,
+        "frequency_pct": 85
       },
       {
         "skill": "React",
@@ -3404,13 +3409,18 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 1242,
-        "frequency_pct": 55
+        "count": 1252,
+        "frequency_pct": 56
       },
       {
-        "skill": "TypeScript",
-        "count": 1067,
-        "frequency_pct": 47
+        "skill": "Machine Learning",
+        "count": 1113,
+        "frequency_pct": 49
+      },
+      {
+        "skill": "AWS",
+        "count": 643,
+        "frequency_pct": 29
       },
       {
         "skill": "Redux",
@@ -3434,7 +3444,7 @@
       },
       {
         "skill": "Vue",
-        "count": 407,
+        "count": 410,
         "frequency_pct": 18
       },
       {
@@ -3443,19 +3453,24 @@
         "frequency_pct": 18
       },
       {
-        "skill": "AWS",
-        "count": 370,
-        "frequency_pct": 16
-      },
-      {
         "skill": "Unit Testing",
         "count": 355,
         "frequency_pct": 16
       },
       {
+        "skill": "RAG",
+        "count": 322,
+        "frequency_pct": 14
+      },
+      {
         "skill": "Scala",
         "count": 314,
         "frequency_pct": 14
+      },
+      {
+        "skill": "SQL",
+        "count": 291,
+        "frequency_pct": 13
       },
       {
         "skill": "GraphQL",
@@ -3468,13 +3483,13 @@
         "frequency_pct": 12
       },
       {
-        "skill": "Next.js",
-        "count": 156,
-        "frequency_pct": 7
+        "skill": "Python",
+        "count": 232,
+        "frequency_pct": 10
       },
       {
-        "skill": "Python",
-        "count": 153,
+        "skill": "Next.js",
+        "count": 156,
         "frequency_pct": 7
       },
       {
@@ -3483,18 +3498,8 @@
         "frequency_pct": 7
       },
       {
-        "skill": "SQL",
-        "count": 138,
-        "frequency_pct": 6
-      },
-      {
         "skill": "Azure",
         "count": 133,
-        "frequency_pct": 6
-      },
-      {
-        "skill": "Go",
-        "count": 130,
         "frequency_pct": 6
       },
       {
@@ -3513,8 +3518,13 @@
         "frequency_pct": 5
       },
       {
+        "skill": "iOS Development",
+        "count": 114,
+        "frequency_pct": 5
+      },
+      {
         "skill": "PHP",
-        "count": 109,
+        "count": 112,
         "frequency_pct": 5
       },
       {
@@ -3558,11 +3568,6 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Machine Learning",
-        "count": 63,
-        "frequency_pct": 3
-      },
-      {
         "skill": "Ruby",
         "count": 59,
         "frequency_pct": 3
@@ -3571,11 +3576,6 @@
         "skill": "Redis",
         "count": 57,
         "frequency_pct": 3
-      },
-      {
-        "skill": "iOS Development",
-        "count": 49,
-        "frequency_pct": 2
       },
       {
         "skill": "Tailwind CSS",
@@ -3618,6 +3618,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Go",
+        "count": 27,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Kotlin",
         "count": 26,
         "frequency_pct": 1
@@ -3631,11 +3636,6 @@
         "skill": "Elasticsearch",
         "count": 26,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Snowflake",
-        "count": 25,
-        "frequency_pct": 1
       }
     ]
   },
@@ -3648,14 +3648,14 @@
     "top_locations": [],
     "skills": [
       {
-        "skill": "Python",
-        "count": 1727,
-        "frequency_pct": 48
+        "skill": "SQL",
+        "count": 1875,
+        "frequency_pct": 52
       },
       {
-        "skill": "SQL",
-        "count": 1721,
-        "frequency_pct": 48
+        "skill": "Python",
+        "count": 1771,
+        "frequency_pct": 49
       },
       {
         "skill": "AWS",
@@ -3721,11 +3721,6 @@
         "skill": "Power BI",
         "count": 277,
         "frequency_pct": 8
-      },
-      {
-        "skill": "Go",
-        "count": 236,
-        "frequency_pct": 7
       },
       {
         "skill": "Shell/Bash",
@@ -3808,6 +3803,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "TypeScript",
+        "count": 70,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Angular",
         "count": 70,
         "frequency_pct": 2
@@ -3858,6 +3858,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Machine Learning",
+        "count": 22,
+        "frequency_pct": 1
+      },
+      {
         "skill": "GraphQL",
         "count": 21,
         "frequency_pct": 1
@@ -3865,6 +3870,11 @@
       {
         "skill": "Flask",
         "count": 21,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "Go",
+        "count": 20,
         "frequency_pct": 1
       },
       {
@@ -3886,16 +3896,6 @@
         "skill": "Kotlin",
         "count": 19,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Android Development",
-        "count": 19,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Scikit-learn",
-        "count": 18,
-        "frequency_pct": 1
       }
     ]
   },
@@ -3909,7 +3909,7 @@
     "skills": [
       {
         "skill": "AWS",
-        "count": 2036,
+        "count": 2074,
         "frequency_pct": 40
       },
       {
@@ -3919,12 +3919,17 @@
       },
       {
         "skill": "Python",
-        "count": 1701,
-        "frequency_pct": 33
+        "count": 1728,
+        "frequency_pct": 34
+      },
+      {
+        "skill": "SQL",
+        "count": 1368,
+        "frequency_pct": 27
       },
       {
         "skill": "Kubernetes",
-        "count": 1236,
+        "count": 1237,
         "frequency_pct": 24
       },
       {
@@ -3934,17 +3939,17 @@
       },
       {
         "skill": "Linux",
-        "count": 1188,
+        "count": 1179,
         "frequency_pct": 23
       },
       {
-        "skill": "SQL",
-        "count": 1016,
-        "frequency_pct": 20
+        "skill": "TypeScript",
+        "count": 1067,
+        "frequency_pct": 21
       },
       {
         "skill": "GCP",
-        "count": 984,
+        "count": 985,
         "frequency_pct": 19
       },
       {
@@ -3968,14 +3973,9 @@
         "frequency_pct": 12
       },
       {
-        "skill": "Go",
-        "count": 548,
-        "frequency_pct": 11
-      },
-      {
         "skill": "JavaScript",
-        "count": 470,
-        "frequency_pct": 9
+        "count": 493,
+        "frequency_pct": 10
       },
       {
         "skill": "Jenkins",
@@ -4013,8 +4013,18 @@
         "frequency_pct": 6
       },
       {
+        "skill": "RAG",
+        "count": 285,
+        "frequency_pct": 6
+      },
+      {
         "skill": "C#",
         "count": 272,
+        "frequency_pct": 5
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 255,
         "frequency_pct": 5
       },
       {
@@ -4063,18 +4073,13 @@
         "frequency_pct": 3
       },
       {
-        "skill": "TypeScript",
-        "count": 142,
+        "skill": "HTML/CSS",
+        "count": 141,
         "frequency_pct": 3
       },
       {
         "skill": "Elasticsearch",
         "count": 140,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "HTML/CSS",
-        "count": 139,
         "frequency_pct": 3
       },
       {
@@ -4093,6 +4098,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "Go",
+        "count": 107,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Angular",
         "count": 103,
         "frequency_pct": 2
@@ -4108,13 +4118,13 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Cassandra",
+        "skill": "PHP",
         "count": 94,
         "frequency_pct": 2
       },
       {
-        "skill": "PHP",
-        "count": 93,
+        "skill": "Cassandra",
+        "count": 94,
         "frequency_pct": 2
       },
       {
@@ -4123,8 +4133,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 59,
+        "skill": "iOS Development",
+        "count": 77,
         "frequency_pct": 1
       },
       {
@@ -4146,16 +4156,6 @@
         "skill": "GraphQL",
         "count": 38,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Unit Testing",
-        "count": 35,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Helm",
-        "count": 33,
-        "frequency_pct": 1
       }
     ]
   },
@@ -4168,9 +4168,19 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 6050,
+        "frequency_pct": 55
+      },
+      {
         "skill": "Linux",
         "count": 1412,
         "frequency_pct": 13
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1359,
+        "frequency_pct": 12
       },
       {
         "skill": "Java",
@@ -4179,27 +4189,42 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 1056,
+        "count": 1073,
+        "frequency_pct": 10
+      },
+      {
+        "skill": "Python",
+        "count": 1065,
         "frequency_pct": 10
       },
       {
         "skill": "JavaScript",
-        "count": 885,
-        "frequency_pct": 8
-      },
-      {
-        "skill": "Python",
-        "count": 674,
-        "frequency_pct": 6
+        "count": 949,
+        "frequency_pct": 9
       },
       {
         "skill": "SQL",
-        "count": 542,
+        "count": 796,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "RAG",
+        "count": 735,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "iOS Development",
+        "count": 499,
         "frequency_pct": 5
       },
       {
+        "skill": "AWS",
+        "count": 474,
+        "frequency_pct": 4
+      },
+      {
         "skill": "C++",
-        "count": 386,
+        "count": 395,
         "frequency_pct": 4
       },
       {
@@ -4220,16 +4245,6 @@
       {
         "skill": "React",
         "count": 236,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "iOS Development",
-        "count": 236,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
-        "count": 228,
         "frequency_pct": 2
       },
       {
@@ -4254,17 +4269,12 @@
       },
       {
         "skill": "PHP",
-        "count": 197,
+        "count": 199,
         "frequency_pct": 2
       },
       {
         "skill": "Scala",
         "count": 196,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "AWS",
-        "count": 190,
         "frequency_pct": 2
       },
       {
@@ -4290,11 +4300,6 @@
       {
         "skill": "Azure",
         "count": 114,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
-        "count": 109,
         "frequency_pct": 1
       },
       {
@@ -4343,11 +4348,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 76,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Spark",
         "count": 70,
         "frequency_pct": 1
@@ -4359,12 +4359,12 @@
       },
       {
         "skill": "Vue",
-        "count": 60,
+        "count": 63,
         "frequency_pct": 1
       },
       {
         "skill": "GCP",
-        "count": 48,
+        "count": 49,
         "frequency_pct": 1
       },
       {
@@ -4428,14 +4428,19 @@
     "top_locations": [],
     "skills": [
       {
-        "skill": "Data Science",
-        "count": 300,
-        "frequency_pct": 56
+        "skill": "LLM",
+        "count": 360,
+        "frequency_pct": 67
       },
       {
         "skill": "Python",
-        "count": 295,
-        "frequency_pct": 55
+        "count": 302,
+        "frequency_pct": 56
+      },
+      {
+        "skill": "Data Science",
+        "count": 300,
+        "frequency_pct": 56
       },
       {
         "skill": "Generative AI",
@@ -4443,14 +4448,9 @@
         "frequency_pct": 36
       },
       {
-        "skill": "LLM",
-        "count": 153,
-        "frequency_pct": 28
-      },
-      {
         "skill": "SQL",
-        "count": 140,
-        "frequency_pct": 26
+        "count": 151,
+        "frequency_pct": 28
       },
       {
         "skill": "PyTorch",
@@ -4464,7 +4464,7 @@
       },
       {
         "skill": "AWS",
-        "count": 104,
+        "count": 105,
         "frequency_pct": 19
       },
       {
@@ -4488,6 +4488,11 @@
         "frequency_pct": 9
       },
       {
+        "skill": "TypeScript",
+        "count": 39,
+        "frequency_pct": 7
+      },
+      {
         "skill": "Pandas",
         "count": 37,
         "frequency_pct": 7
@@ -4498,18 +4503,13 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Go",
-        "count": 33,
+        "skill": "Machine Learning",
+        "count": 34,
         "frequency_pct": 6
       },
       {
         "skill": "NumPy",
         "count": 31,
-        "frequency_pct": 6
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 30,
         "frequency_pct": 6
       },
       {
@@ -4603,11 +4603,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 7,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Airflow",
         "count": 6,
         "frequency_pct": 1
@@ -4624,6 +4619,11 @@
       },
       {
         "skill": "OpenAI API",
+        "count": 6,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "RAG",
         "count": 6,
         "frequency_pct": 1
       },
@@ -4688,8 +4688,18 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 1912,
+        "frequency_pct": 62
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 442,
+        "frequency_pct": 14
+      },
+      {
         "skill": "HTML/CSS",
-        "count": 318,
+        "count": 320,
         "frequency_pct": 10
       },
       {
@@ -4698,24 +4708,39 @@
         "frequency_pct": 10
       },
       {
+        "skill": "RAG",
+        "count": 296,
+        "frequency_pct": 10
+      },
+      {
         "skill": "JavaScript",
-        "count": 272,
+        "count": 292,
         "frequency_pct": 9
       },
       {
-        "skill": "Linux",
-        "count": 252,
+        "skill": "Python",
+        "count": 260,
         "frequency_pct": 8
       },
       {
-        "skill": "Python",
-        "count": 182,
-        "frequency_pct": 6
+        "skill": "Linux",
+        "count": 251,
+        "frequency_pct": 8
       },
       {
         "skill": "SQL",
-        "count": 162,
-        "frequency_pct": 5
+        "count": 223,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "AWS",
+        "count": 220,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "iOS Development",
+        "count": 205,
+        "frequency_pct": 7
       },
       {
         "skill": "Scala",
@@ -4738,23 +4763,8 @@
         "frequency_pct": 4
       },
       {
-        "skill": "AWS",
-        "count": 114,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "Go",
-        "count": 109,
-        "frequency_pct": 4
-      },
-      {
         "skill": "C++",
         "count": 101,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "iOS Development",
-        "count": 99,
         "frequency_pct": 3
       },
       {
@@ -4776,11 +4786,6 @@
         "skill": "Shell/Bash",
         "count": 78,
         "frequency_pct": 3
-      },
-      {
-        "skill": "TypeScript",
-        "count": 72,
-        "frequency_pct": 2
       },
       {
         "skill": "Oracle DB",
@@ -4810,11 +4815,6 @@
       {
         "skill": "Kubernetes",
         "count": 42,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 39,
         "frequency_pct": 1
       },
       {
@@ -4869,7 +4869,7 @@
       },
       {
         "skill": "PHP",
-        "count": 26,
+        "count": 29,
         "frequency_pct": 1
       },
       {
@@ -4949,7 +4949,7 @@
     "skills": [
       {
         "skill": "AWS",
-        "count": 1158,
+        "count": 1167,
         "frequency_pct": 53
       },
       {
@@ -4959,8 +4959,13 @@
       },
       {
         "skill": "Python",
-        "count": 892,
+        "count": 909,
         "frequency_pct": 41
+      },
+      {
+        "skill": "SQL",
+        "count": 689,
+        "frequency_pct": 31
       },
       {
         "skill": "Kubernetes",
@@ -4973,14 +4978,14 @@
         "frequency_pct": 30
       },
       {
+        "skill": "TypeScript",
+        "count": 583,
+        "frequency_pct": 26
+      },
+      {
         "skill": "Java",
         "count": 552,
         "frequency_pct": 25
-      },
-      {
-        "skill": "SQL",
-        "count": 530,
-        "frequency_pct": 24
       },
       {
         "skill": "GCP",
@@ -4994,13 +4999,8 @@
       },
       {
         "skill": "Linux",
-        "count": 410,
+        "count": 408,
         "frequency_pct": 19
-      },
-      {
-        "skill": "Go",
-        "count": 364,
-        "frequency_pct": 17
       },
       {
         "skill": "Shell/Bash",
@@ -5033,17 +5033,22 @@
         "frequency_pct": 12
       },
       {
+        "skill": "JavaScript",
+        "count": 196,
+        "frequency_pct": 9
+      },
+      {
         "skill": "Snowflake",
         "count": 191,
         "frequency_pct": 9
       },
       {
-        "skill": "JavaScript",
-        "count": 184,
-        "frequency_pct": 8
+        "skill": "PostgreSQL",
+        "count": 135,
+        "frequency_pct": 6
       },
       {
-        "skill": "PostgreSQL",
+        "skill": "RAG",
         "count": 135,
         "frequency_pct": 6
       },
@@ -5055,6 +5060,11 @@
       {
         "skill": "MySQL",
         "count": 120,
+        "frequency_pct": 5
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 119,
         "frequency_pct": 5
       },
       {
@@ -5088,6 +5098,11 @@
         "frequency_pct": 5
       },
       {
+        "skill": "Go",
+        "count": 100,
+        "frequency_pct": 5
+      },
+      {
         "skill": "Airflow",
         "count": 98,
         "frequency_pct": 4
@@ -5100,11 +5115,6 @@
       {
         "skill": "Ruby",
         "count": 89,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "TypeScript",
-        "count": 88,
         "frequency_pct": 4
       },
       {
@@ -5149,6 +5159,11 @@
       },
       {
         "skill": "HTML/CSS",
+        "count": 44,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "iOS Development",
         "count": 43,
         "frequency_pct": 2
       },
@@ -5158,13 +5173,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 39,
-        "frequency_pct": 2
-      },
-      {
         "skill": "PHP",
-        "count": 35,
+        "count": 36,
         "frequency_pct": 2
       },
       {
@@ -5186,16 +5196,6 @@
         "skill": "Android Development",
         "count": 23,
         "frequency_pct": 1
-      },
-      {
-        "skill": "TensorFlow",
-        "count": 22,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Django",
-        "count": 18,
-        "frequency_pct": 1
       }
     ]
   },
@@ -5208,29 +5208,44 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 2769,
+        "frequency_pct": 50
+      },
+      {
+        "skill": "SQL",
+        "count": 2017,
+        "frequency_pct": 36
+      },
+      {
         "skill": "Java",
         "count": 1783,
         "frequency_pct": 32
       },
       {
         "skill": "JavaScript",
-        "count": 1678,
-        "frequency_pct": 30
-      },
-      {
-        "skill": "SQL",
-        "count": 1501,
-        "frequency_pct": 27
+        "count": 1759,
+        "frequency_pct": 32
       },
       {
         "skill": "Python",
-        "count": 1212,
-        "frequency_pct": 22
+        "count": 1312,
+        "frequency_pct": 24
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1093,
+        "frequency_pct": 20
       },
       {
         "skill": "HTML/CSS",
-        "count": 984,
+        "count": 988,
         "frequency_pct": 18
+      },
+      {
+        "skill": "AWS",
+        "count": 926,
+        "frequency_pct": 17
       },
       {
         "skill": "C#",
@@ -5243,13 +5258,8 @@
         "frequency_pct": 14
       },
       {
-        "skill": "AWS",
-        "count": 667,
-        "frequency_pct": 12
-      },
-      {
         "skill": "Linux",
-        "count": 589,
+        "count": 587,
         "frequency_pct": 11
       },
       {
@@ -5261,11 +5271,6 @@
         "skill": "Docker",
         "count": 527,
         "frequency_pct": 10
-      },
-      {
-        "skill": "TypeScript",
-        "count": 521,
-        "frequency_pct": 9
       },
       {
         "skill": "Angular",
@@ -5284,7 +5289,7 @@
       },
       {
         "skill": "C++",
-        "count": 448,
+        "count": 449,
         "frequency_pct": 8
       },
       {
@@ -5294,8 +5299,13 @@
       },
       {
         "skill": "PHP",
-        "count": 419,
+        "count": 420,
         "frequency_pct": 8
+      },
+      {
+        "skill": "RAG",
+        "count": 378,
+        "frequency_pct": 7
       },
       {
         "skill": "PostgreSQL",
@@ -5306,11 +5316,6 @@
         "skill": "Scala",
         "count": 344,
         "frequency_pct": 6
-      },
-      {
-        "skill": "Go",
-        "count": 303,
-        "frequency_pct": 5
       },
       {
         "skill": "Kubernetes",
@@ -5378,6 +5383,11 @@
         "frequency_pct": 3
       },
       {
+        "skill": "iOS Development",
+        "count": 157,
+        "frequency_pct": 3
+      },
+      {
         "skill": "Android Development",
         "count": 146,
         "frequency_pct": 3
@@ -5413,18 +5423,13 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 99,
+        "skill": "Go",
+        "count": 95,
         "frequency_pct": 2
       },
       {
         "skill": "Webpack",
         "count": 94,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "iOS Development",
-        "count": 89,
         "frequency_pct": 2
       },
       {
@@ -5451,11 +5456,6 @@
         "skill": "RabbitMQ",
         "count": 78,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Airflow",
-        "count": 73,
-        "frequency_pct": 1
       }
     ]
   },
@@ -5468,13 +5468,18 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 241,
+        "frequency_pct": 29
+      },
+      {
         "skill": "Python",
-        "count": 229,
-        "frequency_pct": 28
+        "count": 238,
+        "frequency_pct": 29
       },
       {
         "skill": "AWS",
-        "count": 197,
+        "count": 203,
         "frequency_pct": 24
       },
       {
@@ -5494,8 +5499,8 @@
       },
       {
         "skill": "SQL",
-        "count": 97,
-        "frequency_pct": 12
+        "count": 113,
+        "frequency_pct": 14
       },
       {
         "skill": "GCP",
@@ -5513,9 +5518,9 @@
         "frequency_pct": 10
       },
       {
-        "skill": "Go",
-        "count": 76,
-        "frequency_pct": 9
+        "skill": "JavaScript",
+        "count": 61,
+        "frequency_pct": 7
       },
       {
         "skill": "Docker",
@@ -5523,14 +5528,19 @@
         "frequency_pct": 7
       },
       {
-        "skill": "JavaScript",
-        "count": 56,
-        "frequency_pct": 7
-      },
-      {
         "skill": "Scala",
         "count": 49,
         "frequency_pct": 6
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 42,
+        "frequency_pct": 5
+      },
+      {
+        "skill": "RAG",
+        "count": 40,
+        "frequency_pct": 5
       },
       {
         "skill": "Oracle DB",
@@ -5603,12 +5613,12 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Apache Kafka",
-        "count": 18,
+        "skill": "HTML/CSS",
+        "count": 20,
         "frequency_pct": 2
       },
       {
-        "skill": "HTML/CSS",
+        "skill": "Apache Kafka",
         "count": 18,
         "frequency_pct": 2
       },
@@ -5633,6 +5643,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "Go",
+        "count": 16,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Android Development",
         "count": 16,
         "frequency_pct": 2
@@ -5643,8 +5658,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "TypeScript",
-        "count": 14,
+        "skill": "iOS Development",
+        "count": 15,
         "frequency_pct": 2
       },
       {
@@ -5673,11 +5688,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 8,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Redis",
         "count": 7,
         "frequency_pct": 1
@@ -5690,11 +5700,6 @@
       {
         "skill": "Kotlin",
         "count": 6,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "iOS Development",
-        "count": 5,
         "frequency_pct": 1
       },
       {
@@ -5711,11 +5716,6 @@
         "skill": "Redux",
         "count": 5,
         "frequency_pct": 1
-      },
-      {
-        "skill": "GraphQL",
-        "count": 4,
-        "frequency_pct": 1
       }
     ]
   },
@@ -5728,14 +5728,24 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 7817,
+        "frequency_pct": 74
+      },
+      {
+        "skill": "SQL",
+        "count": 3725,
+        "frequency_pct": 35
+      },
+      {
         "skill": "Java",
         "count": 3315,
         "frequency_pct": 31
       },
       {
-        "skill": "SQL",
-        "count": 3279,
-        "frequency_pct": 31
+        "skill": "JavaScript",
+        "count": 2518,
+        "frequency_pct": 24
       },
       {
         "skill": "Selenium",
@@ -5743,14 +5753,24 @@
         "frequency_pct": 23
       },
       {
-        "skill": "JavaScript",
-        "count": 2162,
+        "skill": "Python",
+        "count": 2202,
         "frequency_pct": 21
       },
       {
-        "skill": "Python",
-        "count": 1965,
-        "frequency_pct": 19
+        "skill": "iOS Development",
+        "count": 1901,
+        "frequency_pct": 18
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1617,
+        "frequency_pct": 15
+      },
+      {
+        "skill": "RAG",
+        "count": 1570,
+        "frequency_pct": 15
       },
       {
         "skill": "REST API",
@@ -5763,18 +5783,18 @@
         "frequency_pct": 14
       },
       {
+        "skill": "AWS",
+        "count": 1211,
+        "frequency_pct": 11
+      },
+      {
         "skill": "Linux",
-        "count": 1189,
+        "count": 1188,
         "frequency_pct": 11
       },
       {
         "skill": "HTML/CSS",
-        "count": 1066,
-        "frequency_pct": 10
-      },
-      {
-        "skill": "AWS",
-        "count": 1029,
+        "count": 1070,
         "frequency_pct": 10
       },
       {
@@ -5791,11 +5811,6 @@
         "skill": "C#",
         "count": 972,
         "frequency_pct": 9
-      },
-      {
-        "skill": "iOS Development",
-        "count": 859,
-        "frequency_pct": 8
       },
       {
         "skill": "Azure",
@@ -5820,11 +5835,6 @@
       {
         "skill": "Kubernetes",
         "count": 521,
-        "frequency_pct": 5
-      },
-      {
-        "skill": "TypeScript",
-        "count": 512,
         "frequency_pct": 5
       },
       {
@@ -5858,11 +5868,6 @@
         "frequency_pct": 4
       },
       {
-        "skill": "Go",
-        "count": 384,
-        "frequency_pct": 4
-      },
-      {
         "skill": "MongoDB",
         "count": 358,
         "frequency_pct": 3
@@ -5873,14 +5878,14 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Rust",
-        "count": 270,
+        "skill": "PHP",
+        "count": 275,
         "frequency_pct": 3
       },
       {
-        "skill": "PHP",
-        "count": 260,
-        "frequency_pct": 2
+        "skill": "Rust",
+        "count": 270,
+        "frequency_pct": 3
       },
       {
         "skill": "Angular",
@@ -5903,13 +5908,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 183,
-        "frequency_pct": 2
-      },
-      {
         "skill": "C++",
-        "count": 169,
+        "count": 172,
         "frequency_pct": 2
       },
       {
@@ -5963,13 +5963,13 @@
         "frequency_pct": 1
       },
       {
-        "skill": "R",
-        "count": 84,
+        "skill": "Vue",
+        "count": 86,
         "frequency_pct": 1
       },
       {
-        "skill": "Vue",
-        "count": 80,
+        "skill": "R",
+        "count": 84,
         "frequency_pct": 1
       },
       {
@@ -5988,9 +5988,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 3839,
+        "frequency_pct": 83
+      },
+      {
         "skill": "JavaScript",
-        "count": 3508,
-        "frequency_pct": 76
+        "count": 3623,
+        "frequency_pct": 78
       },
       {
         "skill": "Java",
@@ -6003,34 +6008,34 @@
         "frequency_pct": 57
       },
       {
+        "skill": "SQL",
+        "count": 2509,
+        "frequency_pct": 54
+      },
+      {
         "skill": "Node.js",
         "count": 1833,
         "frequency_pct": 40
       },
       {
-        "skill": "HTML/CSS",
-        "count": 1731,
-        "frequency_pct": 37
+        "skill": "AWS",
+        "count": 1747,
+        "frequency_pct": 38
       },
       {
-        "skill": "AWS",
-        "count": 1419,
-        "frequency_pct": 31
+        "skill": "HTML/CSS",
+        "count": 1737,
+        "frequency_pct": 38
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1697,
+        "frequency_pct": 37
       },
       {
         "skill": "Angular",
         "count": 1376,
         "frequency_pct": 30
-      },
-      {
-        "skill": "TypeScript",
-        "count": 1364,
-        "frequency_pct": 29
-      },
-      {
-        "skill": "SQL",
-        "count": 1359,
-        "frequency_pct": 29
       },
       {
         "skill": "REST API",
@@ -6048,6 +6053,11 @@
         "frequency_pct": 20
       },
       {
+        "skill": "Python",
+        "count": 896,
+        "frequency_pct": 19
+      },
+      {
         "skill": "MySQL",
         "count": 854,
         "frequency_pct": 18
@@ -6059,7 +6069,7 @@
       },
       {
         "skill": "Vue",
-        "count": 834,
+        "count": 836,
         "frequency_pct": 18
       },
       {
@@ -6069,12 +6079,7 @@
       },
       {
         "skill": "PHP",
-        "count": 777,
-        "frequency_pct": 17
-      },
-      {
-        "skill": "Python",
-        "count": 771,
+        "count": 781,
         "frequency_pct": 17
       },
       {
@@ -6093,13 +6098,18 @@
         "frequency_pct": 12
       },
       {
+        "skill": "RAG",
+        "count": 502,
+        "frequency_pct": 11
+      },
+      {
         "skill": "GraphQL",
         "count": 455,
         "frequency_pct": 10
       },
       {
         "skill": "Linux",
-        "count": 443,
+        "count": 442,
         "frequency_pct": 10
       },
       {
@@ -6120,11 +6130,6 @@
       {
         "skill": "GCP",
         "count": 325,
-        "frequency_pct": 7
-      },
-      {
-        "skill": "Go",
-        "count": 309,
         "frequency_pct": 7
       },
       {
@@ -6173,13 +6178,13 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Android Development",
-        "count": 154,
+        "skill": "iOS Development",
+        "count": 161,
         "frequency_pct": 3
       },
       {
-        "skill": "Machine Learning",
-        "count": 140,
+        "skill": "Android Development",
+        "count": 154,
         "frequency_pct": 3
       },
       {
@@ -6223,18 +6228,13 @@
         "frequency_pct": 2
       },
       {
-        "skill": "iOS Development",
-        "count": 85,
+        "skill": "Go",
+        "count": 87,
         "frequency_pct": 2
       },
       {
         "skill": "C++",
         "count": 79,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Flask",
-        "count": 77,
         "frequency_pct": 2
       }
     ]
@@ -6248,9 +6248,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 243,
+        "frequency_pct": 68
+      },
+      {
         "skill": "SQL",
-        "count": 68,
-        "frequency_pct": 19
+        "count": 72,
+        "frequency_pct": 20
       },
       {
         "skill": "Data Science",
@@ -6258,14 +6263,19 @@
         "frequency_pct": 14
       },
       {
-        "skill": "Go",
-        "count": 42,
-        "frequency_pct": 12
+        "skill": "RAG",
+        "count": 41,
+        "frequency_pct": 11
       },
       {
         "skill": "Python",
-        "count": 26,
-        "frequency_pct": 7
+        "count": 36,
+        "frequency_pct": 10
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 33,
+        "frequency_pct": 9
       },
       {
         "skill": "Tableau",
@@ -6273,7 +6283,17 @@
         "frequency_pct": 7
       },
       {
+        "skill": "AWS",
+        "count": 19,
+        "frequency_pct": 5
+      },
+      {
         "skill": "Power BI",
+        "count": 17,
+        "frequency_pct": 5
+      },
+      {
+        "skill": "JavaScript",
         "count": 17,
         "frequency_pct": 5
       },
@@ -6293,12 +6313,7 @@
         "frequency_pct": 4
       },
       {
-        "skill": "AWS",
-        "count": 15,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "JavaScript",
+        "skill": "iOS Development",
         "count": 15,
         "frequency_pct": 4
       },
@@ -6306,11 +6321,6 @@
         "skill": "Java",
         "count": 13,
         "frequency_pct": 4
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 11,
-        "frequency_pct": 3
       },
       {
         "skill": "React",
@@ -6363,11 +6373,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "iOS Development",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
         "skill": "C#",
         "count": 5,
         "frequency_pct": 1
@@ -6375,11 +6380,6 @@
       {
         "skill": "Docker",
         "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
-        "count": 4,
         "frequency_pct": 1
       },
       {
@@ -6394,6 +6394,11 @@
       },
       {
         "skill": "MySQL",
+        "count": 3,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "LLM",
         "count": 3,
         "frequency_pct": 1
       },
@@ -6438,11 +6443,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Solidity",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Fine-tuning (LoRA)",
         "count": 2,
         "frequency_pct": 1
@@ -6478,6 +6478,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Solidity",
+        "count": 1,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Vue",
         "count": 1,
         "frequency_pct": 1
@@ -6489,11 +6494,6 @@
       },
       {
         "skill": "Linux",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Deep Learning",
         "count": 1,
         "frequency_pct": 1
       }
@@ -6509,18 +6509,23 @@
     "skills": [
       {
         "skill": "AWS",
-        "count": 4388,
+        "count": 4433,
         "frequency_pct": 56
       },
       {
+        "skill": "TypeScript",
+        "count": 4199,
+        "frequency_pct": 53
+      },
+      {
         "skill": "Kubernetes",
-        "count": 4043,
+        "count": 4044,
         "frequency_pct": 51
       },
       {
         "skill": "Python",
-        "count": 3848,
-        "frequency_pct": 49
+        "count": 3923,
+        "frequency_pct": 50
       },
       {
         "skill": "Docker",
@@ -6534,12 +6539,17 @@
       },
       {
         "skill": "Linux",
-        "count": 3277,
+        "count": 3255,
         "frequency_pct": 41
       },
       {
         "skill": "Shell/Bash",
         "count": 2943,
+        "frequency_pct": 37
+      },
+      {
+        "skill": "SQL",
+        "count": 2911,
         "frequency_pct": 37
       },
       {
@@ -6558,29 +6568,19 @@
         "frequency_pct": 30
       },
       {
-        "skill": "SQL",
-        "count": 1660,
-        "frequency_pct": 21
-      },
-      {
         "skill": "Java",
         "count": 1571,
         "frequency_pct": 20
       },
       {
         "skill": "GCP",
-        "count": 1552,
+        "count": 1553,
         "frequency_pct": 20
       },
       {
         "skill": "PostgreSQL",
         "count": 1083,
         "frequency_pct": 14
-      },
-      {
-        "skill": "Go",
-        "count": 1061,
-        "frequency_pct": 13
       },
       {
         "skill": "Apache Kafka",
@@ -6593,14 +6593,19 @@
         "frequency_pct": 13
       },
       {
+        "skill": "RAG",
+        "count": 952,
+        "frequency_pct": 12
+      },
+      {
         "skill": "MySQL",
         "count": 919,
         "frequency_pct": 12
       },
       {
         "skill": "JavaScript",
-        "count": 772,
-        "frequency_pct": 10
+        "count": 834,
+        "frequency_pct": 11
       },
       {
         "skill": "MongoDB",
@@ -6628,6 +6633,11 @@
         "frequency_pct": 7
       },
       {
+        "skill": "Machine Learning",
+        "count": 544,
+        "frequency_pct": 7
+      },
+      {
         "skill": "REST API",
         "count": 493,
         "frequency_pct": 6
@@ -6649,7 +6659,7 @@
       },
       {
         "skill": "PHP",
-        "count": 400,
+        "count": 406,
         "frequency_pct": 5
       },
       {
@@ -6668,9 +6678,19 @@
         "frequency_pct": 4
       },
       {
+        "skill": "Go",
+        "count": 339,
+        "frequency_pct": 4
+      },
+      {
         "skill": "Rust",
         "count": 279,
         "frequency_pct": 4
+      },
+      {
+        "skill": "iOS Development",
+        "count": 265,
+        "frequency_pct": 3
       },
       {
         "skill": "React",
@@ -6698,19 +6718,9 @@
         "frequency_pct": 3
       },
       {
-        "skill": "TypeScript",
-        "count": 211,
-        "frequency_pct": 3
-      },
-      {
         "skill": "C++",
-        "count": 199,
+        "count": 200,
         "frequency_pct": 3
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 189,
-        "frequency_pct": 2
       },
       {
         "skill": "DynamoDB",
@@ -6746,16 +6756,6 @@
         "skill": "Power BI",
         "count": 93,
         "frequency_pct": 1
-      },
-      {
-        "skill": "HTML/CSS",
-        "count": 77,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Kotlin",
-        "count": 67,
-        "frequency_pct": 1
       }
     ]
   },
@@ -6769,28 +6769,28 @@
     "skills": [
       {
         "skill": "Python",
-        "count": 606,
-        "frequency_pct": 26
+        "count": 636,
+        "frequency_pct": 27
       },
       {
-        "skill": "AWS",
-        "count": 457,
-        "frequency_pct": 20
+        "skill": "TypeScript",
+        "count": 537,
+        "frequency_pct": 23
       },
       {
         "skill": "SQL",
-        "count": 419,
-        "frequency_pct": 18
+        "count": 513,
+        "frequency_pct": 22
+      },
+      {
+        "skill": "AWS",
+        "count": 471,
+        "frequency_pct": 20
       },
       {
         "skill": "Java",
         "count": 414,
         "frequency_pct": 18
-      },
-      {
-        "skill": "Go",
-        "count": 245,
-        "frequency_pct": 10
       },
       {
         "skill": "Azure",
@@ -6800,6 +6800,11 @@
       {
         "skill": "Spark",
         "count": 222,
+        "frequency_pct": 9
+      },
+      {
+        "skill": "JavaScript",
+        "count": 201,
         "frequency_pct": 9
       },
       {
@@ -6813,19 +6818,14 @@
         "frequency_pct": 8
       },
       {
-        "skill": "JavaScript",
-        "count": 190,
-        "frequency_pct": 8
-      },
-      {
         "skill": "Scala",
         "count": 183,
         "frequency_pct": 8
       },
       {
         "skill": "Linux",
-        "count": 176,
-        "frequency_pct": 8
+        "count": 174,
+        "frequency_pct": 7
       },
       {
         "skill": "React",
@@ -6836,6 +6836,16 @@
         "skill": "Apache Kafka",
         "count": 133,
         "frequency_pct": 6
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 131,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "RAG",
+        "count": 126,
+        "frequency_pct": 5
       },
       {
         "skill": "GCP",
@@ -6908,11 +6918,6 @@
         "frequency_pct": 3
       },
       {
-        "skill": "TypeScript",
-        "count": 74,
-        "frequency_pct": 3
-      },
-      {
         "skill": "Rust",
         "count": 69,
         "frequency_pct": 3
@@ -6948,13 +6953,13 @@
         "frequency_pct": 2
       },
       {
-        "skill": "REST API",
+        "skill": "Go",
         "count": 52,
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 51,
+        "skill": "REST API",
+        "count": 52,
         "frequency_pct": 2
       },
       {
@@ -6964,12 +6969,12 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 50,
+        "count": 51,
         "frequency_pct": 2
       },
       {
         "skill": "PHP",
-        "count": 48,
+        "count": 49,
         "frequency_pct": 2
       },
       {
@@ -6986,6 +6991,11 @@
         "skill": "Ansible",
         "count": 36,
         "frequency_pct": 2
+      },
+      {
+        "skill": "iOS Development",
+        "count": 35,
+        "frequency_pct": 1
       },
       {
         "skill": "DynamoDB",
@@ -7006,16 +7016,6 @@
         "skill": "Kotlin",
         "count": 25,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Vue",
-        "count": 24,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Django",
-        "count": 20,
-        "frequency_pct": 1
       }
     ]
   },
@@ -7029,8 +7029,13 @@
     "skills": [
       {
         "skill": "AWS",
-        "count": 73,
-        "frequency_pct": 24
+        "count": 75,
+        "frequency_pct": 25
+      },
+      {
+        "skill": "TypeScript",
+        "count": 67,
+        "frequency_pct": 22
       },
       {
         "skill": "GCP",
@@ -7043,19 +7048,19 @@
         "frequency_pct": 16
       },
       {
-        "skill": "Linux",
+        "skill": "Python",
         "count": 40,
         "frequency_pct": 13
       },
       {
-        "skill": "Python",
-        "count": 32,
-        "frequency_pct": 11
+        "skill": "SQL",
+        "count": 40,
+        "frequency_pct": 13
       },
       {
-        "skill": "SQL",
-        "count": 31,
-        "frequency_pct": 10
+        "skill": "Linux",
+        "count": 40,
+        "frequency_pct": 13
       },
       {
         "skill": "Spark",
@@ -7078,8 +7083,8 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Go",
-        "count": 17,
+        "skill": "RAG",
+        "count": 19,
         "frequency_pct": 6
       },
       {
@@ -7133,6 +7138,11 @@
         "frequency_pct": 4
       },
       {
+        "skill": "Machine Learning",
+        "count": 12,
+        "frequency_pct": 4
+      },
+      {
         "skill": "Oracle DB",
         "count": 11,
         "frequency_pct": 4
@@ -7146,6 +7156,16 @@
         "skill": "JavaScript",
         "count": 8,
         "frequency_pct": 3
+      },
+      {
+        "skill": "iOS Development",
+        "count": 7,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "Go",
+        "count": 6,
+        "frequency_pct": 2
       },
       {
         "skill": "Ansible",
@@ -7218,11 +7238,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "iOS Development",
-        "count": 3,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Node.js",
         "count": 3,
         "frequency_pct": 1
@@ -7233,17 +7248,17 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Android Development",
         "count": 2,
         "frequency_pct": 1
       },
       {
         "skill": "DynamoDB",
+        "count": 1,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "LLM",
         "count": 1,
         "frequency_pct": 1
       },
@@ -7261,21 +7276,6 @@
         "skill": "Vite",
         "count": 1,
         "frequency_pct": 1
-      },
-      {
-        "skill": "R",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "PHP",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Selenium",
-        "count": 1,
-        "frequency_pct": 1
       }
     ]
   },
@@ -7288,9 +7288,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 1835,
+        "frequency_pct": 82
+      },
+      {
         "skill": "JavaScript",
-        "count": 1657,
-        "frequency_pct": 74
+        "count": 1717,
+        "frequency_pct": 77
       },
       {
         "skill": "React",
@@ -7303,33 +7308,33 @@
         "frequency_pct": 58
       },
       {
+        "skill": "SQL",
+        "count": 1184,
+        "frequency_pct": 53
+      },
+      {
+        "skill": "AWS",
+        "count": 978,
+        "frequency_pct": 44
+      },
+      {
         "skill": "Node.js",
         "count": 898,
         "frequency_pct": 40
       },
       {
-        "skill": "AWS",
-        "count": 858,
-        "frequency_pct": 38
-      },
-      {
-        "skill": "TypeScript",
-        "count": 732,
-        "frequency_pct": 33
-      },
-      {
         "skill": "HTML/CSS",
-        "count": 706,
+        "count": 718,
         "frequency_pct": 32
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 692,
+        "frequency_pct": 31
       },
       {
         "skill": "Angular",
         "count": 667,
-        "frequency_pct": 30
-      },
-      {
-        "skill": "SQL",
-        "count": 665,
         "frequency_pct": 30
       },
       {
@@ -7348,6 +7353,11 @@
         "frequency_pct": 22
       },
       {
+        "skill": "Python",
+        "count": 452,
+        "frequency_pct": 20
+      },
+      {
         "skill": "Scala",
         "count": 435,
         "frequency_pct": 19
@@ -7356,11 +7366,6 @@
         "skill": "PostgreSQL",
         "count": 425,
         "frequency_pct": 19
-      },
-      {
-        "skill": "Python",
-        "count": 401,
-        "frequency_pct": 18
       },
       {
         "skill": "Azure",
@@ -7374,7 +7379,7 @@
       },
       {
         "skill": "Vue",
-        "count": 354,
+        "count": 355,
         "frequency_pct": 16
       },
       {
@@ -7385,6 +7390,11 @@
       {
         "skill": "MySQL",
         "count": 334,
+        "frequency_pct": 15
+      },
+      {
+        "skill": "RAG",
+        "count": 325,
         "frequency_pct": 15
       },
       {
@@ -7399,7 +7409,7 @@
       },
       {
         "skill": "PHP",
-        "count": 223,
+        "count": 225,
         "frequency_pct": 10
       },
       {
@@ -7415,11 +7425,6 @@
       {
         "skill": "Unit Testing",
         "count": 211,
-        "frequency_pct": 9
-      },
-      {
-        "skill": "Go",
-        "count": 208,
         "frequency_pct": 9
       },
       {
@@ -7468,6 +7473,11 @@
         "frequency_pct": 4
       },
       {
+        "skill": "iOS Development",
+        "count": 94,
+        "frequency_pct": 4
+      },
+      {
         "skill": "Django",
         "count": 86,
         "frequency_pct": 4
@@ -7493,11 +7503,6 @@
         "frequency_pct": 4
       },
       {
-        "skill": "Machine Learning",
-        "count": 72,
-        "frequency_pct": 3
-      },
-      {
         "skill": "Spring Boot",
         "count": 69,
         "frequency_pct": 3
@@ -7510,6 +7515,11 @@
       {
         "skill": "Express",
         "count": 66,
+        "frequency_pct": 3
+      },
+      {
+        "skill": "Go",
+        "count": 63,
         "frequency_pct": 3
       },
       {
@@ -7526,16 +7536,6 @@
         "skill": "NestJS",
         "count": 51,
         "frequency_pct": 2
-      },
-      {
-        "skill": "Data Science",
-        "count": 50,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Shell/Bash",
-        "count": 42,
-        "frequency_pct": 2
       }
     ]
   },
@@ -7548,34 +7548,39 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 5472,
+        "frequency_pct": 76
+      },
+      {
+        "skill": "SQL",
+        "count": 4104,
+        "frequency_pct": 57
+      },
+      {
         "skill": "Java",
         "count": 4002,
         "frequency_pct": 55
       },
       {
         "skill": "Python",
-        "count": 2724,
-        "frequency_pct": 38
+        "count": 2853,
+        "frequency_pct": 40
       },
       {
         "skill": "AWS",
-        "count": 2617,
-        "frequency_pct": 36
+        "count": 2763,
+        "frequency_pct": 38
+      },
+      {
+        "skill": "JavaScript",
+        "count": 2503,
+        "frequency_pct": 35
       },
       {
         "skill": "Docker",
         "count": 2354,
         "frequency_pct": 33
-      },
-      {
-        "skill": "JavaScript",
-        "count": 2213,
-        "frequency_pct": 31
-      },
-      {
-        "skill": "SQL",
-        "count": 2210,
-        "frequency_pct": 31
       },
       {
         "skill": "REST API",
@@ -7591,6 +7596,11 @@
         "skill": "Kubernetes",
         "count": 1477,
         "frequency_pct": 20
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 1341,
+        "frequency_pct": 19
       },
       {
         "skill": "MySQL",
@@ -7619,7 +7629,12 @@
       },
       {
         "skill": "Linux",
-        "count": 1016,
+        "count": 1009,
+        "frequency_pct": 14
+      },
+      {
+        "skill": "RAG",
+        "count": 992,
         "frequency_pct": 14
       },
       {
@@ -7644,23 +7659,13 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 759,
+        "count": 763,
         "frequency_pct": 11
       },
       {
         "skill": "Django",
         "count": 759,
         "frequency_pct": 11
-      },
-      {
-        "skill": "TypeScript",
-        "count": 714,
-        "frequency_pct": 10
-      },
-      {
-        "skill": "Go",
-        "count": 704,
-        "frequency_pct": 10
       },
       {
         "skill": "GCP",
@@ -7699,7 +7704,7 @@
       },
       {
         "skill": "PHP",
-        "count": 488,
+        "count": 494,
         "frequency_pct": 7
       },
       {
@@ -7723,11 +7728,6 @@
         "frequency_pct": 5
       },
       {
-        "skill": "Machine Learning",
-        "count": 359,
-        "frequency_pct": 5
-      },
-      {
         "skill": "Spark",
         "count": 328,
         "frequency_pct": 5
@@ -7736,6 +7736,11 @@
         "skill": "Shell/Bash",
         "count": 327,
         "frequency_pct": 5
+      },
+      {
+        "skill": "Go",
+        "count": 283,
+        "frequency_pct": 4
       },
       {
         "skill": "Terraform",
@@ -7749,8 +7754,8 @@
       },
       {
         "skill": "Vue",
-        "count": 248,
-        "frequency_pct": 3
+        "count": 253,
+        "frequency_pct": 4
       },
       {
         "skill": "Rust",
@@ -7791,11 +7796,6 @@
         "skill": "Data Science",
         "count": 186,
         "frequency_pct": 3
-      },
-      {
-        "skill": "Airflow",
-        "count": 135,
-        "frequency_pct": 2
       }
     ]
   },
@@ -7809,23 +7809,23 @@
     "skills": [
       {
         "skill": "Machine Learning",
-        "count": 255,
-        "frequency_pct": 93
+        "count": 263,
+        "frequency_pct": 96
       },
       {
         "skill": "Python",
-        "count": 173,
-        "frequency_pct": 63
+        "count": 179,
+        "frequency_pct": 65
+      },
+      {
+        "skill": "SQL",
+        "count": 101,
+        "frequency_pct": 37
       },
       {
         "skill": "Data Science",
         "count": 99,
         "frequency_pct": 36
-      },
-      {
-        "skill": "SQL",
-        "count": 83,
-        "frequency_pct": 30
       },
       {
         "skill": "AWS",
@@ -7883,11 +7883,6 @@
         "frequency_pct": 9
       },
       {
-        "skill": "Go",
-        "count": 22,
-        "frequency_pct": 8
-      },
-      {
         "skill": "Apache Kafka",
         "count": 18,
         "frequency_pct": 7
@@ -7910,6 +7905,11 @@
       {
         "skill": "Tableau",
         "count": 15,
+        "frequency_pct": 5
+      },
+      {
+        "skill": "TypeScript",
+        "count": 13,
         "frequency_pct": 5
       },
       {
@@ -7998,6 +7998,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "RAG",
+        "count": 3,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Power BI",
         "count": 3,
         "frequency_pct": 1
@@ -8019,11 +8024,6 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
         "count": 2,
         "frequency_pct": 1
       },
@@ -8068,9 +8068,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 1609,
+        "frequency_pct": 90
+      },
+      {
         "skill": "SQL",
-        "count": 553,
-        "frequency_pct": 31
+        "count": 603,
+        "frequency_pct": 34
       },
       {
         "skill": "Java",
@@ -8078,23 +8083,33 @@
         "frequency_pct": 20
       },
       {
+        "skill": "Machine Learning",
+        "count": 349,
+        "frequency_pct": 19
+      },
+      {
+        "skill": "JavaScript",
+        "count": 345,
+        "frequency_pct": 19
+      },
+      {
+        "skill": "iOS Development",
+        "count": 303,
+        "frequency_pct": 17
+      },
+      {
         "skill": "HTML/CSS",
         "count": 256,
         "frequency_pct": 14
       },
       {
-        "skill": "JavaScript",
-        "count": 250,
+        "skill": "Python",
+        "count": 248,
         "frequency_pct": 14
       },
       {
         "skill": "Selenium",
         "count": 212,
-        "frequency_pct": 12
-      },
-      {
-        "skill": "Python",
-        "count": 208,
         "frequency_pct": 12
       },
       {
@@ -8108,19 +8123,24 @@
         "frequency_pct": 11
       },
       {
+        "skill": "RAG",
+        "count": 200,
+        "frequency_pct": 11
+      },
+      {
         "skill": "Android Development",
         "count": 187,
         "frequency_pct": 10
       },
       {
-        "skill": "iOS Development",
-        "count": 157,
-        "frequency_pct": 9
-      },
-      {
         "skill": "Jenkins",
         "count": 156,
         "frequency_pct": 9
+      },
+      {
+        "skill": "AWS",
+        "count": 123,
+        "frequency_pct": 7
       },
       {
         "skill": "C#",
@@ -8131,11 +8151,6 @@
         "skill": "Docker",
         "count": 88,
         "frequency_pct": 5
-      },
-      {
-        "skill": "AWS",
-        "count": 80,
-        "frequency_pct": 4
       },
       {
         "skill": "Scala",
@@ -8193,18 +8208,8 @@
         "frequency_pct": 3
       },
       {
-        "skill": "TypeScript",
-        "count": 43,
-        "frequency_pct": 2
-      },
-      {
         "skill": "Rust",
         "count": 43,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
-        "count": 40,
         "frequency_pct": 2
       },
       {
@@ -8238,13 +8243,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 22,
-        "frequency_pct": 1
-      },
-      {
         "skill": "PHP",
-        "count": 19,
+        "count": 20,
         "frequency_pct": 1
       },
       {
@@ -8329,13 +8329,13 @@
     "skills": [
       {
         "skill": "Machine Learning",
-        "count": 567,
-        "frequency_pct": 89
+        "count": 588,
+        "frequency_pct": 92
       },
       {
         "skill": "Python",
-        "count": 515,
-        "frequency_pct": 81
+        "count": 541,
+        "frequency_pct": 85
       },
       {
         "skill": "PyTorch",
@@ -8348,14 +8348,14 @@
         "frequency_pct": 31
       },
       {
-        "skill": "Data Science",
-        "count": 190,
+        "skill": "SQL",
+        "count": 192,
         "frequency_pct": 30
       },
       {
-        "skill": "SQL",
-        "count": 181,
-        "frequency_pct": 28
+        "skill": "Data Science",
+        "count": 190,
+        "frequency_pct": 30
       },
       {
         "skill": "Java",
@@ -8418,11 +8418,6 @@
         "frequency_pct": 9
       },
       {
-        "skill": "Go",
-        "count": 42,
-        "frequency_pct": 7
-      },
-      {
         "skill": "Tableau",
         "count": 42,
         "frequency_pct": 7
@@ -8451,6 +8446,11 @@
         "skill": "MLOps",
         "count": 30,
         "frequency_pct": 5
+      },
+      {
+        "skill": "TypeScript",
+        "count": 27,
+        "frequency_pct": 4
       },
       {
         "skill": "Databricks",
@@ -8558,6 +8558,16 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Go",
+        "count": 5,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "iOS Development",
+        "count": 5,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Elasticsearch",
         "count": 5,
         "frequency_pct": 1
@@ -8565,16 +8575,6 @@
       {
         "skill": "HTML/CSS",
         "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "BigQuery",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Angular",
-        "count": 4,
         "frequency_pct": 1
       }
     ]
@@ -8589,8 +8589,13 @@
     "skills": [
       {
         "skill": "JavaScript",
-        "count": 3253,
-        "frequency_pct": 81
+        "count": 3402,
+        "frequency_pct": 85
+      },
+      {
+        "skill": "TypeScript",
+        "count": 3316,
+        "frequency_pct": 83
       },
       {
         "skill": "Java",
@@ -8604,13 +8609,18 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 2528,
-        "frequency_pct": 63
+        "count": 2557,
+        "frequency_pct": 64
       },
       {
-        "skill": "TypeScript",
-        "count": 1518,
-        "frequency_pct": 38
+        "skill": "Machine Learning",
+        "count": 2255,
+        "frequency_pct": 56
+      },
+      {
+        "skill": "AWS",
+        "count": 1114,
+        "frequency_pct": 28
       },
       {
         "skill": "Angular",
@@ -8639,8 +8649,13 @@
       },
       {
         "skill": "Vue",
-        "count": 680,
+        "count": 682,
         "frequency_pct": 17
+      },
+      {
+        "skill": "SQL",
+        "count": 530,
+        "frequency_pct": 13
       },
       {
         "skill": "Unit Testing",
@@ -8648,13 +8663,13 @@
         "frequency_pct": 13
       },
       {
-        "skill": "Scala",
-        "count": 442,
-        "frequency_pct": 11
+        "skill": "RAG",
+        "count": 494,
+        "frequency_pct": 12
       },
       {
-        "skill": "AWS",
-        "count": 423,
+        "skill": "Scala",
+        "count": 442,
         "frequency_pct": 11
       },
       {
@@ -8663,13 +8678,18 @@
         "frequency_pct": 10
       },
       {
+        "skill": "Python",
+        "count": 356,
+        "frequency_pct": 9
+      },
+      {
         "skill": "GraphQL",
         "count": 341,
         "frequency_pct": 9
       },
       {
         "skill": "PHP",
-        "count": 281,
+        "count": 288,
         "frequency_pct": 7
       },
       {
@@ -8678,13 +8698,8 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Python",
-        "count": 242,
-        "frequency_pct": 6
-      },
-      {
-        "skill": "SQL",
-        "count": 241,
+        "skill": "iOS Development",
+        "count": 224,
         "frequency_pct": 6
       },
       {
@@ -8710,11 +8725,6 @@
       {
         "skill": "MySQL",
         "count": 174,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "Go",
-        "count": 168,
         "frequency_pct": 4
       },
       {
@@ -8758,18 +8768,8 @@
         "frequency_pct": 3
       },
       {
-        "skill": "iOS Development",
-        "count": 97,
-        "frequency_pct": 2
-      },
-      {
         "skill": "GCP",
         "count": 84,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 79,
         "frequency_pct": 2
       },
       {
@@ -8848,14 +8848,19 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 3397,
+        "frequency_pct": 67
+      },
+      {
         "skill": "Android Development",
         "count": 2808,
         "frequency_pct": 55
       },
       {
         "skill": "iOS Development",
-        "count": 2290,
-        "frequency_pct": 45
+        "count": 2529,
+        "frequency_pct": 50
       },
       {
         "skill": "Java",
@@ -8873,9 +8878,19 @@
         "frequency_pct": 26
       },
       {
+        "skill": "JavaScript",
+        "count": 932,
+        "frequency_pct": 18
+      },
+      {
         "skill": "REST API",
         "count": 879,
         "frequency_pct": 17
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 674,
+        "frequency_pct": 13
       },
       {
         "skill": "Flutter",
@@ -8883,14 +8898,24 @@
         "frequency_pct": 13
       },
       {
+        "skill": "RAG",
+        "count": 631,
+        "frequency_pct": 12
+      },
+      {
+        "skill": "SQL",
+        "count": 600,
+        "frequency_pct": 12
+      },
+      {
         "skill": "React",
         "count": 537,
         "frequency_pct": 11
       },
       {
-        "skill": "JavaScript",
-        "count": 506,
-        "frequency_pct": 10
+        "skill": "Python",
+        "count": 337,
+        "frequency_pct": 7
       },
       {
         "skill": "Unit Testing",
@@ -8898,18 +8923,18 @@
         "frequency_pct": 6
       },
       {
+        "skill": "AWS",
+        "count": 290,
+        "frequency_pct": 6
+      },
+      {
         "skill": "C++",
-        "count": 277,
+        "count": 278,
         "frequency_pct": 5
       },
       {
         "skill": "HTML/CSS",
-        "count": 260,
-        "frequency_pct": 5
-      },
-      {
-        "skill": "SQL",
-        "count": 232,
+        "count": 267,
         "frequency_pct": 5
       },
       {
@@ -8923,23 +8948,13 @@
         "frequency_pct": 4
       },
       {
-        "skill": "Python",
-        "count": 221,
-        "frequency_pct": 4
-      },
-      {
         "skill": "Linux",
         "count": 186,
         "frequency_pct": 4
       },
       {
         "skill": "C#",
-        "count": 179,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "AWS",
-        "count": 179,
+        "count": 180,
         "frequency_pct": 4
       },
       {
@@ -8948,18 +8963,8 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Go",
-        "count": 152,
-        "frequency_pct": 3
-      },
-      {
         "skill": "Node.js",
         "count": 137,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "TypeScript",
-        "count": 132,
         "frequency_pct": 3
       },
       {
@@ -8970,11 +8975,6 @@
       {
         "skill": "Rust",
         "count": 108,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 107,
         "frequency_pct": 2
       },
       {
@@ -8999,7 +8999,7 @@
       },
       {
         "skill": "PHP",
-        "count": 74,
+        "count": 75,
         "frequency_pct": 1
       },
       {
@@ -9054,7 +9054,7 @@
       },
       {
         "skill": "Kubernetes",
-        "count": 30,
+        "count": 31,
         "frequency_pct": 1
       },
       {
@@ -9083,6 +9083,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Go",
+        "count": 18,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Django",
         "count": 18,
         "frequency_pct": 1
@@ -9090,11 +9095,6 @@
       {
         "skill": "Deep Learning",
         "count": 17,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Power BI",
-        "count": 16,
         "frequency_pct": 1
       }
     ]
@@ -9108,19 +9108,29 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 3886,
+        "frequency_pct": 76
+      },
+      {
+        "skill": "SQL",
+        "count": 2919,
+        "frequency_pct": 57
+      },
+      {
         "skill": "Java",
         "count": 2878,
         "frequency_pct": 56
       },
       {
         "skill": "AWS",
-        "count": 2248,
-        "frequency_pct": 44
+        "count": 2343,
+        "frequency_pct": 46
       },
       {
         "skill": "Python",
-        "count": 2003,
-        "frequency_pct": 39
+        "count": 2087,
+        "frequency_pct": 41
       },
       {
         "skill": "Docker",
@@ -9128,9 +9138,9 @@
         "frequency_pct": 34
       },
       {
-        "skill": "SQL",
-        "count": 1575,
-        "frequency_pct": 31
+        "skill": "JavaScript",
+        "count": 1553,
+        "frequency_pct": 30
       },
       {
         "skill": "REST API",
@@ -9141,11 +9151,6 @@
         "skill": "Kubernetes",
         "count": 1425,
         "frequency_pct": 28
-      },
-      {
-        "skill": "JavaScript",
-        "count": 1345,
-        "frequency_pct": 26
       },
       {
         "skill": "PostgreSQL",
@@ -9161,6 +9166,16 @@
         "skill": "Apache Kafka",
         "count": 918,
         "frequency_pct": 18
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 868,
+        "frequency_pct": 17
+      },
+      {
+        "skill": "RAG",
+        "count": 833,
+        "frequency_pct": 16
       },
       {
         "skill": "Spring Boot",
@@ -9183,11 +9198,6 @@
         "frequency_pct": 14
       },
       {
-        "skill": "Go",
-        "count": 696,
-        "frequency_pct": 14
-      },
-      {
         "skill": "React",
         "count": 692,
         "frequency_pct": 14
@@ -9199,8 +9209,8 @@
       },
       {
         "skill": "Linux",
-        "count": 644,
-        "frequency_pct": 13
+        "count": 637,
+        "frequency_pct": 12
       },
       {
         "skill": "Azure",
@@ -9223,18 +9233,13 @@
         "frequency_pct": 11
       },
       {
-        "skill": "TypeScript",
-        "count": 528,
-        "frequency_pct": 10
-      },
-      {
         "skill": "Elasticsearch",
         "count": 424,
         "frequency_pct": 8
       },
       {
         "skill": "HTML/CSS",
-        "count": 373,
+        "count": 375,
         "frequency_pct": 7
       },
       {
@@ -9283,9 +9288,9 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Machine Learning",
-        "count": 280,
-        "frequency_pct": 5
+        "skill": "Go",
+        "count": 288,
+        "frequency_pct": 6
       },
       {
         "skill": "Terraform",
@@ -9314,12 +9319,17 @@
       },
       {
         "skill": "C++",
-        "count": 213,
+        "count": 214,
         "frequency_pct": 4
       },
       {
         "skill": "Ruby",
         "count": 204,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "iOS Development",
+        "count": 184,
         "frequency_pct": 4
       },
       {
@@ -9346,16 +9356,6 @@
         "skill": "Airflow",
         "count": 131,
         "frequency_pct": 3
-      },
-      {
-        "skill": "Vue",
-        "count": 124,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Pandas",
-        "count": 115,
-        "frequency_pct": 2
       }
     ]
   },
@@ -9368,23 +9368,43 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 490,
+        "frequency_pct": 50
+      },
+      {
+        "skill": "Python",
+        "count": 92,
+        "frequency_pct": 9
+      },
+      {
         "skill": "Linux",
         "count": 85,
         "frequency_pct": 9
       },
       {
-        "skill": "Python",
-        "count": 55,
-        "frequency_pct": 6
+        "skill": "RAG",
+        "count": 70,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "SQL",
+        "count": 67,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 66,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "AWS",
+        "count": 51,
+        "frequency_pct": 5
       },
       {
         "skill": "Java",
         "count": 48,
-        "frequency_pct": 5
-      },
-      {
-        "skill": "SQL",
-        "count": 47,
         "frequency_pct": 5
       },
       {
@@ -9395,11 +9415,6 @@
       {
         "skill": "Azure",
         "count": 43,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "AWS",
-        "count": 37,
         "frequency_pct": 4
       },
       {
@@ -9438,23 +9453,23 @@
         "frequency_pct": 2
       },
       {
+        "skill": "iOS Development",
+        "count": 24,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Tableau",
         "count": 23,
         "frequency_pct": 2
       },
       {
+        "skill": "JavaScript",
+        "count": 21,
+        "frequency_pct": 2
+      },
+      {
         "skill": "GCP",
         "count": 19,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
-        "count": 18,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "JavaScript",
-        "count": 17,
         "frequency_pct": 2
       },
       {
@@ -9470,11 +9485,6 @@
       {
         "skill": "Vite",
         "count": 14,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "iOS Development",
-        "count": 11,
         "frequency_pct": 1
       },
       {
@@ -9503,17 +9513,17 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 9,
-        "frequency_pct": 1
-      },
-      {
         "skill": "PostgreSQL",
         "count": 9,
         "frequency_pct": 1
       },
       {
         "skill": "C++",
+        "count": 9,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "PHP",
         "count": 9,
         "frequency_pct": 1
       },
@@ -9563,17 +9573,12 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Android Development",
         "count": 5,
         "frequency_pct": 1
       },
       {
-        "skill": "PHP",
+        "skill": "LLM",
         "count": 5,
         "frequency_pct": 1
       },
@@ -9611,11 +9616,6 @@
         "skill": "Fine-tuning (LoRA)",
         "count": 2,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Computer Vision",
-        "count": 2,
-        "frequency_pct": 1
       }
     ]
   },
@@ -9628,19 +9628,29 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 750,
+        "frequency_pct": 29
+      },
+      {
         "skill": "Python",
-        "count": 548,
-        "frequency_pct": 21
+        "count": 565,
+        "frequency_pct": 22
       },
       {
         "skill": "AWS",
-        "count": 427,
-        "frequency_pct": 16
+        "count": 474,
+        "frequency_pct": 18
       },
       {
         "skill": "Linux",
-        "count": 422,
+        "count": 419,
         "frequency_pct": 16
+      },
+      {
+        "skill": "SQL",
+        "count": 347,
+        "frequency_pct": 13
       },
       {
         "skill": "Azure",
@@ -9653,23 +9663,13 @@
         "frequency_pct": 12
       },
       {
-        "skill": "SQL",
-        "count": 268,
-        "frequency_pct": 10
-      },
-      {
         "skill": "Shell/Bash",
         "count": 249,
         "frequency_pct": 10
       },
       {
         "skill": "JavaScript",
-        "count": 175,
-        "frequency_pct": 7
-      },
-      {
-        "skill": "Go",
-        "count": 175,
+        "count": 190,
         "frequency_pct": 7
       },
       {
@@ -9683,18 +9683,28 @@
         "frequency_pct": 5
       },
       {
+        "skill": "RAG",
+        "count": 125,
+        "frequency_pct": 5
+      },
+      {
         "skill": "Docker",
         "count": 124,
         "frequency_pct": 5
       },
       {
-        "skill": "Scala",
+        "skill": "Machine Learning",
+        "count": 119,
+        "frequency_pct": 5
+      },
+      {
+        "skill": "C++",
         "count": 97,
         "frequency_pct": 4
       },
       {
-        "skill": "C++",
-        "count": 96,
+        "skill": "Scala",
+        "count": 97,
         "frequency_pct": 4
       },
       {
@@ -9714,7 +9724,7 @@
       },
       {
         "skill": "HTML/CSS",
-        "count": 68,
+        "count": 73,
         "frequency_pct": 3
       },
       {
@@ -9773,6 +9783,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "iOS Development",
+        "count": 53,
+        "frequency_pct": 2
+      },
+      {
         "skill": "REST API",
         "count": 53,
         "frequency_pct": 2
@@ -9793,8 +9808,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "TypeScript",
-        "count": 40,
+        "skill": "Go",
+        "count": 39,
         "frequency_pct": 2
       },
       {
@@ -9818,11 +9833,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 25,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Databricks",
         "count": 23,
         "frequency_pct": 1
@@ -9830,11 +9840,6 @@
       {
         "skill": "Angular",
         "count": 23,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "iOS Development",
-        "count": 22,
         "frequency_pct": 1
       },
       {
@@ -9871,11 +9876,6 @@
         "skill": "Helm",
         "count": 13,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Unit Testing",
-        "count": 12,
-        "frequency_pct": 1
       }
     ]
   },
@@ -9888,9 +9888,29 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 728,
+        "frequency_pct": 62
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 109,
+        "frequency_pct": 9
+      },
+      {
         "skill": "HTML/CSS",
-        "count": 97,
+        "count": 98,
         "frequency_pct": 8
+      },
+      {
+        "skill": "Python",
+        "count": 91,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "RAG",
+        "count": 70,
+        "frequency_pct": 6
       },
       {
         "skill": "Linux",
@@ -9904,12 +9924,22 @@
       },
       {
         "skill": "JavaScript",
-        "count": 45,
+        "count": 49,
         "frequency_pct": 4
       },
       {
-        "skill": "Python",
-        "count": 41,
+        "skill": "AWS",
+        "count": 46,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "SQL",
+        "count": 37,
+        "frequency_pct": 3
+      },
+      {
+        "skill": "iOS Development",
+        "count": 37,
         "frequency_pct": 3
       },
       {
@@ -9923,23 +9953,8 @@
         "frequency_pct": 3
       },
       {
-        "skill": "SQL",
-        "count": 29,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
-        "count": 27,
-        "frequency_pct": 2
-      },
-      {
         "skill": "Data Science",
         "count": 21,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "iOS Development",
-        "count": 19,
         "frequency_pct": 2
       },
       {
@@ -9993,17 +10008,12 @@
         "frequency_pct": 1
       },
       {
-        "skill": "AWS",
+        "skill": "LLM",
         "count": 9,
         "frequency_pct": 1
       },
       {
         "skill": "Tableau",
-        "count": 8,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
         "count": 8,
         "frequency_pct": 1
       },
@@ -10113,11 +10123,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Selenium",
         "count": 2,
         "frequency_pct": 1
@@ -10129,11 +10134,6 @@
       },
       {
         "skill": "TensorFlow",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "FastAPI",
         "count": 1,
         "frequency_pct": 1
       }
@@ -10148,9 +10148,19 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 879,
+        "frequency_pct": 73
+      },
+      {
+        "skill": "RAG",
+        "count": 151,
+        "frequency_pct": 13
+      },
+      {
         "skill": "SQL",
-        "count": 131,
-        "frequency_pct": 11
+        "count": 146,
+        "frequency_pct": 12
       },
       {
         "skill": "Data Science",
@@ -10158,13 +10168,18 @@
         "frequency_pct": 11
       },
       {
-        "skill": "Go",
-        "count": 111,
-        "frequency_pct": 9
+        "skill": "Machine Learning",
+        "count": 118,
+        "frequency_pct": 10
       },
       {
         "skill": "Python",
-        "count": 72,
+        "count": 101,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "iOS Development",
+        "count": 74,
         "frequency_pct": 6
       },
       {
@@ -10173,14 +10188,14 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Rust",
-        "count": 57,
+        "skill": "AWS",
+        "count": 64,
         "frequency_pct": 5
       },
       {
-        "skill": "Machine Learning",
-        "count": 49,
-        "frequency_pct": 4
+        "skill": "Rust",
+        "count": 57,
+        "frequency_pct": 5
       },
       {
         "skill": "Power BI",
@@ -10193,28 +10208,18 @@
         "frequency_pct": 3
       },
       {
-        "skill": "AWS",
-        "count": 41,
-        "frequency_pct": 3
-      },
-      {
         "skill": "Android Development",
         "count": 39,
         "frequency_pct": 3
       },
       {
-        "skill": "iOS Development",
-        "count": 35,
+        "skill": "JavaScript",
+        "count": 34,
         "frequency_pct": 3
       },
       {
         "skill": "Java",
         "count": 29,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "JavaScript",
-        "count": 27,
         "frequency_pct": 2
       },
       {
@@ -10253,6 +10258,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "LLM",
+        "count": 13,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Snowflake",
         "count": 11,
         "frequency_pct": 1
@@ -10263,12 +10273,12 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 10,
+        "skill": "Docker",
+        "count": 9,
         "frequency_pct": 1
       },
       {
-        "skill": "Docker",
+        "skill": "PHP",
         "count": 9,
         "frequency_pct": 1
       },
@@ -10284,11 +10294,6 @@
       },
       {
         "skill": "Kubernetes",
-        "count": 8,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "PHP",
         "count": 8,
         "frequency_pct": 1
       },
@@ -10309,11 +10314,6 @@
       },
       {
         "skill": "TensorFlow",
-        "count": 6,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Solidity",
         "count": 6,
         "frequency_pct": 1
       },
@@ -10368,6 +10368,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Solidity",
+        "count": 3,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Vue",
         "count": 3,
         "frequency_pct": 1
@@ -10391,11 +10396,6 @@
         "skill": "Airflow",
         "count": 2,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Django",
-        "count": 2,
-        "frequency_pct": 1
       }
     ]
   },
@@ -10408,14 +10408,19 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 394,
+        "frequency_pct": 75
+      },
+      {
         "skill": "Linux",
         "count": 331,
         "frequency_pct": 63
       },
       {
         "skill": "AWS",
-        "count": 314,
-        "frequency_pct": 59
+        "count": 317,
+        "frequency_pct": 60
       },
       {
         "skill": "Docker",
@@ -10429,8 +10434,8 @@
       },
       {
         "skill": "Python",
-        "count": 265,
-        "frequency_pct": 50
+        "count": 271,
+        "frequency_pct": 51
       },
       {
         "skill": "Kubernetes",
@@ -10448,6 +10453,11 @@
         "frequency_pct": 37
       },
       {
+        "skill": "SQL",
+        "count": 165,
+        "frequency_pct": 31
+      },
+      {
         "skill": "Ansible",
         "count": 150,
         "frequency_pct": 28
@@ -10463,11 +10473,6 @@
         "frequency_pct": 21
       },
       {
-        "skill": "SQL",
-        "count": 92,
-        "frequency_pct": 17
-      },
-      {
         "skill": "Java",
         "count": 86,
         "frequency_pct": 16
@@ -10478,24 +10483,24 @@
         "frequency_pct": 12
       },
       {
-        "skill": "Go",
-        "count": 61,
-        "frequency_pct": 12
-      },
-      {
         "skill": "MySQL",
         "count": 59,
         "frequency_pct": 11
       },
       {
-        "skill": "Scala",
-        "count": 53,
+        "skill": "JavaScript",
+        "count": 57,
+        "frequency_pct": 11
+      },
+      {
+        "skill": "RAG",
+        "count": 54,
         "frequency_pct": 10
       },
       {
-        "skill": "JavaScript",
-        "count": 50,
-        "frequency_pct": 9
+        "skill": "Scala",
+        "count": 53,
+        "frequency_pct": 10
       },
       {
         "skill": "MongoDB",
@@ -10510,6 +10515,11 @@
       {
         "skill": "Apache Kafka",
         "count": 34,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 32,
         "frequency_pct": 6
       },
       {
@@ -10543,6 +10553,11 @@
         "frequency_pct": 4
       },
       {
+        "skill": "iOS Development",
+        "count": 21,
+        "frequency_pct": 4
+      },
+      {
         "skill": "PHP",
         "count": 20,
         "frequency_pct": 4
@@ -10561,6 +10576,11 @@
         "skill": "Ruby",
         "count": 19,
         "frequency_pct": 4
+      },
+      {
+        "skill": "Go",
+        "count": 17,
+        "frequency_pct": 3
       },
       {
         "skill": "Android Development",
@@ -10588,18 +10608,8 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 10,
-        "frequency_pct": 2
-      },
-      {
         "skill": "Vite",
         "count": 9,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "TypeScript",
-        "count": 8,
         "frequency_pct": 2
       },
       {
@@ -10628,11 +10638,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "iOS Development",
-        "count": 7,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Kotlin",
         "count": 6,
         "frequency_pct": 1
@@ -10651,11 +10656,6 @@
         "skill": "R",
         "count": 5,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Spring Boot",
-        "count": 5,
-        "frequency_pct": 1
       }
     ]
   },
@@ -10668,28 +10668,38 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 656,
+        "frequency_pct": 71
+      },
+      {
         "skill": "Java",
         "count": 464,
         "frequency_pct": 50
       },
       {
-        "skill": "Python",
-        "count": 324,
-        "frequency_pct": 35
+        "skill": "SQL",
+        "count": 416,
+        "frequency_pct": 45
       },
       {
-        "skill": "SQL",
-        "count": 283,
-        "frequency_pct": 31
+        "skill": "Python",
+        "count": 335,
+        "frequency_pct": 36
       },
       {
         "skill": "JavaScript",
-        "count": 226,
-        "frequency_pct": 24
+        "count": 267,
+        "frequency_pct": 29
       },
       {
         "skill": "Docker",
         "count": 214,
+        "frequency_pct": 23
+      },
+      {
+        "skill": "AWS",
+        "count": 212,
         "frequency_pct": 23
       },
       {
@@ -10698,9 +10708,9 @@
         "frequency_pct": 21
       },
       {
-        "skill": "AWS",
-        "count": 194,
-        "frequency_pct": 21
+        "skill": "Machine Learning",
+        "count": 172,
+        "frequency_pct": 19
       },
       {
         "skill": "PostgreSQL",
@@ -10719,17 +10729,22 @@
       },
       {
         "skill": "Linux",
-        "count": 117,
+        "count": 116,
         "frequency_pct": 13
       },
       {
         "skill": "HTML/CSS",
-        "count": 112,
+        "count": 113,
         "frequency_pct": 12
       },
       {
         "skill": "Django",
         "count": 97,
+        "frequency_pct": 10
+      },
+      {
+        "skill": "RAG",
+        "count": 94,
         "frequency_pct": 10
       },
       {
@@ -10783,11 +10798,6 @@
         "frequency_pct": 7
       },
       {
-        "skill": "TypeScript",
-        "count": 66,
-        "frequency_pct": 7
-      },
-      {
         "skill": "Oracle DB",
         "count": 65,
         "frequency_pct": 7
@@ -10828,12 +10838,12 @@
         "frequency_pct": 3
       },
       {
-        "skill": "C#",
-        "count": 27,
+        "skill": "PHP",
+        "count": 28,
         "frequency_pct": 3
       },
       {
-        "skill": "PHP",
+        "skill": "C#",
         "count": 27,
         "frequency_pct": 3
       },
@@ -10843,13 +10853,8 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Machine Learning",
-        "count": 27,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "Go",
-        "count": 25,
+        "skill": "iOS Development",
+        "count": 26,
         "frequency_pct": 3
       },
       {
@@ -10903,11 +10908,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "iOS Development",
-        "count": 13,
-        "frequency_pct": 1
-      },
-      {
         "skill": "DynamoDB",
         "count": 12,
         "frequency_pct": 1
@@ -10928,9 +10928,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 487,
+        "frequency_pct": 60
+      },
+      {
         "skill": "SQL",
-        "count": 91,
-        "frequency_pct": 11
+        "count": 100,
+        "frequency_pct": 12
       },
       {
         "skill": "Data Science",
@@ -10938,19 +10943,24 @@
         "frequency_pct": 10
       },
       {
+        "skill": "RAG",
+        "count": 84,
+        "frequency_pct": 10
+      },
+      {
         "skill": "Python",
-        "count": 61,
-        "frequency_pct": 7
+        "count": 77,
+        "frequency_pct": 9
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 66,
+        "frequency_pct": 8
       },
       {
         "skill": "AWS",
-        "count": 49,
-        "frequency_pct": 6
-      },
-      {
-        "skill": "Go",
-        "count": 49,
-        "frequency_pct": 6
+        "count": 64,
+        "frequency_pct": 8
       },
       {
         "skill": "Azure",
@@ -10960,6 +10970,11 @@
       {
         "skill": "Scala",
         "count": 36,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "iOS Development",
+        "count": 35,
         "frequency_pct": 4
       },
       {
@@ -10988,12 +11003,12 @@
         "frequency_pct": 3
       },
       {
-        "skill": "Snowflake",
-        "count": 18,
+        "skill": "JavaScript",
+        "count": 19,
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
+        "skill": "Snowflake",
         "count": 18,
         "frequency_pct": 2
       },
@@ -11005,16 +11020,6 @@
       {
         "skill": "GCP",
         "count": 17,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "iOS Development",
-        "count": 17,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "JavaScript",
-        "count": 16,
         "frequency_pct": 2
       },
       {
@@ -11093,6 +11098,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "PHP",
+        "count": 4,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Swift",
         "count": 4,
         "frequency_pct": 1
@@ -11113,12 +11123,17 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Vue",
+        "count": 3,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Apache Kafka",
         "count": 3,
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
+        "skill": "LLM",
         "count": 3,
         "frequency_pct": 1
       },
@@ -11153,27 +11168,12 @@
         "frequency_pct": 1
       },
       {
-        "skill": "PHP",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Vue",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Terraform",
         "count": 2,
         "frequency_pct": 1
       },
       {
         "skill": "Fine-tuning (LoRA)",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "BigQuery",
         "count": 2,
         "frequency_pct": 1
       }
@@ -11189,13 +11189,13 @@
     "skills": [
       {
         "skill": "Python",
-        "count": 74,
-        "frequency_pct": 39
+        "count": 77,
+        "frequency_pct": 41
       },
       {
         "skill": "AWS",
-        "count": 59,
-        "frequency_pct": 31
+        "count": 60,
+        "frequency_pct": 32
       },
       {
         "skill": "Java",
@@ -11203,14 +11203,24 @@
         "frequency_pct": 31
       },
       {
-        "skill": "Linux",
-        "count": 53,
-        "frequency_pct": 28
-      },
-      {
         "skill": "Azure",
         "count": 52,
         "frequency_pct": 27
+      },
+      {
+        "skill": "Linux",
+        "count": 52,
+        "frequency_pct": 27
+      },
+      {
+        "skill": "SQL",
+        "count": 51,
+        "frequency_pct": 27
+      },
+      {
+        "skill": "TypeScript",
+        "count": 50,
+        "frequency_pct": 26
       },
       {
         "skill": "JavaScript",
@@ -11218,17 +11228,7 @@
         "frequency_pct": 18
       },
       {
-        "skill": "Go",
-        "count": 35,
-        "frequency_pct": 18
-      },
-      {
         "skill": "Shell/Bash",
-        "count": 32,
-        "frequency_pct": 17
-      },
-      {
-        "skill": "SQL",
         "count": 32,
         "frequency_pct": 17
       },
@@ -11263,6 +11263,11 @@
         "frequency_pct": 11
       },
       {
+        "skill": "Machine Learning",
+        "count": 20,
+        "frequency_pct": 11
+      },
+      {
         "skill": "Spark",
         "count": 15,
         "frequency_pct": 8
@@ -11293,7 +11298,17 @@
         "frequency_pct": 6
       },
       {
+        "skill": "iOS Development",
+        "count": 12,
+        "frequency_pct": 6
+      },
+      {
         "skill": "Oracle DB",
+        "count": 11,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "RAG",
         "count": 11,
         "frequency_pct": 6
       },
@@ -11313,6 +11328,11 @@
         "frequency_pct": 5
       },
       {
+        "skill": "Go",
+        "count": 8,
+        "frequency_pct": 4
+      },
+      {
         "skill": "Tableau",
         "count": 8,
         "frequency_pct": 4
@@ -11324,11 +11344,6 @@
       },
       {
         "skill": "REST API",
-        "count": 8,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "iOS Development",
         "count": 8,
         "frequency_pct": 4
       },
@@ -11373,17 +11388,17 @@
         "frequency_pct": 2
       },
       {
+        "skill": "PHP",
+        "count": 4,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Angular",
         "count": 4,
         "frequency_pct": 2
       },
       {
         "skill": "Databricks",
-        "count": 3,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "PHP",
         "count": 3,
         "frequency_pct": 2
       },
@@ -11400,11 +11415,6 @@
       {
         "skill": "Vite",
         "count": 2,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
-        "count": 1,
         "frequency_pct": 1
       },
       {
@@ -11426,16 +11436,6 @@
         "skill": "Webpack",
         "count": 1,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Spring Boot",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Unit Testing",
-        "count": 1,
-        "frequency_pct": 1
       }
     ]
   },
@@ -11448,14 +11448,19 @@
     "top_locations": [],
     "skills": [
       {
-        "skill": "Android Development",
-        "count": 1208,
-        "frequency_pct": 55
+        "skill": "TypeScript",
+        "count": 1756,
+        "frequency_pct": 80
       },
       {
         "skill": "iOS Development",
-        "count": 1180,
-        "frequency_pct": 53
+        "count": 1254,
+        "frequency_pct": 57
+      },
+      {
+        "skill": "Android Development",
+        "count": 1208,
+        "frequency_pct": 55
       },
       {
         "skill": "Swift",
@@ -11478,9 +11483,24 @@
         "frequency_pct": 18
       },
       {
+        "skill": "RAG",
+        "count": 381,
+        "frequency_pct": 17
+      },
+      {
+        "skill": "JavaScript",
+        "count": 351,
+        "frequency_pct": 16
+      },
+      {
         "skill": "React",
         "count": 327,
         "frequency_pct": 15
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 282,
+        "frequency_pct": 13
       },
       {
         "skill": "Flutter",
@@ -11488,8 +11508,8 @@
         "frequency_pct": 11
       },
       {
-        "skill": "JavaScript",
-        "count": 188,
+        "skill": "AWS",
+        "count": 208,
         "frequency_pct": 9
       },
       {
@@ -11498,18 +11518,23 @@
         "frequency_pct": 8
       },
       {
+        "skill": "SQL",
+        "count": 185,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "Python",
+        "count": 158,
+        "frequency_pct": 7
+      },
+      {
         "skill": "Unit Testing",
         "count": 138,
         "frequency_pct": 6
       },
       {
-        "skill": "AWS",
-        "count": 135,
-        "frequency_pct": 6
-      },
-      {
         "skill": "C++",
-        "count": 133,
+        "count": 134,
         "frequency_pct": 6
       },
       {
@@ -11521,16 +11546,6 @@
         "skill": "Jenkins",
         "count": 110,
         "frequency_pct": 5
-      },
-      {
-        "skill": "Go",
-        "count": 108,
-        "frequency_pct": 5
-      },
-      {
-        "skill": "Python",
-        "count": 89,
-        "frequency_pct": 4
       },
       {
         "skill": "Rust",
@@ -11560,21 +11575,6 @@
       {
         "skill": "Node.js",
         "count": 64,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "SQL",
-        "count": 63,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 62,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "TypeScript",
-        "count": 61,
         "frequency_pct": 3
       },
       {
@@ -11623,6 +11623,11 @@
         "frequency_pct": 1
       },
       {
+        "skill": "GCP",
+        "count": 27,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Computer Vision",
         "count": 27,
         "frequency_pct": 1
@@ -11635,11 +11640,6 @@
       {
         "skill": "Vite",
         "count": 24,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "GCP",
-        "count": 23,
         "frequency_pct": 1
       },
       {
@@ -11709,18 +11709,23 @@
     "skills": [
       {
         "skill": "Python",
-        "count": 281,
-        "frequency_pct": 58
+        "count": 285,
+        "frequency_pct": 59
       },
       {
         "skill": "AWS",
-        "count": 275,
-        "frequency_pct": 57
+        "count": 277,
+        "frequency_pct": 58
       },
       {
         "skill": "Kubernetes",
         "count": 271,
         "frequency_pct": 56
+      },
+      {
+        "skill": "TypeScript",
+        "count": 244,
+        "frequency_pct": 51
       },
       {
         "skill": "Linux",
@@ -11753,9 +11758,9 @@
         "frequency_pct": 33
       },
       {
-        "skill": "Go",
-        "count": 150,
-        "frequency_pct": 31
+        "skill": "SQL",
+        "count": 153,
+        "frequency_pct": 32
       },
       {
         "skill": "Azure",
@@ -11783,8 +11788,8 @@
         "frequency_pct": 18
       },
       {
-        "skill": "SQL",
-        "count": 78,
+        "skill": "RAG",
+        "count": 77,
         "frequency_pct": 16
       },
       {
@@ -11799,8 +11804,8 @@
       },
       {
         "skill": "JavaScript",
-        "count": 55,
-        "frequency_pct": 11
+        "count": 59,
+        "frequency_pct": 12
       },
       {
         "skill": "MySQL",
@@ -11853,6 +11858,11 @@
         "frequency_pct": 6
       },
       {
+        "skill": "Go",
+        "count": 26,
+        "frequency_pct": 5
+      },
+      {
         "skill": "C#",
         "count": 25,
         "frequency_pct": 5
@@ -11873,6 +11883,16 @@
         "frequency_pct": 4
       },
       {
+        "skill": "iOS Development",
+        "count": 21,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 21,
+        "frequency_pct": 4
+      },
+      {
         "skill": "Helm",
         "count": 19,
         "frequency_pct": 4
@@ -11881,11 +11901,6 @@
         "skill": "RabbitMQ",
         "count": 18,
         "frequency_pct": 4
-      },
-      {
-        "skill": "TypeScript",
-        "count": 16,
-        "frequency_pct": 3
       },
       {
         "skill": "Cassandra",
@@ -11905,11 +11920,6 @@
       {
         "skill": "Spring Boot",
         "count": 11,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 10,
         "frequency_pct": 2
       },
       {
@@ -11946,16 +11956,6 @@
         "skill": "Vue",
         "count": 5,
         "frequency_pct": 1
-      },
-      {
-        "skill": "HTML/CSS",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Vite",
-        "count": 5,
-        "frequency_pct": 1
       }
     ]
   },
@@ -11968,19 +11968,29 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "Python",
+        "count": 227,
+        "frequency_pct": 74
+      },
+      {
         "skill": "Data Science",
         "count": 220,
         "frequency_pct": 72
       },
       {
-        "skill": "Python",
-        "count": 219,
-        "frequency_pct": 72
+        "skill": "LLM",
+        "count": 166,
+        "frequency_pct": 54
       },
       {
         "skill": "Generative AI",
         "count": 153,
         "frequency_pct": 50
+      },
+      {
+        "skill": "SQL",
+        "count": 103,
+        "frequency_pct": 34
       },
       {
         "skill": "PyTorch",
@@ -11998,16 +12008,6 @@
         "frequency_pct": 29
       },
       {
-        "skill": "LLM",
-        "count": 86,
-        "frequency_pct": 28
-      },
-      {
-        "skill": "SQL",
-        "count": 84,
-        "frequency_pct": 28
-      },
-      {
         "skill": "Azure",
         "count": 60,
         "frequency_pct": 20
@@ -12015,11 +12015,6 @@
       {
         "skill": "Spark",
         "count": 49,
-        "frequency_pct": 16
-      },
-      {
-        "skill": "Go",
-        "count": 48,
         "frequency_pct": 16
       },
       {
@@ -12059,7 +12054,7 @@
       },
       {
         "skill": "Machine Learning",
-        "count": 20,
+        "count": 22,
         "frequency_pct": 7
       },
       {
@@ -12089,6 +12084,11 @@
       },
       {
         "skill": "Scala",
+        "count": 12,
+        "frequency_pct": 4
+      },
+      {
+        "skill": "TypeScript",
         "count": 12,
         "frequency_pct": 4
       },
@@ -12135,6 +12135,11 @@
       {
         "skill": "PHP",
         "count": 4,
+        "frequency_pct": 1
+      },
+      {
+        "skill": "RAG",
+        "count": 3,
         "frequency_pct": 1
       },
       {
@@ -12203,12 +12208,7 @@
         "frequency_pct": 1
       },
       {
-        "skill": "RAG",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
+        "skill": "Go",
         "count": 1,
         "frequency_pct": 1
       },
@@ -12233,14 +12233,19 @@
         "frequency_pct": 59
       },
       {
+        "skill": "LLM",
+        "count": 18,
+        "frequency_pct": 53
+      },
+      {
         "skill": "Data Science",
         "count": 18,
         "frequency_pct": 53
       },
       {
         "skill": "Python",
-        "count": 14,
-        "frequency_pct": 41
+        "count": 15,
+        "frequency_pct": 44
       },
       {
         "skill": "Spark",
@@ -12253,11 +12258,6 @@
         "frequency_pct": 26
       },
       {
-        "skill": "LLM",
-        "count": 7,
-        "frequency_pct": 21
-      },
-      {
         "skill": "NLP",
         "count": 5,
         "frequency_pct": 15
@@ -12268,12 +12268,12 @@
         "frequency_pct": 15
       },
       {
-        "skill": "TensorFlow",
-        "count": 4,
-        "frequency_pct": 12
+        "skill": "AWS",
+        "count": 5,
+        "frequency_pct": 15
       },
       {
-        "skill": "AWS",
+        "skill": "TensorFlow",
         "count": 4,
         "frequency_pct": 12
       },
@@ -12286,6 +12286,11 @@
         "skill": "Power BI",
         "count": 3,
         "frequency_pct": 9
+      },
+      {
+        "skill": "TypeScript",
+        "count": 2,
+        "frequency_pct": 6
       },
       {
         "skill": "Scala",
@@ -12318,9 +12323,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 44,
+        "frequency_pct": 29
+      },
+      {
         "skill": "Python",
-        "count": 29,
-        "frequency_pct": 19
+        "count": 30,
+        "frequency_pct": 20
       },
       {
         "skill": "Linux",
@@ -12329,8 +12339,8 @@
       },
       {
         "skill": "SQL",
-        "count": 18,
-        "frequency_pct": 12
+        "count": 22,
+        "frequency_pct": 14
       },
       {
         "skill": "Java",
@@ -12343,12 +12353,12 @@
         "frequency_pct": 7
       },
       {
-        "skill": "JavaScript",
-        "count": 9,
-        "frequency_pct": 6
+        "skill": "AWS",
+        "count": 10,
+        "frequency_pct": 7
       },
       {
-        "skill": "AWS",
+        "skill": "JavaScript",
         "count": 9,
         "frequency_pct": 6
       },
@@ -12368,12 +12378,22 @@
         "frequency_pct": 5
       },
       {
+        "skill": "Machine Learning",
+        "count": 7,
+        "frequency_pct": 5
+      },
+      {
         "skill": "Tableau",
         "count": 6,
         "frequency_pct": 4
       },
       {
         "skill": "Docker",
+        "count": 5,
+        "frequency_pct": 3
+      },
+      {
+        "skill": "RAG",
         "count": 5,
         "frequency_pct": 3
       },
@@ -12391,11 +12411,6 @@
         "skill": "Kubernetes",
         "count": 4,
         "frequency_pct": 3
-      },
-      {
-        "skill": "Go",
-        "count": 3,
-        "frequency_pct": 2
       },
       {
         "skill": "Android Development",
@@ -12453,11 +12468,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Machine Learning",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
         "skill": "iOS Development",
         "count": 2,
         "frequency_pct": 1
@@ -12498,12 +12508,12 @@
         "frequency_pct": 1
       },
       {
-        "skill": "Terraform",
+        "skill": "Go",
         "count": 1,
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
+        "skill": "Terraform",
         "count": 1,
         "frequency_pct": 1
       },
@@ -12558,14 +12568,19 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 353,
+        "frequency_pct": 77
+      },
+      {
         "skill": "Android Development",
         "count": 250,
         "frequency_pct": 55
       },
       {
         "skill": "iOS Development",
-        "count": 206,
-        "frequency_pct": 45
+        "count": 228,
+        "frequency_pct": 50
       },
       {
         "skill": "Java",
@@ -12588,23 +12603,43 @@
         "frequency_pct": 20
       },
       {
+        "skill": "JavaScript",
+        "count": 70,
+        "frequency_pct": 15
+      },
+      {
         "skill": "Flutter",
         "count": 69,
         "frequency_pct": 15
       },
       {
-        "skill": "JavaScript",
-        "count": 31,
-        "frequency_pct": 7
+        "skill": "SQL",
+        "count": 60,
+        "frequency_pct": 13
       },
       {
-        "skill": "SQL",
-        "count": 30,
+        "skill": "RAG",
+        "count": 54,
+        "frequency_pct": 12
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 44,
+        "frequency_pct": 10
+      },
+      {
+        "skill": "Python",
+        "count": 31,
         "frequency_pct": 7
       },
       {
         "skill": "C++",
         "count": 27,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "AWS",
+        "count": 26,
         "frequency_pct": 6
       },
       {
@@ -12621,21 +12656,6 @@
         "skill": "Linux",
         "count": 18,
         "frequency_pct": 4
-      },
-      {
-        "skill": "Python",
-        "count": 17,
-        "frequency_pct": 4
-      },
-      {
-        "skill": "Go",
-        "count": 14,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "AWS",
-        "count": 14,
-        "frequency_pct": 3
       },
       {
         "skill": "R",
@@ -12665,11 +12685,6 @@
       {
         "skill": "Redux",
         "count": 10,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "TypeScript",
-        "count": 9,
         "frequency_pct": 2
       },
       {
@@ -12724,11 +12739,6 @@
       },
       {
         "skill": "MongoDB",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Machine Learning",
         "count": 5,
         "frequency_pct": 1
       },
@@ -12818,18 +12828,33 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 120,
+        "frequency_pct": 56
+      },
+      {
         "skill": "Java",
         "count": 30,
         "frequency_pct": 14
       },
       {
-        "skill": "Selenium",
+        "skill": "SQL",
+        "count": 22,
+        "frequency_pct": 10
+      },
+      {
+        "skill": "Python",
         "count": 17,
         "frequency_pct": 8
       },
       {
-        "skill": "SQL",
-        "count": 16,
+        "skill": "JavaScript",
+        "count": 17,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "Selenium",
+        "count": 17,
         "frequency_pct": 8
       },
       {
@@ -12838,12 +12863,17 @@
         "frequency_pct": 8
       },
       {
-        "skill": "JavaScript",
-        "count": 14,
+        "skill": "RAG",
+        "count": 16,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "iOS Development",
+        "count": 15,
         "frequency_pct": 7
       },
       {
-        "skill": "Python",
+        "skill": "AWS",
         "count": 12,
         "frequency_pct": 6
       },
@@ -12863,7 +12893,7 @@
         "frequency_pct": 5
       },
       {
-        "skill": "AWS",
+        "skill": "Machine Learning",
         "count": 10,
         "frequency_pct": 5
       },
@@ -12893,14 +12923,9 @@
         "frequency_pct": 3
       },
       {
-        "skill": "iOS Development",
-        "count": 7,
-        "frequency_pct": 3
-      },
-      {
         "skill": "C++",
-        "count": 5,
-        "frequency_pct": 2
+        "count": 6,
+        "frequency_pct": 3
       },
       {
         "skill": "Snowflake",
@@ -12909,11 +12934,6 @@
       },
       {
         "skill": "Cypress",
-        "count": 5,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
         "count": 5,
         "frequency_pct": 2
       },
@@ -12943,17 +12963,22 @@
         "frequency_pct": 1
       },
       {
+        "skill": "PHP",
+        "count": 3,
+        "frequency_pct": 1
+      },
+      {
         "skill": "MySQL",
         "count": 3,
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
+        "skill": "React",
         "count": 3,
         "frequency_pct": 1
       },
       {
-        "skill": "React",
+        "skill": "GCP",
         "count": 3,
         "frequency_pct": 1
       },
@@ -12973,12 +12998,7 @@
         "frequency_pct": 1
       },
       {
-        "skill": "PHP",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "GCP",
+        "skill": "LLM",
         "count": 2,
         "frequency_pct": 1
       },
@@ -12989,11 +13009,6 @@
       },
       {
         "skill": "PostgreSQL",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Solidity",
         "count": 1,
         "frequency_pct": 1
       },
@@ -13058,14 +13073,14 @@
         "frequency_pct": 61
       },
       {
+        "skill": "LLM",
+        "count": 11,
+        "frequency_pct": 61
+      },
+      {
         "skill": "SQL",
         "count": 8,
         "frequency_pct": 44
-      },
-      {
-        "skill": "LLM",
-        "count": 7,
-        "frequency_pct": 39
       },
       {
         "skill": "PyTorch",
@@ -13116,6 +13131,11 @@
         "skill": "Scikit-learn",
         "count": 1,
         "frequency_pct": 6
+      },
+      {
+        "skill": "TypeScript",
+        "count": 1,
+        "frequency_pct": 6
       }
     ]
   },
@@ -13129,8 +13149,8 @@
     "skills": [
       {
         "skill": "Python",
-        "count": 225,
-        "frequency_pct": 57
+        "count": 227,
+        "frequency_pct": 58
       },
       {
         "skill": "Kubernetes",
@@ -13139,7 +13159,7 @@
       },
       {
         "skill": "AWS",
-        "count": 200,
+        "count": 202,
         "frequency_pct": 51
       },
       {
@@ -13153,6 +13173,11 @@
         "frequency_pct": 46
       },
       {
+        "skill": "TypeScript",
+        "count": 174,
+        "frequency_pct": 44
+      },
+      {
         "skill": "Shell/Bash",
         "count": 146,
         "frequency_pct": 37
@@ -13161,11 +13186,6 @@
         "skill": "Docker",
         "count": 138,
         "frequency_pct": 35
-      },
-      {
-        "skill": "Go",
-        "count": 127,
-        "frequency_pct": 32
       },
       {
         "skill": "Ansible",
@@ -13183,6 +13203,11 @@
         "frequency_pct": 25
       },
       {
+        "skill": "SQL",
+        "count": 96,
+        "frequency_pct": 24
+      },
+      {
         "skill": "Java",
         "count": 90,
         "frequency_pct": 23
@@ -13198,14 +13223,14 @@
         "frequency_pct": 20
       },
       {
-        "skill": "SQL",
-        "count": 57,
-        "frequency_pct": 15
-      },
-      {
         "skill": "Apache Kafka",
         "count": 55,
         "frequency_pct": 14
+      },
+      {
+        "skill": "RAG",
+        "count": 52,
+        "frequency_pct": 13
       },
       {
         "skill": "Ruby",
@@ -13219,8 +13244,8 @@
       },
       {
         "skill": "JavaScript",
-        "count": 37,
-        "frequency_pct": 9
+        "count": 38,
+        "frequency_pct": 10
       },
       {
         "skill": "PostgreSQL",
@@ -13230,6 +13255,11 @@
       {
         "skill": "MySQL",
         "count": 31,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "Go",
+        "count": 30,
         "frequency_pct": 8
       },
       {
@@ -13245,6 +13275,11 @@
       {
         "skill": "Helm",
         "count": 25,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 22,
         "frequency_pct": 6
       },
       {
@@ -13278,11 +13313,6 @@
         "frequency_pct": 4
       },
       {
-        "skill": "TypeScript",
-        "count": 15,
-        "frequency_pct": 4
-      },
-      {
         "skill": "Spark",
         "count": 14,
         "frequency_pct": 4
@@ -13300,6 +13330,11 @@
       {
         "skill": "RabbitMQ",
         "count": 12,
+        "frequency_pct": 3
+      },
+      {
+        "skill": "iOS Development",
+        "count": 10,
         "frequency_pct": 3
       },
       {
@@ -13333,11 +13368,6 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 5,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Angular",
         "count": 4,
         "frequency_pct": 1
@@ -13366,16 +13396,6 @@
         "skill": "gRPC",
         "count": 3,
         "frequency_pct": 1
-      },
-      {
-        "skill": "Vite",
-        "count": 3,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Flask",
-        "count": 3,
-        "frequency_pct": 1
       }
     ]
   },
@@ -13388,9 +13408,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 99,
+        "frequency_pct": 41
+      },
+      {
         "skill": "AWS",
-        "count": 26,
-        "frequency_pct": 11
+        "count": 30,
+        "frequency_pct": 12
       },
       {
         "skill": "Linux",
@@ -13403,17 +13428,27 @@
         "frequency_pct": 9
       },
       {
-        "skill": "GCP",
-        "count": 16,
-        "frequency_pct": 7
-      },
-      {
-        "skill": "Python",
-        "count": 16,
-        "frequency_pct": 7
+        "skill": "RAG",
+        "count": 22,
+        "frequency_pct": 9
       },
       {
         "skill": "SQL",
+        "count": 21,
+        "frequency_pct": 9
+      },
+      {
+        "skill": "Python",
+        "count": 18,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 17,
+        "frequency_pct": 7
+      },
+      {
+        "skill": "GCP",
         "count": 16,
         "frequency_pct": 7
       },
@@ -13443,6 +13478,11 @@
         "frequency_pct": 3
       },
       {
+        "skill": "iOS Development",
+        "count": 8,
+        "frequency_pct": 3
+      },
+      {
         "skill": "Oracle DB",
         "count": 8,
         "frequency_pct": 3
@@ -13459,11 +13499,6 @@
       },
       {
         "skill": "Shell/Bash",
-        "count": 6,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
         "count": 6,
         "frequency_pct": 2
       },
@@ -13488,6 +13523,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "HTML/CSS",
+        "count": 4,
+        "frequency_pct": 2
+      },
+      {
         "skill": "PostgreSQL",
         "count": 4,
         "frequency_pct": 2
@@ -13503,17 +13543,7 @@
         "frequency_pct": 1
       },
       {
-        "skill": "HTML/CSS",
-        "count": 3,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Vite",
-        "count": 3,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "iOS Development",
         "count": 3,
         "frequency_pct": 1
       },
@@ -13628,22 +13658,32 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 16,
+        "frequency_pct": 50
+      },
+      {
         "skill": "Java",
         "count": 14,
         "frequency_pct": 44
       },
       {
         "skill": "Python",
-        "count": 10,
-        "frequency_pct": 31
+        "count": 11,
+        "frequency_pct": 34
       },
       {
-        "skill": "AWS",
-        "count": 8,
-        "frequency_pct": 25
+        "skill": "SQL",
+        "count": 11,
+        "frequency_pct": 34
       },
       {
         "skill": "JavaScript",
+        "count": 9,
+        "frequency_pct": 28
+      },
+      {
+        "skill": "AWS",
         "count": 8,
         "frequency_pct": 25
       },
@@ -13693,11 +13733,6 @@
         "frequency_pct": 9
       },
       {
-        "skill": "SQL",
-        "count": 3,
-        "frequency_pct": 9
-      },
-      {
         "skill": "Django",
         "count": 3,
         "frequency_pct": 9
@@ -13738,6 +13773,11 @@
         "frequency_pct": 9
       },
       {
+        "skill": "Machine Learning",
+        "count": 3,
+        "frequency_pct": 9
+      },
+      {
         "skill": "Oracle DB",
         "count": 2,
         "frequency_pct": 6
@@ -13759,6 +13799,11 @@
       },
       {
         "skill": "Redis",
+        "count": 2,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "RAG",
         "count": 2,
         "frequency_pct": 6
       },
@@ -13848,14 +13893,24 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 211,
+        "frequency_pct": 86
+      },
+      {
         "skill": "JavaScript",
-        "count": 195,
-        "frequency_pct": 79
+        "count": 198,
+        "frequency_pct": 80
       },
       {
         "skill": "Java",
         "count": 148,
         "frequency_pct": 60
+      },
+      {
+        "skill": "SQL",
+        "count": 145,
+        "frequency_pct": 59
       },
       {
         "skill": "HTML/CSS",
@@ -13868,9 +13923,14 @@
         "frequency_pct": 46
       },
       {
-        "skill": "SQL",
-        "count": 105,
-        "frequency_pct": 43
+        "skill": "Machine Learning",
+        "count": 109,
+        "frequency_pct": 44
+      },
+      {
+        "skill": "AWS",
+        "count": 84,
+        "frequency_pct": 34
       },
       {
         "skill": "C#",
@@ -13888,18 +13948,13 @@
         "frequency_pct": 32
       },
       {
-        "skill": "TypeScript",
-        "count": 62,
-        "frequency_pct": 25
-      },
-      {
-        "skill": "AWS",
-        "count": 55,
-        "frequency_pct": 22
-      },
-      {
         "skill": "Docker",
         "count": 45,
+        "frequency_pct": 18
+      },
+      {
+        "skill": "Python",
+        "count": 44,
         "frequency_pct": 18
       },
       {
@@ -13911,11 +13966,6 @@
         "skill": "MySQL",
         "count": 42,
         "frequency_pct": 17
-      },
-      {
-        "skill": "Python",
-        "count": 35,
-        "frequency_pct": 14
       },
       {
         "skill": "Vue",
@@ -13943,6 +13993,11 @@
         "frequency_pct": 10
       },
       {
+        "skill": "RAG",
+        "count": 23,
+        "frequency_pct": 9
+      },
+      {
         "skill": "Scala",
         "count": 22,
         "frequency_pct": 9
@@ -13965,11 +14020,6 @@
       {
         "skill": "Unit Testing",
         "count": 15,
-        "frequency_pct": 6
-      },
-      {
-        "skill": "Go",
-        "count": 14,
         "frequency_pct": 6
       },
       {
@@ -14053,11 +14103,6 @@
         "frequency_pct": 2
       },
       {
-        "skill": "Machine Learning",
-        "count": 5,
-        "frequency_pct": 2
-      },
-      {
         "skill": "Spark",
         "count": 4,
         "frequency_pct": 2
@@ -14069,6 +14114,11 @@
       },
       {
         "skill": "Android Development",
+        "count": 4,
+        "frequency_pct": 2
+      },
+      {
+        "skill": "iOS Development",
         "count": 4,
         "frequency_pct": 2
       },
@@ -14088,12 +14138,7 @@
         "frequency_pct": 2
       },
       {
-        "skill": "TensorFlow",
-        "count": 3,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Flask",
+        "skill": "Go",
         "count": 3,
         "frequency_pct": 1
       }
@@ -14108,7 +14153,32 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 68,
+        "frequency_pct": 80
+      },
+      {
+        "skill": "RAG",
+        "count": 17,
+        "frequency_pct": 20
+      },
+      {
+        "skill": "Python",
+        "count": 9,
+        "frequency_pct": 11
+      },
+      {
         "skill": "SQL",
+        "count": 9,
+        "frequency_pct": 11
+      },
+      {
+        "skill": "AWS",
+        "count": 7,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "Machine Learning",
         "count": 7,
         "frequency_pct": 8
       },
@@ -14133,27 +14203,12 @@
         "frequency_pct": 6
       },
       {
-        "skill": "Python",
-        "count": 3,
-        "frequency_pct": 4
-      },
-      {
         "skill": "HTML/CSS",
         "count": 3,
         "frequency_pct": 4
       },
       {
-        "skill": "AWS",
-        "count": 2,
-        "frequency_pct": 2
-      },
-      {
         "skill": "MySQL",
-        "count": 2,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Go",
         "count": 2,
         "frequency_pct": 2
       },
@@ -14164,11 +14219,6 @@
       },
       {
         "skill": "Scala",
-        "count": 2,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Machine Learning",
         "count": 2,
         "frequency_pct": 2
       },
@@ -14218,11 +14268,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "TypeScript",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
         "skill": "C#",
         "count": 1,
         "frequency_pct": 1
@@ -14258,9 +14303,14 @@
         "frequency_pct": 44
       },
       {
+        "skill": "TypeScript",
+        "count": 36,
+        "frequency_pct": 40
+      },
+      {
         "skill": "Python",
-        "count": 32,
-        "frequency_pct": 36
+        "count": 33,
+        "frequency_pct": 37
       },
       {
         "skill": "Kubernetes",
@@ -14278,14 +14328,14 @@
         "frequency_pct": 28
       },
       {
+        "skill": "SQL",
+        "count": 24,
+        "frequency_pct": 27
+      },
+      {
         "skill": "Linux",
         "count": 22,
         "frequency_pct": 24
-      },
-      {
-        "skill": "SQL",
-        "count": 18,
-        "frequency_pct": 20
       },
       {
         "skill": "Shell/Bash",
@@ -14343,17 +14393,27 @@
         "frequency_pct": 8
       },
       {
+        "skill": "JavaScript",
+        "count": 7,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "RAG",
+        "count": 7,
+        "frequency_pct": 8
+      },
+      {
         "skill": "Snowflake",
         "count": 6,
         "frequency_pct": 7
       },
       {
-        "skill": "JavaScript",
-        "count": 6,
-        "frequency_pct": 7
+        "skill": "MongoDB",
+        "count": 5,
+        "frequency_pct": 6
       },
       {
-        "skill": "MongoDB",
+        "skill": "Machine Learning",
         "count": 5,
         "frequency_pct": 6
       },
@@ -14383,11 +14443,6 @@
         "frequency_pct": 4
       },
       {
-        "skill": "Go",
-        "count": 4,
-        "frequency_pct": 4
-      },
-      {
         "skill": "REST API",
         "count": 4,
         "frequency_pct": 4
@@ -14413,6 +14468,11 @@
         "frequency_pct": 2
       },
       {
+        "skill": "iOS Development",
+        "count": 2,
+        "frequency_pct": 2
+      },
+      {
         "skill": "Helm",
         "count": 2,
         "frequency_pct": 2
@@ -14431,11 +14491,6 @@
         "skill": "PostgreSQL",
         "count": 2,
         "frequency_pct": 2
-      },
-      {
-        "skill": "TypeScript",
-        "count": 1,
-        "frequency_pct": 1
       },
       {
         "skill": "React",
@@ -14483,17 +14538,12 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Go",
+        "count": 1,
+        "frequency_pct": 1
+      },
+      {
         "skill": "RabbitMQ",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "GitHub Actions",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Angular",
         "count": 1,
         "frequency_pct": 1
       }
@@ -14508,9 +14558,14 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 16,
+        "frequency_pct": 67
+      },
+      {
         "skill": "Python",
-        "count": 14,
-        "frequency_pct": 58
+        "count": 15,
+        "frequency_pct": 62
       },
       {
         "skill": "Shell/Bash",
@@ -14519,8 +14574,13 @@
       },
       {
         "skill": "AWS",
-        "count": 10,
-        "frequency_pct": 42
+        "count": 11,
+        "frequency_pct": 46
+      },
+      {
+        "skill": "SQL",
+        "count": 9,
+        "frequency_pct": 38
       },
       {
         "skill": "Linux",
@@ -14538,12 +14598,12 @@
         "frequency_pct": 29
       },
       {
-        "skill": "SQL",
+        "skill": "Azure",
         "count": 6,
         "frequency_pct": 25
       },
       {
-        "skill": "Azure",
+        "skill": "RAG",
         "count": 6,
         "frequency_pct": 25
       },
@@ -14556,11 +14616,6 @@
         "skill": "Ansible",
         "count": 5,
         "frequency_pct": 21
-      },
-      {
-        "skill": "Go",
-        "count": 4,
-        "frequency_pct": 17
       },
       {
         "skill": "Kubernetes",
@@ -14576,6 +14631,11 @@
         "skill": "Terraform",
         "count": 4,
         "frequency_pct": 17
+      },
+      {
+        "skill": "iOS Development",
+        "count": 3,
+        "frequency_pct": 12
       },
       {
         "skill": "Jenkins",
@@ -14606,6 +14666,11 @@
         "skill": "GitHub Actions",
         "count": 2,
         "frequency_pct": 8
+      },
+      {
+        "skill": "Go",
+        "count": 1,
+        "frequency_pct": 4
       },
       {
         "skill": "Oracle DB",
@@ -14673,14 +14738,24 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 131,
+        "frequency_pct": 60
+      },
+      {
+        "skill": "iOS Development",
+        "count": 77,
+        "frequency_pct": 35
+      },
+      {
         "skill": "Android Development",
         "count": 40,
         "frequency_pct": 18
       },
       {
-        "skill": "iOS Development",
-        "count": 35,
-        "frequency_pct": 16
+        "skill": "Machine Learning",
+        "count": 28,
+        "frequency_pct": 13
       },
       {
         "skill": "Java",
@@ -14688,9 +14763,19 @@
         "frequency_pct": 9
       },
       {
-        "skill": "Go",
+        "skill": "SQL",
         "count": 17,
         "frequency_pct": 8
+      },
+      {
+        "skill": "RAG",
+        "count": 17,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "Python",
+        "count": 16,
+        "frequency_pct": 7
       },
       {
         "skill": "Scala",
@@ -14699,6 +14784,11 @@
       },
       {
         "skill": "HTML/CSS",
+        "count": 14,
+        "frequency_pct": 6
+      },
+      {
+        "skill": "JavaScript",
         "count": 13,
         "frequency_pct": 6
       },
@@ -14706,21 +14796,6 @@
         "skill": "Rust",
         "count": 11,
         "frequency_pct": 5
-      },
-      {
-        "skill": "JavaScript",
-        "count": 11,
-        "frequency_pct": 5
-      },
-      {
-        "skill": "Python",
-        "count": 10,
-        "frequency_pct": 5
-      },
-      {
-        "skill": "SQL",
-        "count": 8,
-        "frequency_pct": 4
       },
       {
         "skill": "Data Science",
@@ -14758,6 +14833,11 @@
         "frequency_pct": 3
       },
       {
+        "skill": "AWS",
+        "count": 6,
+        "frequency_pct": 3
+      },
+      {
         "skill": "React Native",
         "count": 5,
         "frequency_pct": 2
@@ -14773,17 +14853,22 @@
         "frequency_pct": 2
       },
       {
+        "skill": "GCP",
+        "count": 4,
+        "frequency_pct": 2
+      },
+      {
         "skill": "REST API",
         "count": 3,
         "frequency_pct": 1
       },
       {
-        "skill": "GCP",
+        "skill": "MySQL",
         "count": 3,
         "frequency_pct": 1
       },
       {
-        "skill": "MySQL",
+        "skill": "PHP",
         "count": 3,
         "frequency_pct": 1
       },
@@ -14828,17 +14913,7 @@
         "frequency_pct": 1
       },
       {
-        "skill": "AWS",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
         "skill": "DynamoDB",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Machine Learning",
         "count": 1,
         "frequency_pct": 1
       },
@@ -14854,11 +14929,6 @@
       },
       {
         "skill": "Fine-tuning (LoRA)",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "TypeScript",
         "count": 1,
         "frequency_pct": 1
       },
@@ -14898,11 +14968,6 @@
         "frequency_pct": 1
       },
       {
-        "skill": "PHP",
-        "count": 1,
-        "frequency_pct": 1
-      },
-      {
         "skill": "Redis",
         "count": 1,
         "frequency_pct": 1
@@ -14923,14 +14988,19 @@
     "top_locations": [],
     "skills": [
       {
+        "skill": "TypeScript",
+        "count": 353,
+        "frequency_pct": 92
+      },
+      {
         "skill": "JavaScript",
-        "count": 328,
-        "frequency_pct": 86
+        "count": 337,
+        "frequency_pct": 88
       },
       {
         "skill": "HTML/CSS",
-        "count": 270,
-        "frequency_pct": 70
+        "count": 273,
+        "frequency_pct": 71
       },
       {
         "skill": "React",
@@ -14943,14 +15013,19 @@
         "frequency_pct": 67
       },
       {
-        "skill": "TypeScript",
-        "count": 168,
-        "frequency_pct": 44
+        "skill": "Machine Learning",
+        "count": 253,
+        "frequency_pct": 66
       },
       {
         "skill": "Redux",
         "count": 123,
         "frequency_pct": 32
+      },
+      {
+        "skill": "AWS",
+        "count": 100,
+        "frequency_pct": 26
       },
       {
         "skill": "Angular",
@@ -14978,9 +15053,19 @@
         "frequency_pct": 14
       },
       {
+        "skill": "RAG",
+        "count": 52,
+        "frequency_pct": 14
+      },
+      {
         "skill": "Unit Testing",
         "count": 46,
         "frequency_pct": 12
+      },
+      {
+        "skill": "SQL",
+        "count": 38,
+        "frequency_pct": 10
       },
       {
         "skill": "GraphQL",
@@ -14993,14 +15078,14 @@
         "frequency_pct": 8
       },
       {
-        "skill": "AWS",
-        "count": 30,
-        "frequency_pct": 8
-      },
-      {
         "skill": "Next.js",
         "count": 26,
         "frequency_pct": 7
+      },
+      {
+        "skill": "Python",
+        "count": 24,
+        "frequency_pct": 6
       },
       {
         "skill": "Scala",
@@ -15013,14 +15098,9 @@
         "frequency_pct": 6
       },
       {
-        "skill": "SQL",
-        "count": 19,
+        "skill": "iOS Development",
+        "count": 21,
         "frequency_pct": 5
-      },
-      {
-        "skill": "Python",
-        "count": 15,
-        "frequency_pct": 4
       },
       {
         "skill": "MongoDB",
@@ -15034,11 +15114,6 @@
       },
       {
         "skill": "Jenkins",
-        "count": 13,
-        "frequency_pct": 3
-      },
-      {
-        "skill": "Go",
         "count": 13,
         "frequency_pct": 3
       },
@@ -15078,18 +15153,8 @@
         "frequency_pct": 3
       },
       {
-        "skill": "iOS Development",
-        "count": 9,
-        "frequency_pct": 2
-      },
-      {
         "skill": "Rust",
         "count": 8,
-        "frequency_pct": 2
-      },
-      {
-        "skill": "Machine Learning",
-        "count": 7,
         "frequency_pct": 2
       },
       {
@@ -15158,17 +15223,17 @@
         "frequency_pct": 1
       },
       {
+        "skill": "Go",
+        "count": 2,
+        "frequency_pct": 1
+      },
+      {
         "skill": "Elasticsearch",
         "count": 2,
         "frequency_pct": 1
       },
       {
         "skill": "NestJS",
-        "count": 2,
-        "frequency_pct": 1
-      },
-      {
-        "skill": "Spring Boot",
         "count": 2,
         "frequency_pct": 1
       }
@@ -15213,11 +15278,6 @@
         "frequency_pct": 33
       },
       {
-        "skill": "Go",
-        "count": 2,
-        "frequency_pct": 33
-      },
-      {
         "skill": "SQL",
         "count": 2,
         "frequency_pct": 33
@@ -15229,6 +15289,11 @@
       },
       {
         "skill": "Terraform",
+        "count": 2,
+        "frequency_pct": 33
+      },
+      {
+        "skill": "TypeScript",
         "count": 2,
         "frequency_pct": 33
       },
@@ -15278,6 +15343,11 @@
         "frequency_pct": 17
       },
       {
+        "skill": "JavaScript",
+        "count": 1,
+        "frequency_pct": 17
+      },
+      {
         "skill": "Shell/Bash",
         "count": 1,
         "frequency_pct": 17
@@ -15294,6 +15364,11 @@
       },
       {
         "skill": "Ansible",
+        "count": 1,
+        "frequency_pct": 17
+      },
+      {
+        "skill": "Machine Learning",
         "count": 1,
         "frequency_pct": 17
       }
@@ -15313,6 +15388,11 @@
         "frequency_pct": 67
       },
       {
+        "skill": "TypeScript",
+        "count": 10,
+        "frequency_pct": 67
+      },
+      {
         "skill": "Java",
         "count": 8,
         "frequency_pct": 53
@@ -15321,6 +15401,11 @@
         "skill": "React",
         "count": 8,
         "frequency_pct": 53
+      },
+      {
+        "skill": "SQL",
+        "count": 7,
+        "frequency_pct": 47
       },
       {
         "skill": "AWS",
@@ -15336,6 +15421,11 @@
         "skill": "MySQL",
         "count": 5,
         "frequency_pct": 33
+      },
+      {
+        "skill": "Python",
+        "count": 4,
+        "frequency_pct": 27
       },
       {
         "skill": "HTML/CSS",
@@ -15358,16 +15448,6 @@
         "frequency_pct": 27
       },
       {
-        "skill": "Python",
-        "count": 3,
-        "frequency_pct": 20
-      },
-      {
-        "skill": "Go",
-        "count": 3,
-        "frequency_pct": 20
-      },
-      {
         "skill": "Angular",
         "count": 3,
         "frequency_pct": 20
@@ -15383,14 +15463,14 @@
         "frequency_pct": 20
       },
       {
-        "skill": "Docker",
+        "skill": "Machine Learning",
         "count": 3,
         "frequency_pct": 20
       },
       {
-        "skill": "SQL",
-        "count": 2,
-        "frequency_pct": 13
+        "skill": "Docker",
+        "count": 3,
+        "frequency_pct": 20
       },
       {
         "skill": "Linux",
@@ -15458,11 +15538,6 @@
         "frequency_pct": 7
       },
       {
-        "skill": "TypeScript",
-        "count": 1,
-        "frequency_pct": 7
-      },
-      {
         "skill": "Redis",
         "count": 1,
         "frequency_pct": 7
@@ -15518,6 +15593,16 @@
         "frequency_pct": 50
       },
       {
+        "skill": "TypeScript",
+        "count": 5,
+        "frequency_pct": 42
+      },
+      {
+        "skill": "Machine Learning",
+        "count": 5,
+        "frequency_pct": 42
+      },
+      {
         "skill": "Python",
         "count": 3,
         "frequency_pct": 25
@@ -15543,12 +15628,7 @@
         "frequency_pct": 17
       },
       {
-        "skill": "Go",
-        "count": 1,
-        "frequency_pct": 8
-      },
-      {
-        "skill": "Machine Learning",
+        "skill": "RAG",
         "count": 1,
         "frequency_pct": 8
       },
@@ -15559,6 +15639,11 @@
       },
       {
         "skill": "GraphQL",
+        "count": 1,
+        "frequency_pct": 8
+      },
+      {
+        "skill": "AWS",
         "count": 1,
         "frequency_pct": 8
       }

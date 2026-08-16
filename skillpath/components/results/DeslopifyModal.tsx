@@ -100,11 +100,26 @@ export function DeslopifyModal({
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md" data-lenis-prevent>
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deslopify-title"
+        data-lenis-prevent
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -121,7 +136,7 @@ export function DeslopifyModal({
                 <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block">
                   Feature #1 • Passive Verb De-Slopifier
                 </span>
-                <h3 className="font-display text-title-md text-ink">
+                <h3 id="deslopify-title" className="font-display text-title-md text-ink">
                   1-Click AI Buzzword De-Slopifier
                 </h3>
               </div>

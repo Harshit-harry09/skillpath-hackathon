@@ -102,7 +102,8 @@ export function AgentTracePanel({ trace, className }: { trace?: TraceEvent[]; cl
           >
             <div
               ref={scrollRef}
-              className="max-h-[320px] overflow-y-auto border-t border-white/[0.04] scrollbar-thin"
+              data-lenis-prevent
+              className="max-h-[320px] overflow-y-auto overscroll-contain touch-pan-y border-t border-white/[0.04] scrollbar-thin"
             >
               {events.map((event, i) => {
                 const config = ACTOR_CONFIG[event.actor] || { label: event.actor, color: '#9CA3AF', icon: <Cpu className="w-3.5 h-3.5" /> };

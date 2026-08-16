@@ -93,12 +93,13 @@ ${nextRecommendation
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" data-lenis-prevent>
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-surface-card border border-hairline rounded-[32px] max-w-2xl w-full p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+          data-lenis-prevent
+          className="bg-surface-card border border-hairline rounded-[32px] max-w-2xl w-full p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto overscroll-contain touch-pan-y scrollbar-thin"
         >
           {/* Close button */}
           <button

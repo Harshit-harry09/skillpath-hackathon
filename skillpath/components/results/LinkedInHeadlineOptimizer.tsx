@@ -16,7 +16,7 @@ export function LinkedInHeadlineOptimizer({ roleLabel, topSkills }: LinkedInHead
   const generate = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/generate-linkedin-headlines', {
+      const res = await fetch('/api/generate/linkedin-headlines', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: roleLabel, topSkills: topSkills.slice(0, 6) }),

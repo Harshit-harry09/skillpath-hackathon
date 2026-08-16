@@ -710,10 +710,10 @@ export default function JobsTrackerPage() {
 
       {/* Job Description View Modal */}
       {selectedJob && (
-        <div className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="tactile-card bg-surface-card max-w-2xl w-full max-h-[85vh] flex flex-col rounded-3xl relative border border-hairline shadow-2xl animate-fade-in overflow-hidden">
+        <div className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" data-lenis-prevent>
+          <div className="tactile-card bg-surface-card max-w-2xl w-full max-h-[85vh] flex flex-col rounded-3xl relative border border-hairline shadow-2xl animate-fade-in overflow-hidden" data-lenis-prevent>
             {/* Modal Header */}
-            <div className="p-6 border-b border-hairline flex items-start justify-between gap-4 bg-surface-strong">
+            <div className="p-6 border-b border-hairline flex items-start justify-between gap-4 bg-surface-strong shrink-0">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-brand-pink text-white">
                   {selectedJob.company_name}
@@ -728,14 +728,15 @@ export default function JobsTrackerPage() {
 
               <button
                 onClick={() => setSelectedJob(null)}
-                className="text-muted hover:text-ink p-1 rounded-lg bg-surface-card"
+                className="text-muted hover:text-ink p-1.5 rounded-lg bg-surface-card active:scale-95 transition-transform"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto space-y-4 text-sm text-ink prose prose-slate dark:prose-invert max-w-none">
+            <div className="p-6 flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y space-y-4 text-sm text-ink prose prose-slate dark:prose-invert max-w-none scrollbar-thin" data-lenis-prevent>
               {selectedJob.content_html ? (
                 <div
                   dangerouslySetInnerHTML={{ __html: selectedJob.content_html }}
@@ -747,7 +748,7 @@ export default function JobsTrackerPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-hairline bg-surface-strong flex items-center justify-between">
+            <div className="p-4 border-t border-hairline bg-surface-strong flex items-center justify-between shrink-0">
               <span className="text-xs text-muted font-mono">ID: {selectedJob.gh_id}</span>
 
               <a

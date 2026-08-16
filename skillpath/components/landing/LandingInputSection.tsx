@@ -1,8 +1,8 @@
 'use client';
 // updated
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Sparkles, ArrowRight, Cpu, Terminal, ChevronRight } from 'lucide-react';
@@ -11,7 +11,35 @@ const sampleRoles = ['Full-Stack AI Engineer', 'LLM Systems Architect', 'Senior 
 
 export function LandingInputSection() {
   const [jd, setJd] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
+  const streamTimerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    return () => {
+      if (streamTimerRef.current) clearInterval(streamTimerRef.current);
+    };
+  }, []);
+
+  const streamSampleText = (role: string) => {
+    if (streamTimerRef.current) clearInterval(streamTimerRef.current);
+    const fullText = `Targeting role: ${role}. Requires core engineering, architecture, and deployment standards.`;
+    setIsStreaming(true);
+    let currentIdx = 0;
+    const chunkSize = 4;
+    setJd('');
+
+    streamTimerRef.current = setInterval(() => {
+      currentIdx += chunkSize;
+      if (currentIdx >= fullText.length) {
+        setJd(fullText);
+        if (streamTimerRef.current) clearInterval(streamTimerRef.current);
+        setIsStreaming(false);
+      } else {
+        setJd(fullText.slice(0, currentIdx));
+      }
+    }, 14);
+  };
 
   const handleStartWithText = (textToSubmit: string) => {
     const finalJd = textToSubmit.trim();
@@ -25,8 +53,11 @@ export function LandingInputSection() {
   };
 
   return (
-    <section id="analyze" className="relative py-16 md:py-28 px-4 sm:px-8 lg:px-24 flex justify-center" style={{ background: 'var(--color-canvas)' }}>
-      <div className="max-w-[1280px] w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+    <section id="analyze" className="relative py-16 md:py-28 px-4 sm:px-8 lg:px-24 flex justify-center overflow-hidden" style={{ background: 'var(--color-canvas)' }}>
+      {/* Ambient Radial Blur Glow */}
+      <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-br from-[#2DD4BF]/6 via-[#ff4d8b]/4 to-transparent blur-3xl pointer-events-none -z-0" />
+
+      <div className="max-w-[1280px] w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start relative z-10">
         {/* Left */}
         <motion.div initial={{ opacity: 0, x: -32 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="lg:col-span-5 space-y-6">
           <div>
@@ -34,12 +65,12 @@ export function LandingInputSection() {
               <div className="h-1 w-10 rounded" style={{ background: '#2DD4BF', borderRadius: '2px' }} />
               <span className="font-mono text-[11px] font-black uppercase tracking-[0.18em]" style={{ color: 'var(--color-muted)' }}>Gap Engine</span>
             </div>
-            <h2 className="font-black leading-[0.95] tracking-tighter" style={{ fontSize: 'clamp(36px, 5vw, 62px)', color: 'var(--color-ink)', letterSpacing: '-0.04em' }}>
+            <h2 className="font-comico font-normal uppercase leading-[0.98] tracking-wide" style={{ fontSize: 'clamp(36px, 5vw, 62px)', color: 'var(--color-ink)' }}>
               Bridge your<br />skill gap<br /><span style={{ color: '#2DD4BF' }}>in real time.</span>
             </h2>
           </div>
 
-          <p className="text-[16px] font-medium leading-relaxed" style={{ color: 'var(--color-muted)', maxWidth: '380px' }}>
+          <p className="font-zodiak text-[18px] font-normal leading-relaxed" style={{ color: 'var(--color-muted)', maxWidth: '400px' }}>
             Paste any target Job Description. Our deep learning engine extracts missing competencies and constructs your step-by-step career path.
           </p>
 
@@ -50,13 +81,11 @@ export function LandingInputSection() {
                 <button
                   key={role}
                   type="button"
-                  onClick={() => {
-                    setJd(`Targeting role: ${role}. Requires core engineering, architecture, and deployment standards.`);
-                  }}
-                  className="flex items-center gap-1.5 px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-wide transition-all duration-150 active:translate-y-[1px] cursor-pointer hover:border-brand-pink"
+                  onClick={() => streamSampleText(role)}
+                  className="flex items-center gap-1.5 px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-wide transition-all duration-150 active:scale-[0.97] hover:-translate-y-0.5 cursor-pointer hover:border-[#ff4d8b]"
                   style={{ background: 'var(--color-surface-soft)', color: 'var(--color-ink)', border: '2px solid var(--bold-border)', borderRadius: '8px', boxShadow: '2px 2px 0 var(--bold-border)' }}
                 >
-                  <ChevronRight className="w-3 h-3" />{role}
+                  <ChevronRight className="w-3 h-3 text-[#2DD4BF]" />{role}
                 </button>
               ))}
             </div>
@@ -72,7 +101,16 @@ export function LandingInputSection() {
                 <Terminal className="w-4 h-4" style={{ color: '#2DD4BF' }} />
                 <span className="font-mono text-[11px] font-black uppercase tracking-widest" style={{ color: 'var(--color-canvas)' }}>Target JD Evaluator · AI Parser</span>
               </div>
-              <div className="px-2.5 py-1 rounded-full font-mono text-[10px] font-black" style={{ background: '#2DD4BF22', color: '#2DD4BF', border: '1px solid #2DD4BF44' }}>READY</div>
+              <div
+                className="px-2.5 py-1 rounded-full font-mono text-[10px] font-black transition-colors duration-200"
+                style={{
+                  background: isStreaming ? '#ff4d8b22' : '#2DD4BF22',
+                  color: isStreaming ? '#ff4d8b' : '#2DD4BF',
+                  border: isStreaming ? '1px solid #ff4d8b55' : '1px solid #2DD4BF44',
+                }}
+              >
+                {isStreaming ? 'STREAMING...' : 'READY'}
+              </div>
             </div>
 
             <div className="p-5 md:p-7">
@@ -88,26 +126,26 @@ export function LandingInputSection() {
                 <label htmlFor="jd-input" className="sr-only">Target Job Description</label>
                 <textarea
                   id="jd-input"
-                  placeholder="Paste target Job Description, role requirements, or expectations here…"
-                  className="w-full min-h-[260px] resize-none font-mono text-[14px] leading-7 bg-transparent rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
-                  style={{ paddingLeft: '52px', paddingTop: '16px', paddingRight: '16px', paddingBottom: '16px', color: 'var(--color-ink)' }}
                   value={jd}
                   onChange={(e) => setJd(e.target.value)}
-                  spellCheck={false}
-                  autoComplete="off"
+                  placeholder="Paste any target job description here... (e.g. 'We are hiring a Senior ML Engineer proficient in PyTorch, Distributed Systems, CUDA optimization, and Vector DBs...')"
+                  rows={8}
+                  className="w-full bg-transparent pl-12 pr-4 py-4 font-mono text-[13px] leading-7 text-ink placeholder:text-muted/40 focus:outline-none resize-none"
+                  style={{ color: 'var(--color-ink)' }}
                 />
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-4 mt-5 pt-5" style={{ borderTop: '2px solid var(--color-hairline)' }}>
-                <div className="flex items-center gap-2 text-[12px] font-mono font-bold" style={{ color: 'var(--color-muted)' }}>
-                  <Sparkles className="w-4 h-4" style={{ color: '#ff4d8b' }} />
-                  <span>{jd.length} chars · instant skill match &amp; gap analysis</span>
+              <div className="flex flex-wrap items-center justify-between gap-4 mt-5">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[11px] font-bold" style={{ color: 'var(--color-muted)' }}>
+                    {jd.trim().length > 0 ? `${jd.trim().split(/\s+/).length} words detected` : 'Waiting for input...'}
+                  </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleStartWithText(jd)}
                   disabled={!jd.trim()}
-                  className="flex items-center gap-2.5 font-black uppercase tracking-wider transition-all duration-150 active:translate-y-[2px] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0"
+                  className="flex items-center gap-2.5 font-comico uppercase tracking-wider transition-all duration-150 active:scale-[0.97] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0"
                   style={{
                     background: jd.trim() ? '#2DD4BF' : 'var(--color-muted)',
                     color: '#0a0a0a',

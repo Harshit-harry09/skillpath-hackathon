@@ -1,4 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap");
+@import "./originkit-section-themes.css";
+@import "./originkit-section-theme.css";
+@import url("https://api.fontshare.com/v2/css?f[]=britney@300,400,700,1000&f[]=comico@400&f[]=zodiak@400,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=DM+Mono:wght@400;500&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Hedvig+Letters+Serif:opsz@12..24&family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Lato:wght@400;700&family=Manrope:wght@400;500;600;700&family=Monda:wght@400;500;600;700&family=Outfit:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Red+Hat+Display:wght@400;500;600;700&family=Rethink+Sans:wght@400;500;600;700&family=Tillana:wght@400;500;600;700&family=Urbanist:wght@400;500;600;700&display=swap");
 /* updated */
+
+/* Local bundled fonts for 100% zero-latency reliability */
+@font-face {
+  font-family: 'Britney';
+  src: url('/fonts/britney-variable.woff2') format('woff2'),
+    url('/fonts/britney-regular.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Britney';
+  src: url('/fonts/britney-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Britney';
+  src: url('/fonts/britney-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Comico';
+  src: url('/fonts/comico-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/zodiak-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/zodiak-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,17 +85,28 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+/* Sleek minimal scrollbar with keyboard/wheel visibility */
 ::-webkit-scrollbar {
-  display: none;
+  width: 6px;
+  height: 6px;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
 html {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline) transparent;
 }
 
 :root {
@@ -53,18 +120,17 @@ html {
   --color-muted-soft: #9a9a9a;
   --color-hairline: rgba(26, 25, 23, 0.1);
   --color-hairline-soft: #f0f0f0;
-  --color-canvas: #e1dfea;
+  --color-canvas: #F7F1E5;
   --color-surface-soft: #faf5e8;
   --color-surface-card: #f5f0e0;
   --color-surface-strong: #ebe6d6;
-  --color-surface-dark: #0a1a1a;
-  --color-surface-dark-elevated: #1a2a2a;
+  --color-surface-dark: #121212;
+  --color-surface-dark-elevated: #1e1e1e;
   --color-on-primary: #ffffff;
   --color-on-dark: #ffffff;
   --color-on-dark-soft: #a0a0a0;
 
   --color-bulb-glow: rgba(255, 120, 0, 0.85);
-  /* Much stronger, more saturated orange for light mode */
 
   --color-brand-pink: #ff4d8b;
   --color-brand-teal: #1a3a3a;
@@ -92,7 +158,7 @@ html {
   --radius-lg: 16px;
 
   /* Anomalous Matter Hero Variables */
-  --sky-300: 203, 92%, 53%;
+  --sky-300: 0, 0%, 70%;
   --gray-300: 0, 0%, 70%;
 
   /* Theme-safe maximalist tokens */
@@ -118,30 +184,30 @@ html {
 }
 
 .dark {
-  --background: 240, 10%, 4%;
+  --background: 0, 0%, 3%;
   --foreground: 0, 0%, 98%;
-  --sky-300: 217, 91%, 60%;
-  --gray-300: 240, 4%, 16%;
+  --sky-300: 0, 0%, 70%;
+  --gray-300: 0, 0%, 16%;
   --color-primary: #ffffff;
   --color-primary-active: #e2e2e2;
   --color-primary-disabled: #1a1a1e;
-  --color-ink: #f8fafc;
-  --color-body: #94a3b8;
-  --color-body-strong: #f1f5f9;
-  --color-muted: #64748b;
-  --color-muted-soft: #334155;
+  --color-ink: #f5f5f5;
+  --color-body: #a3a3a3;
+  --color-body-strong: #f5f5f5;
+  --color-muted: #737373;
+  --color-muted-soft: #262626;
   --color-hairline: rgba(255, 255, 255, 0.08);
-  --color-hairline-soft: #1e1e24;
-  --color-canvas: #060608;
-  /* Premium deep onyx with slight blue tint */
-  --color-surface-soft: #0c0c0f;
-  --color-surface-card: #111116;
-  --color-surface-strong: #1a1a22;
+  --color-hairline-soft: #1e1e1e;
+  --color-canvas: #050505;
+  /* Pure luxury dark neutral, zero blue tint */
+  --color-surface-soft: #0a0a0a;
+  --color-surface-card: #121212;
+  --color-surface-strong: #1a1a1a;
   --color-surface-dark: #fffaf0;
   --color-surface-dark-elevated: #faf5e8;
-  --color-on-primary: #020617;
-  --color-on-dark: #020617;
-  --color-on-dark-soft: #64748b;
+  --color-on-primary: #000000;
+  --color-on-dark: #000000;
+  --color-on-dark-soft: #737373;
 
   --color-bulb-glow: rgba(232, 185, 74, 0.35);
 
@@ -181,6 +247,9 @@ body {
       rgba(10, 10, 10, 0.15) 80%,
       rgba(10, 10, 10, 0.45) 100%);
   -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -341,9 +410,12 @@ body {
 }
 
 @keyframes rippleEffect {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(-50%, -50%) scale(1);
   }
+
   50% {
     transform: translate(-50%, -50%) scale(0.92);
   }
@@ -355,11 +427,12 @@ body {
   will-change: transform;
 }
 
-@theme inline {
+:root {
   --animate-ripple: rippleEffect 3s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   ::before,
   ::after {

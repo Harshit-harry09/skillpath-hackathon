@@ -205,6 +205,14 @@ export interface CompositeATSScore {
   strengths: string[];
 }
 
+export interface KeywordBountyItem {
+  skill: string;
+  scoreImpact: number;
+  placement: 'summary' | 'skills' | 'experience' | 'project';
+  suggestedLine: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
 export interface AnalysisResult {
   share_token: string;
   gap_score: number;
@@ -248,6 +256,9 @@ export interface AnalysisResult {
   fraud_audit?: FraudAuditResult;
   jd_requirements?: JDRequirements;
   composite_ats_score?: CompositeATSScore;
+  missing_skills?: string[];
+  parsed_text?: string;
+  pdf_url?: string;
 }
 
 export interface AnalysisRequest {

@@ -18,11 +18,11 @@ export default function ExplorePage() {
   }, []);
 
   const isDark = mounted && theme === 'dark';
-  const particleColor = isDark ? '#6366f1' : '#ff4d8b';
-  const trailColor = isDark ? '0, 0, 0' : '255, 250, 240';
+  const particleColor = '#ff4d8b';
+  const trailColor = isDark ? '5, 5, 5' : '255, 250, 240';
 
   return (
-    <main className="h-screen w-screen bg-canvas text-ink selection:bg-primary/10 relative overflow-hidden font-sans flex flex-col items-center justify-center">
+    <main className="min-h-screen w-full bg-canvas text-ink selection:bg-primary/10 relative overflow-y-auto font-sans flex flex-col items-center justify-center py-12">
       {/* Background Shader */}
       <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
         <NeuralBackground 

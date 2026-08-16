@@ -12,6 +12,15 @@ const SignInPage = dynamic(() => import('@/components/ui/sign-in-flow-1').then(m
 export function AuthModal() {
   const { isAuthModalOpen, closeAuthModal } = useAuth();
 
+  React.useEffect(() => {
+    if (!isAuthModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeAuthModal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAuthModalOpen, closeAuthModal]);
+
   const handleSuccess = () => {
     setTimeout(() => {
       closeAuthModal();
@@ -21,7 +30,13 @@ export function AuthModal() {
   return (
     <AnimatePresence>
       {isAuthModalOpen && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Sign in"
+          data-lenis-prevent
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

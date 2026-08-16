@@ -1,0 +1,335 @@
+[
+  {
+    "name": "Resume Job Description Fit",
+    "source": "HuggingFace",
+    "priority": "P0",
+    "category": "Resume-Job Matching",
+    "target_path": "data/matching/resume-job-description-fit",
+    "status": "Downloaded",
+    "size_mb": 65.44
+  },
+  {
+    "name": "Job Skill Set",
+    "source": "HuggingFace",
+    "priority": "P0",
+    "category": "Skills Ontology and Skill Graph",
+    "target_path": "data/skill_graph/job-skill-set",
+    "status": "Downloaded",
+    "size_mb": 2.41
+  },
+  {
+    "name": "Vacancy Job-to-Skill",
+    "source": "HuggingFace",
+    "priority": "P0",
+    "category": "Skills Ontology and Skill Graph",
+    "target_path": "data/skill_graph/vacancy-job-to-skill",
+    "status": "Downloaded",
+    "size_mb": 0.65
+  },
+  {
+    "name": "Job Titles",
+    "source": "HuggingFace",
+    "priority": "P0",
+    "category": "Skills Ontology and Skill Graph",
+    "target_path": "data/skill_graph/job-titles",
+    "status": "Downloaded",
+    "size_mb": 0.75
+  },
+  {
+    "name": "IT Job Titles and Descriptions",
+    "source": "HuggingFace",
+    "priority": "P1",
+    "category": "Skills Ontology & Cybersecurity",
+    "target_path": "data/skill_graph/it_job_titles_and_descriptions",
+    "status": "Downloaded",
+    "size_mb": 0.05
+  },
+  {
+    "name": "Job Descriptions",
+    "source": "HuggingFace",
+    "priority": "P1",
+    "category": "Job Description Understanding",
+    "target_path": "data/job_descriptions/jacob-job-descriptions",
+    "status": "Downloaded",
+    "size_mb": 3.6
+  },
+  {
+    "name": "Recruitment Dataset Job Descriptions English",
+    "source": "HuggingFace",
+    "priority": "P1",
+    "category": "Job Description Understanding",
+    "target_path": "data/job_descriptions/recruitment-dataset-job-descriptions-english",
+    "status": "Downloaded",
+    "size_mb": 139.11
+  },
+  {
+    "name": "Annotated NER PDF Resumes",
+    "source": "HuggingFace",
+    "priority": "P1",
+    "category": "Resume NER / Extraction",
+    "target_path": "data/resume_ner/Annotated_NER_PDF_Resumes",
+    "status": "Downloaded",
+    "size_mb": 574.91
+  },
+  {
+    "name": "Resumes Dataset",
+    "source": "HuggingFace",
+    "priority": "P2",
+    "category": "Resume and Career Twin",
+    "target_path": "data/resumes/datasetmaster-resumes",
+    "status": "Downloaded",
+    "size_mb": 15.58
+  },
+  {
+    "name": "Resume NER BERT v2 Model",
+    "source": "HuggingFace Model",
+    "priority": "P1",
+    "category": "Resume NER / Extraction Models",
+    "target_path": "data/models/resume-ner-bert-v2",
+    "status": "Downloaded",
+    "size_mb": 411.88
+  },
+  {
+    "name": "Skill2Vec 50K Dataset",
+    "source": "GitHub Raw",
+    "priority": "P1",
+    "category": "Skills Ontology and Skill Graph",
+    "target_path": "data/skill_graph/skill2vec_50K.csv.gz",
+    "status": "Downloaded",
+    "size_mb": 3.07
+  },
+  {
+    "name": "LinkedIn Job Postings 2023\u20132024",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/core_jobs/linkedin-job-postings",
+    "status": "Downloaded",
+    "size_mb": 530.72
+  },
+  {
+    "name": "LinkedIn Job Posts Insights Dataset",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/core_jobs/linkedin-job-posts-insights",
+    "status": "Downloaded",
+    "size_mb": 1.92
+  },
+  {
+    "name": "Job Postings Dataset",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/core_jobs/job-postings-dataset",
+    "status": "Downloaded",
+    "size_mb": 0.08
+  },
+  {
+    "name": "Job Description Dataset",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/job_descriptions/job-description-dataset",
+    "status": "Downloaded",
+    "size_mb": 1662.41
+  },
+  {
+    "name": "Online Job Postings",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/core_jobs/online-job-postings",
+    "status": "Downloaded",
+    "size_mb": 92.31
+  },
+  {
+    "name": "Data Science Job Postings & Skills 2024",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/core_jobs/data-science-job-postings-and-skills",
+    "status": "Downloaded",
+    "size_mb": 61.5
+  },
+  {
+    "name": "AI-Powered Job Market Insights",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Core Job Market Datasets",
+    "target_path": "data/core_jobs/ai-powered-job-market-insights",
+    "status": "Downloaded",
+    "size_mb": 0.05
+  },
+  {
+    "name": "54K Resume Dataset Structured",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Resume and Career Twin",
+    "target_path": "data/resumes/54k-resume-dataset-structured",
+    "status": "Downloaded",
+    "size_mb": 129.68
+  },
+  {
+    "name": "Resume Dataset",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Resume and Career Twin",
+    "target_path": "data/resumes/saugataroyarghya-resume-dataset",
+    "status": "Downloaded",
+    "size_mb": 16.22
+  },
+  {
+    "name": "Candidate Job Role Dataset",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Resume and Career Twin",
+    "target_path": "data/resumes/candidate-job-role-dataset",
+    "status": "Downloaded",
+    "size_mb": 0.09
+  },
+  {
+    "name": "Strategeion Resume Skills",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Resume and Career Twin",
+    "target_path": "data/skill_graph/strategeion-resume-skills",
+    "status": "Downloaded",
+    "size_mb": 2.24
+  },
+  {
+    "name": "Updated Resume Dataset",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Resume and Career Twin",
+    "target_path": "data/resumes/updated-resume-dataset",
+    "status": "Downloaded",
+    "size_mb": 2.96
+  },
+  {
+    "name": "Resume and Job Description",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Resume-Job Matching",
+    "target_path": "data/matching/resume-and-job-description",
+    "status": "Downloaded",
+    "size_mb": 57.26
+  },
+  {
+    "name": "AI-Powered Resume Screening Dataset 2025",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Resume-Job Matching",
+    "target_path": "data/matching/ai-powered-resume-screening-2025",
+    "status": "Downloaded",
+    "size_mb": 0.1
+  },
+  {
+    "name": "Resume Entities for NER",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Resume NER / Extraction",
+    "target_path": "data/resume_ner/dataturks-resume-entities-for-ner",
+    "status": "Downloaded",
+    "size_mb": 1.16
+  },
+  {
+    "name": "Salary Data with Gender",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Salary Intelligence Datasets",
+    "target_path": "data/salary/salary-data-gender",
+    "status": "Downloaded",
+    "size_mb": 0.33
+  },
+  {
+    "name": "Years of Experience and Salary Dataset",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Salary Intelligence Datasets",
+    "target_path": "data/salary/years-experience-salary",
+    "status": "Downloaded",
+    "size_mb": 0.0
+  },
+  {
+    "name": "Predict Data Scientists Salary in India",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Salary Intelligence Datasets",
+    "target_path": "data/salary/predict-ds-salary-india",
+    "status": "Downloaded",
+    "size_mb": 5.81
+  },
+  {
+    "name": "Data Professionals Salary 2022 India",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Salary Intelligence Datasets",
+    "target_path": "data/salary/data-professionals-salary-2022-india",
+    "status": "Downloaded",
+    "size_mb": 0.47
+  },
+  {
+    "name": "Salary Cyber Security Jobs",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Salary Intelligence & Cybersecurity",
+    "target_path": "data/salary/salary-cyber-security-jobs",
+    "status": "Downloaded",
+    "size_mb": 0.16
+  },
+  {
+    "name": "RemoteOK Dataset",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Remote Job Datasets",
+    "target_path": "data/remote/remoteok-io-dataset",
+    "status": "Downloaded",
+    "size_mb": 0.27
+  },
+  {
+    "name": "We Work Remotely Job Dataset",
+    "source": "Kaggle",
+    "priority": "P1",
+    "category": "Remote Job Datasets",
+    "target_path": "data/remote/we-work-remotely-job-dataset",
+    "status": "Downloaded",
+    "size_mb": 0.01
+  },
+  {
+    "name": "Remote Tech Jobs",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Remote Job Datasets",
+    "target_path": "data/remote/remote-tech-jobs",
+    "status": "Downloaded",
+    "size_mb": 0.32
+  },
+  {
+    "name": "Remote Job Market Analysis: 1500+ Jobs",
+    "source": "Kaggle",
+    "priority": "P2",
+    "category": "Remote Job Datasets",
+    "target_path": "data/remote/remote-job-market-analysis-1500-jobs",
+    "status": "Downloaded",
+    "size_mb": 0.1
+  },
+  {
+    "name": "Real/Fake Job Posting Prediction",
+    "source": "Kaggle",
+    "priority": "P0",
+    "category": "Fake Job Detection",
+    "target_path": "data/fake_jobs/real-or-fake-fake-jobposting-prediction",
+    "status": "Downloaded",
+    "size_mb": 47.74
+  },
+  {
+    "name": "Remote Work & Mental Health",
+    "source": "Kaggle",
+    "priority": "P3",
+    "category": "Inclusion & Accessibility",
+    "target_path": "data/inclusion/remote-work-and-mental-health",
+    "status": "Downloaded",
+    "size_mb": 0.57
+  }
+]

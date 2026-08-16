@@ -26,7 +26,7 @@ export function StarBulletModal({ isOpen, onClose, skill, role }: StarBulletModa
   async function fetchBullets() {
     setLoading(true);
     try {
-      const res = await fetch('/api/generate-star-bullets', {
+      const res = await fetch('/api/generate/star-bullets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ skill, role }),
@@ -52,7 +52,7 @@ export function StarBulletModal({ isOpen, onClose, skill, role }: StarBulletModa
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" data-lenis-prevent>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" data-lenis-prevent>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

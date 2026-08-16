@@ -498,6 +498,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
       }
       lineMaterial.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
     };
   }, [isHomePage, urls, palette, onComplete, setLoaded]);
 

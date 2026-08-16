@@ -13,7 +13,12 @@ export default async function SharePage({ params }: { params: Promise<{ id: stri
   const shareSnap = await db.collection('share_cards').doc(id).get();
   if (!shareSnap.exists) return notFound();
 
-  const { uid } = shareSnap.data()!;
+  const shareData = shareSnap.data()!;
+  if (shareData.expires_at && typeof shareData.expires_at === 'string' && new Date(shareData.expires_at).getTime() < Date.now()) {
+    return notFound();
+  }
+
+  const { uid } = shareData;
   const [profileSnap, jobSnap] = await Promise.all([
     db.collection('profiles').doc(uid).get(),
     db.collection('active_jobs').doc(uid).get(),

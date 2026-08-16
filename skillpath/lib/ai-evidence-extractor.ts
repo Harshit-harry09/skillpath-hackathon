@@ -40,7 +40,7 @@ ${jdText.slice(0, 120_000)}
 
 export async function extractAiEvidence(resumeText: string, jdText: string): Promise<AiAnalysisExtraction> {
   const raw = await callGeminiJSON<unknown>(SYSTEM_PROMPT, userPrompt(resumeText, jdText), {
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     temperature: 0,
     maxTokens: 4096,
     responseSchema: AI_ANALYSIS_RESPONSE_SCHEMA,
@@ -113,7 +113,7 @@ ${JSON.stringify(matches.slice(0, 60))}`;
   const raw = await callGeminiJSON<unknown>(
     'You are a careful career analyst. Return only JSON. Ground every claim in supplied evidence.',
     prompt,
-    { model: 'gemini-2.5-flash', temperature: 0.1, maxTokens: 1200, responseSchema: EXPLANATION_SCHEMA }
+    { model: 'gemini-3.5-flash-lite', temperature: 0.1, maxTokens: 1200, responseSchema: EXPLANATION_SCHEMA }
   );
 
   if (!raw || typeof raw !== 'object') throw new Error('AI explanation must be an object.');

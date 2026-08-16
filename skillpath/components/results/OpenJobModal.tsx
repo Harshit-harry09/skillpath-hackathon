@@ -28,12 +28,13 @@ export function OpenJobModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" data-lenis-prevent>
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          data-lenis-prevent
           className="bg-surface-card border-2 border-brand-teal/40 rounded-[36px] max-w-lg w-full p-8 space-y-6 shadow-2xl relative overflow-hidden text-center"
         >
           {/* Confetti Glow Background */}

@@ -70,12 +70,6 @@ export default function AnalyzePage() {
   const isFormValid = jd.trim().length > 0 && (file !== null || resumeText.trim().length > 0);
 
   const handleAnalyze = async () => {
-    if (!user) {
-      setError('Please sign in to analyze your resume.');
-      openAuthModal();
-      return;
-    }
-
     if (!jd.trim()) {
       setError(mode === 'job' ? 'Please paste a job description.' : 'Please describe your career dream.');
       return;
@@ -91,7 +85,7 @@ export default function AnalyzePage() {
         return;
       }
 
-      const token = await getToken();
+      const token = user ? await getToken() : null;
       const formData = new FormData();
       formData.append('jd_text', jd);
 
@@ -108,11 +102,14 @@ export default function AnalyzePage() {
         formData.append('resume_text', resumeText);
       }
 
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch('/api/analyze', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
         body: formData,
       });
 

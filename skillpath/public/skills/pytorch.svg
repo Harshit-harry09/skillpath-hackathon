@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <linearGradient id="bg_pytorch" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2A100B" />
+      <stop offset="100%" stop-color="#160604" />
+    </linearGradient>
+    <filter id="glow_pytorch" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect x="8" y="8" width="224" height="224" rx="36" fill="url(#bg_pytorch)" stroke="#EE4C2C" stroke-width="3" stroke-opacity="0.6" />
+  
+  <!-- Subtle inner shadow ring -->
+  <rect x="12" y="12" width="216" height="216" rx="32" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.12" />
+
+  <!-- Top Category Tag -->
+  <rect x="28" y="24" width="76" height="22" rx="11" fill="#EE4C2C" fill-opacity="0.25" />
+  <text x="66" y="39" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="900" fill="#EE4C2C" text-anchor="middle" letter-spacing="1.5">AI / ML</text>
+
+  <!-- Center Graphic -->
+  <g filter="url(#glow_pytorch)">
+    
+            <g transform="translate(120, 115)">
+                <path d="M0 -55 C22 -35 48 -10 48 24 C48 52 26 68 0 68 C-26 68 -48 52 -48 24 C-48 -10 -22 -35 0 -55 Z" fill="#EE4C2C" />
+                <path d="M0 -30 C12 -15 26 2 26 24 C26 40 14 50 0 50 C-14 50 -26 40 -26 24 C-26 2 -12 -15 0 -30 Z" fill="#FFA33C" />
+                <circle cx="28" cy="-36" r="7" fill="#FFA33C" />
+            </g>
+        
+  </g>
+
+  <!-- Bottom Skill Name -->
+  <text x="120" y="210" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">AI & PyTorch</text>
+</svg>

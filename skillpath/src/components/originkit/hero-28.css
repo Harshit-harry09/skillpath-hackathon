@@ -1,0 +1,7 @@
+/* hero-28 — Zentra coordination-layer hero (black-hole visual + grid frame) */
+
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap");
+
+@theme {
+  --font-rajdhani: "Rajdhani", Inter, ui-sans-serif, sans-serif;
+}

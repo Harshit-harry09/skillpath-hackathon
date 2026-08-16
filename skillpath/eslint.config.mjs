@@ -12,7 +12,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  globalIgnores([".next/**", "next-env.d.ts", "node_modules/**", "out/**", "dist/**", "coverage/**"]),
+  globalIgnores([".next/**", ".next-stale*/**", "next-env.d.ts", "node_modules/**", "out/**", "dist/**", "coverage/**", "scratch/**"]),
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
@@ -22,6 +22,7 @@ const eslintConfig = [
       "react/no-unescaped-entities": "warn",
       "react-hooks/exhaustive-deps": "warn",
       "prefer-const": "warn",
+      "@typescript-eslint/no-require-imports": "warn",
     },
   },
 ];

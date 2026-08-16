@@ -143,12 +143,19 @@ export function ResumeTransitionOverlay({
             </div>
           </motion.div>
 
-          {/* Flash Reveal Overlay */}
+          {/* Cinematic Circular Iris Reveal Overlay */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0, 0, 1] }}
-            transition={{ duration: 1.3, times: [0, 0.7, 0.9, 1] }}
+            initial={{ clipPath: 'circle(0% at 50% 50%)', opacity: 1 }}
+            animate={{
+              clipPath: ['circle(0% at 50% 50%)', 'circle(0% at 50% 50%)', 'circle(160% at 50% 50%)'],
+            }}
+            transition={{
+              duration: 1.3,
+              times: [0, 0.7, 1],
+              ease: [0.16, 1, 0.3, 1],
+            }}
             className="fixed inset-0 bg-canvas pointer-events-none z-[100000]"
+            style={{ willChange: 'clip-path' }}
           />
         </motion.div>
       )}

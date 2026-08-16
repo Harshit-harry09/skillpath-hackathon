@@ -4,12 +4,12 @@ import React, { useRef, type PropsWithChildren } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import {
   motion,
-  MotionValue,
+  type MotionValue,
   useMotionValue,
   useSpring,
   useTransform,
-} from "motion/react"
-import type { MotionProps } from "motion/react"
+  type MotionProps,
+} from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
@@ -29,7 +29,7 @@ const DEFAULT_DISTANCE = 140
 const DEFAULT_DISABLEMAGNIFICATION = false
 
 const dockVariants = cva(
-  "supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto mt-8 flex h-[58px] w-max items-center justify-center gap-2 rounded-2xl border p-2 backdrop-blur-md"
+  "mx-auto mt-8 flex h-[58px] w-max items-center justify-center gap-2 rounded-2xl border border-white/10 dark:border-white/8 p-2 backdrop-blur-[1px] bg-transparent"
 )
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(

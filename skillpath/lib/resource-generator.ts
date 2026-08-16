@@ -200,7 +200,7 @@ export async function generateResources(
       parsed = await callGeminiJSON<SkillResources>(
         "",
         prompt,
-        { model: 'gemini-2.0-flash', temperature: 0.1, maxTokens: 1000 }
+        { model: 'gemini-3.5-flash-lite', temperature: 0.1, maxTokens: 1000 }
       );
 
       if (!parsed.resources || !Array.isArray(parsed.resources) || parsed.resources.length === 0) {

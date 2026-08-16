@@ -44,10 +44,25 @@ export function SelfAssessmentModal({
   const assessedCount = Object.keys(assessments).length;
   const progress = Math.round((assessedCount / totalSkills) * 100);
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 md:p-8" data-lenis-prevent>
+        <div
+          className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 md:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="self-assessment-title"
+          data-lenis-prevent
+        >
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -72,7 +87,7 @@ export function SelfAssessmentModal({
                     <Sparkles className="text-primary w-6 h-6" />
                   </div>
                   <div>
-                    <h2 className="font-display text-title-lg text-ink">Personalize Your Path</h2>
+                    <h2 id="self-assessment-title" className="font-display text-title-lg text-ink">Personalize Your Path</h2>
                     <p className="font-sans text-body-sm text-muted">
                       Self-assess your skills for the <span className="text-primary font-bold">{roleName}</span> role.
                     </p>

@@ -10,10 +10,10 @@ import { AuthModal } from "@/components/ui/auth-modal";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Preloader } from "@/components/ui/Preloader";
 import { UIProvider } from "@/context/UIContext";
-import { AppWrapper } from "@/components/ui/AppWrapper";
 import { ThemeTransition } from "@/components/providers/theme-transition";
 import { cn } from "@/lib/utils";
 import { DraftProvider } from "@/context/DraftContext";
+import { ReactQueryProvider } from "@/components/providers/query-provider";
 
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 
@@ -32,6 +32,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("antialiased", "font-sans", geist.variable, geistMono.variable)} suppressHydrationWarning>
+      <head>
+        <link rel="preload" href="/fonts/britney-variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/zodiak-regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link href="https://api.fontshare.com/v2/css?f[]=britney@300,400,700,1000&f[]=comico@400&f[]=zodiak@400,700&display=swap" rel="stylesheet" />
+      </head>
       <body className="font-sans flex flex-col min-h-screen bg-canvas text-ink selection:bg-brand-pink selection:text-white">
         <ThemeProvider
           attribute="class"
@@ -39,24 +44,24 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <DraftProvider>
-              <UIProvider>
-                <ThemeTransition>
-                  <SmoothCursor />
-                  <Preloader />
-                  <AppWrapper>
+          <ReactQueryProvider>
+            <AuthProvider>
+              <DraftProvider>
+                <UIProvider>
+                  <ThemeTransition>
+                    <SmoothCursor />
+                    <Preloader />
                     <Navbar />
                     <FloatingDock />
                     <AuthModal />
                     <SmoothScrolling>
                       {children}
                     </SmoothScrolling>
-                  </AppWrapper>
-                </ThemeTransition>
-              </UIProvider>
-            </DraftProvider>
-          </AuthProvider>
+                  </ThemeTransition>
+                </UIProvider>
+              </DraftProvider>
+            </AuthProvider>
+          </ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>

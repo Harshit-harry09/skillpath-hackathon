@@ -1,11 +1,9 @@
 'use client';
-// updated
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import { motion } from 'framer-motion';
-import { ArrowRight, Zap } from 'lucide-react';
+import { Zap, ArrowRight } from 'lucide-react';
+import DitherReveal from '@/components/originkit/dither-reveal';
 
 const GitHubIcon = ({ size = 18 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -29,101 +27,98 @@ const InstagramIcon = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
-// ─── CTA Section ─────────────────────────────────────────────────────────────
+// ─── Full-Screen Dither Reveal CTA Section ─────────────────────────────────────
 export function CtaSection() {
   const router = useRouter();
-  const { user, openAuthModal } = useAuth();
+  const [isDark, setIsDark] = useState(false);
 
-  const handleAction = () => {
-    router.push('/analyze');
-  };
+  useEffect(() => {
+    const checkDark = () => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
+    checkDark();
+    const observer = new MutationObserver(checkDark);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
-      className="relative py-16 md:py-28 px-4 sm:px-8 lg:px-24 flex justify-center overflow-hidden"
-      style={{ background: 'var(--color-surface-soft)' }}
+      className="relative w-full min-h-screen overflow-hidden text-[#1F3A4B] dark:text-white transition-colors duration-300 flex flex-col justify-between"
+      style={{ background: isDark ? '#0a0a0a' : 'var(--color-canvas)' }}
     >
-      <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'var(--bold-border)' }} />
-
-      <div className="max-w-[1280px] w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative overflow-hidden"
-          style={{
-            /* Always dark — hardcoded, not a theme variable */
-            background: '#0a0a0a',
-            border: '3px solid #0a0a0a',
-            borderRadius: '24px',
-            padding: 'clamp(40px, 6vw, 80px)',
-            boxShadow: '10px 10px 0 var(--color-brand-pink)',
-          }}
-        >
-          {/* Grid pattern overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.04] pointer-events-none"
-            style={{ backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, backgroundSize: '40px 40px' }}
-          />
-
-          {/* Corner accent */}
-          <div className="absolute top-0 right-0 w-[280px] h-[280px] pointer-events-none" style={{ background: 'var(--color-brand-pink)', clipPath: 'polygon(100% 0, 0 0, 100% 100%)', opacity: 0.12 }} />
-
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
-            {/* Left: Copy */}
-            <div className="space-y-5 max-w-2xl">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#ff4d8b] animate-pulse" />
-                <span className="font-mono text-[11px] font-black uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>Start Now · Free Forever</span>
-              </div>
-              <h2 className="font-black leading-[0.92] text-white" style={{ fontSize: 'clamp(40px, 6vw, 80px)', letterSpacing: '-0.04em' }}>
-                Stop guessing.<br /><span style={{ color: '#ff4d8b' }}>Start growing.</span>
-              </h2>
-              <p className="text-[16px] font-medium leading-relaxed max-w-lg" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                Whether it's a 10-person startup or a Fortune 500 giant, we'll map your exact route — in seconds, for free.
-              </p>
-
-              <div className="flex items-center gap-8 pt-2">
-                {[{ val: '5,000+', label: 'engineers' }, { val: 'Free', label: 'forever' }, { val: '< 1s', label: 'analysis time' }].map((s, i) => (
-                  <div key={i} className="flex flex-col">
-                    <span className="font-black text-[22px] text-white leading-none" style={{ letterSpacing: '-0.03em' }}>{s.val}</span>
-                    <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>{s.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: CTA button */}
-            <div className="flex flex-col gap-3 flex-shrink-0">
-              <button
-                onClick={handleAction}
-                className="group flex items-center gap-3 font-black uppercase tracking-wider transition-all duration-150 active:translate-y-[3px] active:shadow-none"
-                style={{
-                  background: '#ff4d8b',
-                  color: '#fff',
-                  fontSize: '15px',
-                  letterSpacing: '0.08em',
-                  padding: '20px 40px',
-                  borderRadius: '14px',
-                  border: '3px solid rgba(255,255,255,0.15)',
-                  boxShadow: '6px 6px 0 rgba(255,77,139,0.5)',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <Zap className="w-5 h-5" fill="currentColor" />
-                Get My Free Roadmap
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </button>
-              <p className="font-mono text-[10px] font-black uppercase tracking-widest text-center" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                No signup required · Instant results
-              </p>
-            </div>
-          </div>
-        </motion.div>
+      {/* WebGL Dither Shader Background */}
+      <div className="absolute inset-0 w-full h-full pointer-events-auto">
+        <DitherReveal
+          image="/images/hands.jpg"
+          fit="cover"
+          focusY={50}
+          ditherStyle="bayer8"
+          dotSize={5}
+          revealRadius={112}
+          revealSoftness={50}
+          wave={true}
+          waveSpeed={80}
+          waveDensity={25}
+          rotate={0}
+          invert={!isDark}
+          style={{ width: '100%', height: '100%' }}
+        />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: 'var(--bold-border)' }} />
+      {/* Main Overlay Content — 3-Column Split */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto min-h-screen px-6 sm:px-12 lg:px-16 py-12 flex flex-col lg:flex-row items-center justify-between gap-8 pointer-events-none">
+        
+        {/* Left Column: Headline & Description */}
+        <div className="w-full lg:w-5/12 flex flex-col items-start gap-4 text-left pointer-events-auto">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-mono text-xs font-bold uppercase tracking-widest bg-surface-card text-[#1F3A4B] border border-hairline dark:bg-white/10 dark:text-[#ff4d8b] dark:border-[#ff4d8b]/30 backdrop-blur-md shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#ff4d8b] animate-pulse" />
+            SkillPath AI Roadmap
+          </span>
+
+          <h2 className="font-comico text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] uppercase text-[#1F3A4B] dark:text-white drop-shadow-sm">
+            STOP GUESSING. <br />
+            <span className="text-[#ff4d8b]">START GROWING.</span>
+          </h2>
+
+          <p className="font-zodiak text-base sm:text-lg text-[#1F3A4B]/90 dark:text-slate-300 font-medium leading-relaxed max-w-md">
+            Map your tech career trajectory in seconds with real-time AI market intelligence.
+          </p>
+        </div>
+
+        {/* Center Column: ONLY THE BUTTON positioned right between the hands */}
+        <div className="w-full lg:w-2/12 flex items-center justify-center pointer-events-auto my-4 lg:my-0">
+          <button
+            onClick={() => router.push('/analyze')}
+            className="group relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#1F3A4B] text-white dark:bg-black dark:text-white border-2 border-[#1F3A4B] dark:border-[#ff4d8b]/70 font-comico uppercase text-xs sm:text-sm font-bold tracking-widest shadow-[0_4px_16px_rgba(31,58,75,0.25)] dark:shadow-[0_0_22px_rgba(255,77,139,0.45)] hover:scale-[1.05] active:scale-[0.96] transition-all duration-200 cursor-pointer whitespace-nowrap"
+          >
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-[#C2F84F] dark:text-[#ff4d8b] group-hover:rotate-12 transition-transform duration-200" />
+            <span>Roadmap</span>
+            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-x-1" />
+          </button>
+        </div>
+
+        {/* Right Column: Stats Cards Stack */}
+        <div className="w-full lg:w-5/12 flex flex-col items-center lg:items-end gap-3.5 pointer-events-auto">
+          {[
+            { val: '5,000+', label: 'ENGINEERS', sub: 'Accelerating tech careers' },
+            { val: 'FREE', label: 'FOREVER', sub: 'No credit card needed' },
+            { val: '< 1S', label: 'ANALYSIS TIME', sub: 'Real-time AI skill mapping' },
+          ].map((card, idx) => (
+            <div
+              key={idx}
+              className="w-full max-w-xs bg-surface-card/95 border border-hairline/80 dark:bg-black/60 dark:border-white/10 p-4 rounded-2xl backdrop-blur-md shadow-md hover:border-[#ff4d8b]/40 transition-colors flex flex-col gap-0.5"
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-comico text-xl sm:text-2xl text-[#1F3A4B] dark:text-white font-bold leading-none">{card.val}</span>
+                <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#ff4d8b]">{card.label}</span>
+              </div>
+              <span className="font-zodiak text-xs text-[#1F3A4B]/80 dark:text-slate-400 font-medium">{card.sub}</span>
+            </div>
+          ))}
+        </div>
+
+      </div>
     </section>
   );
 }
@@ -131,63 +126,82 @@ export function CtaSection() {
 // ─── Footer ──────────────────────────────────────────────────────────────────
 export function Footer() {
   return (
-    <footer
-      className="w-full flex justify-center px-4 sm:px-8 lg:px-24"
-      style={{
-        /* Always dark — hardcoded so it doesn't invert in dark mode */
-        background: '#0a0a0a',
-        borderTop: '3px solid #0a0a0a',
-      }}
-    >
-      <div className="max-w-[1280px] w-full py-8 flex flex-col md:flex-row justify-between items-center gap-5">
-        {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: '#ff4d8b', border: '2px solid rgba(255,255,255,0.15)', boxShadow: '2px 2px 0 rgba(255,255,255,0.08)' }}>
-            <Zap className="w-4 h-4 text-white" fill="currentColor" />
+    <footer className="w-full bg-canvas dark:bg-[#0a0a0a] border-t border-hairline dark:border-white/10 transition-colors duration-300">
+      <div className="max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-16">
+
+        {/* Top row: brand + nav links */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 py-10 border-b border-hairline dark:border-white/10">
+
+          {/* Brand */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#1F3A4B] dark:bg-[#ff4d8b] shadow-sm shrink-0">
+              <span className="font-black text-white text-sm leading-none">⚡</span>
+            </div>
+            <div className="flex flex-col">
+              <span
+                className="font-black text-[18px] text-[#1F3A4B] dark:text-white leading-none"
+                style={{ letterSpacing: '-0.03em' }}
+              >
+                Skill<span className="text-[#ff4d8b]">Path</span>
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#1F3A4B]/50 dark:text-white/35 mt-0.5">
+                Neural Career Intelligence
+              </span>
+            </div>
           </div>
-          <span className="font-black text-[18px] text-white" style={{ letterSpacing: '-0.03em' }}>
-            Skill<span style={{ color: '#ff4d8b' }}>Path</span>
-          </span>
-          <span className="hidden md:block h-4 w-px" style={{ background: 'rgba(255,255,255,0.1)' }} />
-          <span className="hidden md:block font-mono text-[11px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            © 2026 SkillPath Inc.
-          </span>
+
+          {/* Nav links */}
+          <nav className="flex items-center gap-1 flex-wrap">
+            {[
+              { label: 'Privacy', href: '#' },
+              { label: 'Terms', href: '#' },
+              { label: 'GitHub', href: 'https://github.com/shauryap9006-cell' },
+              { label: 'LinkedIn', href: 'https://www.linkedin.com/in/shaurya-singh-971005357/' },
+            ].map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                className="px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[#1F3A4B]/55 hover:text-[#ff4d8b] dark:text-white/40 dark:hover:text-[#ff4d8b] transition-colors rounded-md hover:bg-[#ff4d8b]/5 dark:hover:bg-[#ff4d8b]/10"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
         </div>
 
-        {/* Nav links */}
-        <div className="hidden md:flex items-center gap-6">
-          {['Privacy', 'Terms'].map(link => (
-            <button
-              key={link}
-              type="button"
-              className="font-mono text-[11px] font-bold uppercase tracking-widest text-white/25 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink rounded"
-            >
-              {link}
-            </button>
-          ))}
+        {/* Bottom row: copyright + social */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-5">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-[#1F3A4B]/40 dark:text-white/30">
+            © 2026 SkillPath Inc. — All rights reserved.
+          </span>
+
+          {/* Social icons */}
+          <div className="flex items-center gap-2">
+            {[
+              { icon: <GitHubIcon size={15} />, href: 'https://github.com/shauryap9006-cell', label: 'GitHub' },
+              { icon: <LinkedinIcon size={15} />, href: 'https://www.linkedin.com/in/shaurya-singh-971005357/', label: 'LinkedIn' },
+              { icon: <InstagramIcon size={15} />, href: 'https://instagram.com', label: 'Instagram' },
+            ].map(({ icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 border border-hairline dark:border-white/10 text-[#1F3A4B]/50 dark:text-white/50 hover:text-[#ff4d8b] hover:border-[#ff4d8b]/40 hover:bg-[#ff4d8b]/5 dark:hover:bg-[#ff4d8b]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4d8b]"
+              >
+                {icon}
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Social icons */}
-        <div className="flex items-center gap-3">
-          {[
-            { icon: <GitHubIcon size={16} />, href: 'https://github.com/shauryap9006-cell', label: 'GitHub' },
-            { icon: <LinkedinIcon size={16} />, href: 'https://www.linkedin.com/in/shaurya-singh-971005357/', label: 'LinkedIn' },
-            { icon: <InstagramIcon size={16} />, href: 'https://instagram.com', label: 'Instagram' },
-          ].map(({ icon, href, label }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={label}
-              className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-150 active:translate-y-[1px] bg-white/5 border border-white/10 text-white/45 hover:text-[#ff4d8b] hover:border-[#ff4d8b]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
-              style={{ boxShadow: '2px 2px 0 rgba(255,255,255,0.04)' }}
-            >
-              {icon}
-            </a>
-          ))}
-        </div>
       </div>
     </footer>
   );
 }
+
+
+

@@ -39,12 +39,24 @@ test('AI routes have an explicit rate-limit guard', () => {
     'app/api/analyze/route.ts',
     'app/api/explore/route.ts',
     'app/api/battle/estimate/route.ts',
-    'app/api/generate-cover-lines/route.ts',
-    'app/api/generate-linkedin-headlines/route.ts',
-    'app/api/generate-star-bullets/route.ts',
+    'app/api/generate/[tool]/route.ts',
+  ]) {
+    assert.match(read(file), /runGeneratorTool|guardAiRequest/);
+  }
+});
+
+test('Atlas routes guard AI work and expose every page connection they call', () => {
+  for (const file of [
+    'app/api/atlas/analyze/route.ts',
+    'app/api/atlas/analyze/stream/route.ts',
+    'app/api/atlas/chat/route.ts',
+    'app/api/atlas/agent/rerun/route.ts',
+    'app/api/atlas/compare/route.ts',
   ]) {
     assert.match(read(file), /guardAiRequest/);
   }
+  assert.match(read('app/atlas/page.tsx'), /api\/atlas\/compare/);
+  assert.match(read('app/api/atlas/compare/route.ts'), /runRoleSwitchComparisonAgent/);
 });
 
 test('public result pages can generate learning plans as guests', () => {

@@ -116,20 +116,27 @@ export function SmoothCursor({
   const cursorY = useSpring(rawMouseY, springConfig)
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(DESKTOP_POINTER_QUERY)
+    const desktopMediaQuery = window.matchMedia(DESKTOP_POINTER_QUERY)
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 
     const updateEnabled = () => {
-      const nextIsEnabled = mediaQuery.matches
+      const isDesktopPointer = desktopMediaQuery.matches
+      const prefersReducedMotion = reducedMotionQuery.matches
+      const nextIsEnabled = isDesktopPointer && !prefersReducedMotion
+
       setIsEnabled(nextIsEnabled)
       if (!nextIsEnabled) {
         setIsVisible(false)
+        document.documentElement.classList.remove("custom-cursor-active")
       }
     }
 
     updateEnabled()
-    mediaQuery.addEventListener("change", updateEnabled)
+    desktopMediaQuery.addEventListener("change", updateEnabled)
+    reducedMotionQuery.addEventListener("change", updateEnabled)
     return () => {
-      mediaQuery.removeEventListener("change", updateEnabled)
+      desktopMediaQuery.removeEventListener("change", updateEnabled)
+      reducedMotionQuery.removeEventListener("change", updateEnabled)
     }
   }, [])
 
@@ -208,9 +215,14 @@ export function SmoothCursor({
   return (
     <>
       <style jsx global>{`
-        html.custom-cursor-active,
-        html.custom-cursor-active * {
-          cursor: none !important;
+        @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+          html.custom-cursor-active,
+          html.custom-cursor-active body,
+          html.custom-cursor-active button,
+          html.custom-cursor-active a,
+          html.custom-cursor-active [role="button"] {
+            cursor: none;
+          }
         }
       `}</style>
 

@@ -1,0 +1,9 @@
+import { Fingerprint, Sparkles } from 'lucide-react';
+import type { CareerTwinOutput } from '@/lib/atlas/agent4-career-twin';
+import type { AtlasSoftSignals } from '@/lib/atlas/soft-parse';
+
+export function CareerTwinDNA({ twin, softSignals }: { twin?: CareerTwinOutput; softSignals?: AtlasSoftSignals }) {
+  const powers = twin?.skills?.slice(0, 4).map((skill) => skill.name) || softSignals?.informalSkills.slice(0, 4) || [];
+  return <section className="rounded-3xl border-2 border-hairline bg-surface-card p-6 shadow-sm"><div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-pink"><Fingerprint className="h-4 w-4" /> Strategic identity</div><h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink">Your Career Twin</h2><p className="mt-1 text-sm leading-6 text-muted">This is who you are in the job market when your full story is properly translated.</p><div className="mt-5 rounded-2xl bg-brand-pink/10 p-4"><p className="text-lg font-semibold text-ink">{twin?.career_stage ? twin.career_stage.replace(/_/g, ' ') : 'Emerging career transitioner'}</p><p className="mt-2 text-sm leading-6 text-muted">{twin?.inferenceSummary || softSignals?.confidenceNarrative || 'Atlas is building a strategic identity from your goals, constraints, and lived experience.'}</p></div><div className="mt-5"><p className="text-xs font-bold uppercase tracking-[0.14em] text-muted">Core powers</p><div className="mt-3 flex flex-wrap gap-2">{(powers.length ? powers : ['Learning velocity', 'Systems thinking', 'Ownership']).map((power) => <span key={power} className="inline-flex items-center gap-1.5 rounded-lg border border-hairline bg-surface-soft px-3 py-2 text-xs font-semibold text-ink"><Sparkles className="h-3.5 w-3.5 text-brand-pink" />{power}</span>)}</div></div></section>;
+}
+

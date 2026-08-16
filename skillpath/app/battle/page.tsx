@@ -21,7 +21,7 @@ export default function BattlePage() {
   const trailColor = isDark ? '0, 0, 0' : '255, 250, 240';
 
   return (
-    <main className="min-h-screen w-full bg-canvas text-ink selection:bg-primary/10 relative font-sans flex flex-col items-center justify-center pt-24 pb-28 overflow-hidden">
+    <main className="min-h-screen w-full bg-canvas text-ink selection:bg-primary/10 relative font-sans flex flex-col items-center justify-center pt-24 pb-28 overflow-x-hidden">
       {/* Background Shader */}
       <div className="fixed inset-0 z-0 opacity-40 pointer-events-none">
         <NeuralBackground 

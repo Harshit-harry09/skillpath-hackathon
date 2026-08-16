@@ -50,47 +50,59 @@ export function calculateCompositeATSScore(params: {
     experience_score = Math.min(100, Math.max(60, experience.total_yoe * 15));
   }
 
-  // Pillar 3: Title & Seniority Progression (15%)
-  let title_score = 75;
+  // Pillar 3: Title, Potential & Seniority Progression (15%) - Bias-Free Evaluation
+  let title_score = 85;
   const seniorityRanks = { entry: 1, mid: 2, senior: 3, lead: 4, executive: 5 };
   const candidateRank = seniorityRanks[experience.seniority_level] || 1;
 
   if (experience.career_progression === 'accelerated') {
     title_score = 100;
-    strengths.push('Demonstrates accelerated career progression.');
+    strengths.push('Demonstrates accelerated career progression and high learning velocity.');
   } else if (experience.career_progression === 'steady') {
-    title_score = 85;
-  } else if (experience.employment_gaps.length > 0) {
-    title_score -= 15;
-    penalties.push(`Employment gap of >6 months detected in work history.`);
+    title_score = 90;
   }
 
-  // Pillar 4: Education & Certifications (15%)
-  let education_score = 70; // baseline
+  // Inclusive Workforce Rule: Gap Immunity Policy
+  if (experience.employment_gaps.length > 0) {
+    // Zero deduction! Lived experience & career breaks (caregiving, health, reskilling) are protected
+    strengths.push('Gap Non-Penalization Active: Work history evaluated on demonstrated skills, not break duration.');
+  }
+
+  // Pillar 4: Skills-First Learning, Education & Certifications (15%)
+  // Bias-Free: Demonstrating skills and practical project capability is valued over elite school pedigree
+  let education_score = 85; // Inclusive baseline for verified skills / non-traditional pathways
   if (education.length > 0) {
     const highestDegree = education[0].degree;
     if (highestDegree.includes('Master') || highestDegree.includes('Ph.D.')) {
       education_score = 100;
       strengths.push('Holds advanced degree (Master’s or Ph.D.).');
     } else if (highestDegree.includes('Bachelor')) {
+      education_score = 95;
+      strengths.push('Holds undergraduate degree.');
+    } else {
       education_score = 90;
+      strengths.push('Holds verified vocational/diploma credential.');
     }
+  } else {
+    // Non-traditional / self-taught pathway
+    education_score = skills_score >= 70 ? 90 : 80;
+    strengths.push('Skills-First Accreditation: Practical technical competence evaluated over formal institution name.');
   }
 
   if (certifications.length > 0) {
     education_score = Math.min(100, education_score + 10);
-    strengths.push(`Holds ${certifications.length} relevant industry certification(s).`);
+    strengths.push(`Holds ${certifications.length} verified micro-credential(s) / certification(s).`);
   }
 
-  // Pillar 5: Formatting & Fraud Risk (10%)
+  // Pillar 5: Formatting & Integrity Audit (10%)
   let formatting_score = 100;
   if (fraudAudit.hidden_text_detected) {
     formatting_score -= 50;
-    penalties.push('Severe Penalty: Hidden or white text detected in document.');
+    penalties.push('Integrity Warning: Hidden or white text detected in document.');
   }
   if (fraudAudit.keyword_stuffing_score > 0) {
     formatting_score -= Math.round(fraudAudit.keyword_stuffing_score / 2);
-    penalties.push(`Penalty: Unnatural keyword density / stuffing detected.`);
+    penalties.push(`Formatting Notice: Unnatural keyword density detected.`);
   }
 
   // Composite Calculation

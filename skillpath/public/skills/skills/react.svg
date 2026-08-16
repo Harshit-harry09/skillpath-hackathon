@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <!-- Clean Card Base with Subtle Border -->
+  <rect x="6" y="6" width="228" height="228" rx="32" fill="#F0FAFD" stroke="#00D8FF" stroke-width="2.5" stroke-opacity="0.8" />
+  
+  <!-- Inner White Card Inset for contrast -->
+  <rect x="12" y="12" width="216" height="216" rx="26" fill="#FFFFFF" fill-opacity="0.85" />
+
+  <!-- Top Category Tag -->
+  <rect x="24" y="24" width="80" height="20" rx="10" fill="#00D8FF" fill-opacity="0.15" />
+  <text x="64" y="38" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="800" fill="#00D8FF" text-anchor="middle" letter-spacing="1.2">FRAMEWORK</text>
+
+  <!-- Central Graphic Icon -->
+  <g>
+    
+            <g transform="translate(120, 115)">
+                <ellipse rx="65" ry="24" fill="none" stroke="#00D8FF" stroke-width="6" />
+                <ellipse rx="65" ry="24" fill="none" stroke="#00D8FF" stroke-width="6" transform="rotate(60)" />
+                <ellipse rx="65" ry="24" fill="none" stroke="#00D8FF" stroke-width="6" transform="rotate(120)" />
+                <circle r="14" fill="#00D8FF" />
+            </g>
+        
+  </g>
+
+  <!-- Bottom Skill Label -->
+  <text x="120" y="208" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="800" fill="#1E293B" text-anchor="middle" letter-spacing="-0.3">React</text>
+</svg>

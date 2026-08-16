@@ -135,7 +135,7 @@ export function UnifiedToolkit({
         </div>
 
         {/* Tab Navigation Pill Bar (Apple-style Segmented Control) */}
-        <div className="mt-6 p-1.5 rounded-2xl bg-surface-soft/80 border border-hairline flex items-center gap-1.5 overflow-x-auto scrollbar-none relative">
+        <div data-lenis-prevent className="mt-6 p-1.5 rounded-2xl bg-surface-soft/80 border border-hairline flex items-center gap-1.5 overflow-x-auto overscroll-contain touch-pan-x scrollbar-none relative">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;

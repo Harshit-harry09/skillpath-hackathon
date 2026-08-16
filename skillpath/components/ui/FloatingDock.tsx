@@ -11,6 +11,7 @@ import {
   Swords,
   History,
   User,
+  Sparkles,
 } from 'lucide-react';
 
 export function FloatingDock() {
@@ -19,6 +20,7 @@ export function FloatingDock() {
 
   const items = [
     { href: '/', label: 'Home', icon: Home, matchExact: true },
+    { href: '/atlas', label: 'Atlas OS', icon: Sparkles },
     { href: '/analyze', label: 'Analyze', icon: Target },
     { href: '/explore', label: 'Explore Roles', icon: Compass },
     { href: '/battle', label: 'Skill Battle', icon: Swords },
@@ -29,7 +31,7 @@ export function FloatingDock() {
 
   return (
     <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto max-w-[96vw] px-1 sm:px-2">
-      <Dock className="shadow-2xl border-bold-border bg-surface-card/90 backdrop-blur-xl">
+      <Dock className="shadow-sm border-[#1F3A4B]/10 dark:border-white/8">
         {items.map(({ href, label, icon: Icon, matchExact }) => {
           const active = matchExact ? pathname === href : pathname.startsWith(href);
 
@@ -37,6 +39,12 @@ export function FloatingDock() {
             <DockIcon
               key={href}
               onClick={() => router.push(href)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  router.push(href);
+                }
+              }}
               aria-label={label}
               title={label}
               role="button"

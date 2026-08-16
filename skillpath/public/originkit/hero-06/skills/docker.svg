@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <!-- Clean Card Base with Subtle Border -->
+  <rect x="6" y="6" width="228" height="228" rx="32" fill="#F0F7FC" stroke="#2496ED" stroke-width="2.5" stroke-opacity="0.8" />
+  
+  <!-- Inner White Card Inset for contrast -->
+  <rect x="12" y="12" width="216" height="216" rx="26" fill="#FFFFFF" fill-opacity="0.85" />
+
+  <!-- Top Category Tag -->
+  <rect x="24" y="24" width="80" height="20" rx="10" fill="#2496ED" fill-opacity="0.15" />
+  <text x="64" y="38" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="800" fill="#2496ED" text-anchor="middle" letter-spacing="1.2">DEVOPS</text>
+
+  <!-- Central Graphic Icon -->
+  <g>
+    
+            <g transform="translate(120, 115)">
+                <rect x="-35" y="-34" width="16" height="14" rx="2" fill="#2496ED" />
+                <rect x="-15" y="-34" width="16" height="14" rx="2" fill="#2496ED" />
+                <rect x="5" y="-34" width="16" height="14" rx="2" fill="#2496ED" />
+                <rect x="-35" y="-16" width="16" height="14" rx="2" fill="#2496ED" />
+                <rect x="-15" y="-16" width="16" height="14" rx="2" fill="#2496ED" />
+                <rect x="5" y="-16" width="16" height="14" rx="2" fill="#2496ED" />
+                <rect x="25" y="-16" width="16" height="14" rx="2" fill="#2496ED" />
+                <path d="M-55 4 C-45 4 -35 24 0 24 C40 24 60 4 60 4 C60 22 40 38 0 38 C-40 38 -55 20 -55 4 Z" fill="#2496ED" />
+            </g>
+        
+  </g>
+
+  <!-- Bottom Skill Label -->
+  <text x="120" y="208" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="800" fill="#1E293B" text-anchor="middle" letter-spacing="-0.3">Docker</text>
+</svg>

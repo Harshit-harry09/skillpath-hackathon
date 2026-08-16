@@ -522,8 +522,24 @@ export default function AsciiFire(props: Props) {
       window.cancelAnimationFrame(animationFrameId);
       previousFrameTime = 0;
       startTime = performance.now();
-      animationFrameId = window.requestAnimationFrame(drawFrame);
+      if (isVisible) {
+        animationFrameId = window.requestAnimationFrame(drawFrame);
+      }
     };
+
+    let isVisible = true;
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isVisible = Boolean(entry?.isIntersecting);
+      if (isVisible) {
+        window.cancelAnimationFrame(animationFrameId);
+        previousFrameTime = 0;
+        animationFrameId = window.requestAnimationFrame(drawFrame);
+      } else {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+    }, { threshold: 0.05 });
+
+    intersectionObserver.observe(container);
 
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
@@ -537,6 +553,7 @@ export default function AsciiFire(props: Props) {
     return () => {
       isActive = false;
       window.cancelAnimationFrame(animationFrameId);
+      intersectionObserver.disconnect();
       resizeObserver.disconnect();
       reducedMotionQuery.removeEventListener(
         "change",

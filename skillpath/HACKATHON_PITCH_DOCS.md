@@ -1,340 +1,137 @@
 <!-- updated -->
-# 🚀 SKILLPATH — Complete Hackathon Pitch & Deep Technical Documentation
+# 🚀 SKILLPATH — Inclusive Workforce & SAP Talent Intelligence Orchestrator
+## Complete Hackathon Pitch & Deep Technical Documentation
 
-> **Event / Context**: Nehru Hackathon Pitch & Technical Review  
-> **Project Name**: SkillPath (`skillpath`)  
-> **Tagline**: Bridge the Gap Between Your Resume and Your Dream Job with AI-Driven Career Intelligence  
-> **Document Purpose**: Exhaustive A-to-Z Technical Architecture, Database Schemas, Dataset Specs, Slide-by-Slide Pitch Presentation Deck, and Judge Q&A Cheat Sheet.
+> **Theme**: **Inclusive Workforce**  
+> **Enterprise Anchor**: **SAP SuccessFactors Talent Intelligence Hub & Joule Agent Architecture**  
+> **Tagline**: *AI is rewriting who gets to work. We rewrite the rules fairly.*  
+> **Document Purpose**: Exhaustive A-to-Z Technical Architecture, Multi-Agent Swarm Specs, SAP Export Schemas, Judge Q&A Cheat Sheet, and Presentation Scripts.
 
 ---
 
 ## 📌 Table of Contents
-1. [Project Overview & Core Vision](#1-project-overview--core-vision)
-2. [Problem Statement & Market Gap](#2-problem-statement--market-gap)
-3. [The Solution & Unique Value Proposition](#3-the-solution--unique-value-proposition)
-4. [Dual-Engine Architecture (Local + AI)](#4-dual-engine-architecture-local--ai)
-5. [Complete Technology Stack (A-to-Z)](#5-complete-technology-stack-a-to-z)
-6. [Complete Database Schema (Firestore Collections)](#6-complete-database-schema-firestore-collections)
-7. [Trained Datasets & Data Files Deep-Dive](#7-trained-datasets--data-files-deep-dive)
-8. [Codebase Map & File Breakdown](#8-codebase-map--file-breakdown)
-9. [Slide-by-Slide Pitch Deck (With Hinglish & English Scripts)](#9-slide-by-slide-pitch-deck-with-hinglish--english-scripts)
-10. [Judge Q&A Cheat Sheet & Winning Answers](#10-judge-qa-cheat-sheet--winning-answers)
+1. [Theme & Problem Statement](#1-theme--problem-statement)
+2. [The Multi-Agent Solution & Unique Value Proposition](#2-the-multi-agent-solution--unique-value-proposition)
+3. [The 6 Canonical Autonomous Agents](#3-the-6-canonical-autonomous-agents)
+4. [SAP SuccessFactors & Joule Integration](#4-sap-successfactors--joule-integration)
+5. [The 4 Live Theme Personas](#5-the-4-live-theme-personas)
+6. [Complete Technology Stack & DAG Wave Pipeline](#6-complete-technology-stack--dag-wave-pipeline)
+7. [Slide-by-Slide Pitch Presentation Guide](#7-slide-by-slide-pitch-presentation-guide)
+8. [Winning Judge Q&A Cheat Sheet](#8-winning-judge-qa-cheat-sheet)
 
 ---
 
-## 🎯 1. Project Overview & Core Vision
+## 🎯 1. Theme & Problem Statement
 
-**SkillPath** is a production-grade **AI-Powered Career Intelligence and Skill Gap Analysis Platform**.
+### 💥 Why This Matters Now:
+The global workforce is in the middle of its most significant structural transformation since industrialization. AI is redrawing the boundaries of who is employable and what skills matter:
 
-When candidates apply for jobs online, **over 75% of resumes are filtered out by ATS (Applicant Tracking Systems)** without giving candidates any constructive feedback on *why* they were rejected or *what specific skills* they need to acquire to become competitive.
-
-SkillPath takes a candidate's uploaded **Resume (PDF or raw text)** and a target **Job Description (JD)**, diffs them using a **Dual-Brain Hybrid Engine**, isolates non-negotiable **MVC (Minimum Viable Candidate) deal-breaker skills**, calculates a precise **Weeks-to-Job-Ready timeline**, estimates **Salary ROI**, and generates a customized **Week-by-Week AI Learning Roadmap**.
-
----
-
-## 💥 2. Problem Statement & Market Gap
-
-### ❌ The Core Problems in Tech Hiring Today:
-1. **The ATS Black Hole**:
-   - Candidates send hundreds of resumes on LinkedIn/Indeed, receiving generic automated rejections ("We've decided to move forward with other candidates"). No feedback is ever given.
-2. **Job Description Noise & Fatigue**:
-   - JDs list 20–30 requirements (often written by HR recruiters without deep tech knowledge). Candidates face **analysis paralysis** — they don't know which 3-4 skills are actual deal-breakers versus nice-to-haves.
-3. **Inability to Plan Career Readiness**:
-   - Job seekers cannot answer simple questions: *"Am I 60% ready or 80% ready?"*, *"How many weeks of study do I need?"*, and *"Which specific courses/projects should I build?"*
-4. **Vague AI Prompts**:
-   - Standard ChatGPT prompts fail because LLMs lack domain-specific frequency models from thousands of real JDs and often give hallucinated, unquantified advice.
-5. **Data Privacy Concerns**:
-   - Job seekers hesitate uploading private resumes into third-party AI databases.
+1. **The $5.5 Trillion Skills Gap (IDC)**:
+   - Over 90% of global enterprises will face critical skills shortages by 2026, risking $5.5T in losses. The bottleneck is not a lack of people — it is a mismatch between what people know and what organizations need.
+2. **AI Is Creating Jobs — But Unevenly (WEF & PwC)**:
+   - 170M new roles vs. 92M displaced (78M net gain). But AI-fluent workers command a **+56% wage premium**, while those without are falling behind.
+3. **India's Reskilling Paradox (India Skills Report 2026)**:
+   - Employability has risen to 56.35% with tier-2/3 cities emerging as talent pools. Yet TCS announced 12,000 layoffs citing AI skill mismatches.
+4. **59% of Global Workforce Needs Reskilling**:
+   - 120M workers are at medium-term redundancy risk because traditional training is unavailable to them.
+5. **Displacement Hits the Margins Hardest**:
+   - Women returning from caregiving breaks, first-gen tier-2/3 graduates, workers without Ivy/elite degrees, persons with disabilities (PwD), and routine cognitive workers face systematic algorithmic exclusion in traditional ATS keyword filters.
 
 ---
 
-## 💡 3. The Solution & Unique Value Proposition
+## 💡 2. The Multi-Agent Solution & Unique Value Proposition
 
-### ⚡ How SkillPath Fixes This:
-- **Instant Deterministic Pipeline**: Local algorithm runs in < 200ms without needing an external API key to give initial results.
-- **5,000+ JDs Trained MVC Model**: Uses statistical market frequency data across **60+ role categories** (Frontend, Backend, ML Engineer, DevOps, Cybersecurity, etc.) to isolate the **top 4-5 deal-breaker skills**.
-- **Interactive Confidence Reweighter**: Candidates rate their own confidence level on missing skills (`never_used`, `heard_of_it`, `used_it`, `comfortable`, `strong`), automatically updating their readiness score and weekly timeline in real time.
-- **Skill Decay & Market Trend Engine**: Detects obsolete technologies on resumes (e.g. jQuery, SVN, AngularJS v1) and suggests modern replacements (React, Git, Angular 17+).
-- **Privacy-First AES Encryption**: Short-lived encrypted Firestore payloads auto-expire and wipe after 30 minutes.
+**SkillPath** is an autonomous multi-agent career intelligence orchestrator that enforces fairness as an architectural principle:
+
+- **Gap Alchemy & Informal Skill Translation**: Translates caregiving, household budgeting, and operational work into enterprise-accredited capabilities with a **0% Career Gap Penalty**.
+- **Stepped Bridge-Role Ladders**: Constructs realistic, paid stepping-stones (e.g. Data Entry ➔ IT Operations ➔ Cloud QA) instead of impossible 6-month leaps.
+- **Employer Court / JD Accessibility Audit**: Automatically scans corporate JDs for exclusionary jargon ("rockstar", "unbroken 5-year tenure", "ivy league only") and generates HR accommodation actions.
+- **10-Dimension Bias & Fairness Governance**: Continuous demographic parity monitoring issuing certified A+ fairness scorecards.
+- **SAP Talent Intelligence Hub Export**: One-click generation of standard Skills Portfolio JSON and pre-packaged handoffs for **SAP SuccessFactors Joule Agents**.
 
 ---
 
-## 🧠 4. Dual-Engine Architecture (Local + AI)
-
-SkillPath implements a **Hybrid Dual-Brain Architecture**:
+## 🤖 3. The 6 Canonical Autonomous Agents
 
 ```
- ┌─────────────────────────────────────────────────────────────────────────┐
- │                            USER INPUT                                   │
- │                Upload PDF Resume  +  Paste Target JD                   │
- └────────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
- ┌─────────────────────────────────────────────────────────────────────────┐
- │               STEP 1: LOCAL DETERMINISTIC ENGINE (<200ms)               │
- │ ├─ Node.js pdf2json buffer parser                                       │
- │ ├─ Keyword & Levenshtein Fuzzy Skill Extractor                          │
- │ ├─ Role Category Detector (60+ Roles)                                   │
- │ ├─ MVC Model Lookup (Cross-references 5,000+ JD dataset)               │
- │ └─ Baseline Gap Scorer & Weeks-to-Ready Countdown                       │
- └────────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
- ┌─────────────────────────────────────────────────────────────────────────┐
- │           STEP 2: ASYNC AI ENRICHMENT ENGINE (Google Gemini API)        │
- │ ├─ Transient AES-256 Payload Storage (30-min encrypted TTL)            │
- │ ├─ Resume Quote vs JD Requirement Evidence Matcher                      │
- │ ├─ Zod Schema Enforced Structured Analysis Output                        │
- │ └─ Personalized Weekly Learning Roadmap & Video Resource Generator      │
- └─────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                          SKILLPATH MULTI-AGENT SWARM                                   │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. Skills Discovery Agent    │ Parses resumes + informal lived experience (caregiving) │
+│ 2. Market Intelligence Agent  │ Monitors real-time demand, India tier-2/3 wage signals  │
+│ 3. Learning Pathway Agent    │ Week-by-week roadmap + stepped bridge-role ladders       │
+│ 4. Inclusive Matching Agent   │ De-biases against pedigree; matches PwD accommodations  │
+│ 5. Employer Readiness Agent   │ Scans JDs for exclusionary language & degree proxies    │
+│ 6. Bias Audit Governance      │ Continuous fairness ledger & certified A+ scorecards   │
+│ ─────────────────────────────┼─────────────────────────────────────────────────────────┤
+│ + Human-in-the-Loop          │ Doubt Resolver + Interactive Copilot Command Dispatcher │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 💻 5. Complete Technology Stack (A-to-Z)
+## 🏢 4. SAP SuccessFactors & Joule Integration
 
-| Layer | Technology | Purpose & Implementation Details |
-| :--- | :--- | :--- |
-| **Frontend Framework** | **Next.js 15 (App Router)** | Modern SSR, SSG, and API route handler. Uses React 19 concurrent features. |
-| **Language** | **TypeScript (v5)** | End-to-end type safety with strict contracts (`types/analysis.ts`, `types/profile.ts`). |
-| **Styling & Design System** | **Tailwind CSS v3 + CSS Variables** | Custom glassmorphism dark theme (`var(--color-canvas)`, `var(--color-ink)`). |
-| **3D & Canvas Graphics** | **Three.js + React Three Fiber + OGL** | WebGL ASCII Fire shader background (`components/ui/AsciiFire.tsx`). |
-| **Animations & Transitions** | **Framer Motion + Lenis** | Hardware-accelerated fluid scroll and micro-interactions. |
-| **AI LLM Provider** | **Google Gemini 2.5 API (`@google/genai`)** | Deep evidence quote extraction, resume/JD diffing, and resource generation. |
-| **Schema Validation** | **Zod** | Enforces structured JSON returns from LLM (`lib/ai-analysis-schema.ts`). |
-| **PDF Extraction** | **`pdf2json`** | Direct server-side PDF binary array-buffer parsing without external API cost. |
-| **Cloud Database** | **Firebase Firestore** | Serverless NoSQL document store for analyses, share cards, and user profiles. |
-| **Authentication** | **Firebase Auth + Firebase Admin** | User authentication and session verification (`lib/auth-helpers.ts`). |
-| **Dynamic Counters** | **`@number-flow/react`** | Animated score counters for percentage rings and salary jumps. |
-| **Deploy & Infrastructure** | **Vercel / Node.js Runtime** | Configured with `maxDuration = 30` for Vercel Serverless Functions. |
+SkillPath bridges directly into the SAP ecosystem:
+
+1. **Talent Intelligence Hub (TIH)**:
+   - Formats candidate skills into standard SAP taxonomy (`proficiencyLevel: 1-5`, `source: formal_resume | informal_lived_experience`, `growthPotentialScore`).
+2. **SAP Joule Career & Talent Development Agent**:
+   - Passes verified bridge-role succession ladders and personalized mentorship trajectories.
+3. **SAP Joule HR Service Agent**:
+   - Delivers candidate accommodation requirements (screen-reader compatibility, async hours) and returnship program matches (Microsoft LEAP, IBM SkillsBuild).
+4. **SAP Joule People Intelligence Agent**:
+   - Feeds demographic parity metrics and regional tier analytics into SAP Business Data Cloud.
 
 ---
 
-## 🗄️ 6. Complete Database Schema (Firestore Collections)
+## 👥 5. The 4 Live Theme Personas
 
-Security rules (`firestore.rules`) enforce strict privacy. Below is the full schema breakdown across all **8 collections**:
-
-```
-cloud.firestore
-├── /analyses/{shareToken}                  (Analysis Reports)
-├── /analysis_enrichment_jobs/{shareToken}   (Short-lived Encrypted Resume Payloads)
-├── /profiles/{userId}                      (User Profile & Preferences)
-├── /active_jobs/{userId}                   (Saved Target Jobs)
-├── /job_history/{userId}/jobs/{jobId}       (User Search History)
-├── /share_cards/{cardId}                   (Public Viral Social Cards)
-├── /explorations/{explorationId}           (Cached Skill Deep Dives)
-└── /resource_cache/{resourceId}            (Cached Learning Resources)
-```
-
-### JSON Schema Representations:
-
-#### 1. `analyses` Collection (`/analyses/{shareToken}`)
-```json
-{
-  "share_token": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "user_id": "usr_9981247",
-  "gap_score": 38,
-  "ready_by_date": "2026-09-17",
-  "weeks_required": 6,
-  "company_type": "enterprise",
-  "role_category": "frontend-developer",
-  "role_label": "Frontend Developer",
-  "summary": "You are 6 weeks away from being competitive...",
-  "mvc_skills": ["React", "TypeScript", "Next.js", "Tailwind CSS", "State Management"],
-  "user_skills": ["JavaScript", "HTML", "CSS", "React", "Git"],
-  "matched_skills": ["React", "JavaScript", "HTML", "CSS"],
-  "skill_gaps": [
-    {
-      "skill": "TypeScript",
-      "priority": 1,
-      "weeks_to_learn": 2,
-      "in_mvc": true,
-      "reason": "High frequency in job description; required for type safety.",
-      "category": "frontend"
-    }
-  ],
-  "trajectory": {
-    "current_level": "mid",
-    "current_salary": 85000,
-    "next_salary": 115000,
-    "salary_jump": 35.29,
-    "next_role_label": "Fullstack Developer"
-  },
-  "created_at": "2026-08-06T21:34:00Z"
-}
-```
-
-#### 2. `analysis_enrichment_jobs` Collection (`/analysis_enrichment_jobs/{shareToken}`)
-*(Server-Only Access for Privacy)*
-```json
-{
-  "shareToken": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "encryptedPayload": "U2FsdGVkX19v8zN...[AES-256 Encrypted Ciphertext]",
-  "createdAt": "2026-08-06T21:34:00Z",
-  "expiresAt": "2026-08-06T22:04:00Z"
-}
-```
+| Persona | Background & Challenge | SkillPath Swarm Output |
+|---|---|---|
+| **🌟 1. Caregiving Returner** | 3-year family eldercare break after back-office data entry | **Gap Alchemy** translates crisis coordination & budgeting into IT Project Management; 0% penalty applied. |
+| **🚀 2. First-Gen Tier-2/3 Student** | B.Tech graduate from Gorakhpur with no campus placement network | **Market Intelligence & Pathfinder** scouts remote web/data roles based on project proof rather than college tier. |
+| **⚡ 3. Displaced Routine Worker** | 5 years in transactional processing automated by AI | **Stepped Bridge Ladder** constructs an 8-week reskilling trajectory to QA Automation and AI Data Ops. |
+| **♿ 4. PwD Accessibility Candidate** | Visually impaired software tester needing async tools | **Employer Court & Matcher** matches verified remote roles with screen-reader (NVDA/JAWS) accommodations. |
 
 ---
 
-## 📊 7. Trained Datasets & Data Files Deep-Dive
+## 💻 6. Complete Technology Stack & DAG Wave Pipeline
 
-Located in [`lib/data/`](file:///c:/Users/shaur/OneDrive/web2/skillpath/skillpath/lib/data), SkillPath incorporates proprietary structured dataset files:
-
-1. **`mvc_model.json` (309 KB)**:
-   - Contains statistical skill frequency counts from **5,000+ parsed global JDs**.
-   - Covers 60+ role slugs. Assigns importance weights (e.g. `count`, `frequency`, `premium`).
-2. **`mvc_model_india.json` (298 KB)**:
-   - Indian Tech Market variant calibrated for Bangalore/NCR/Hyderabad tech ecosystems.
-3. **`skill_trends.json` (4.6 KB)**:
-   - Tracks technology decay vs modern equivalents:
-     - `jQuery` ➔ Replace with Vanilla JS / React.
-     - `Hadoop` ➔ Replace with Apache Spark / Databricks.
-     - `SVN` ➔ Replace with Git.
-     - `AngularJS (v1)` ➔ Migrate to Angular 17+ or React.
-4. **`role_adjacency.json` (7.3 KB)**:
-   - Multi-directional career progression graph mapping adjacent transition roles (e.g., `frontend-developer` ➔ `fullstack-developer` ➔ `solutions-architect`).
-5. **`fuzzy-dictionary.ts` & `noise-dictionary.ts`**:
-   - Normalizes alias variations (`k8s` ➔ `kubernetes`, `postgres` ➔ `postgresql`) and removes fluff filler words.
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript 5 Strict, Tailwind CSS, Glassmorphic UI.
+- **Orchestration**: DAG Wave Parallel Scheduler (`fast-pipeline.ts`) executing 14 sub-agents in < 2.5s with SHA-256 caching.
+- **AI Models**: Google Gemini 2.5 Flash & Flash-Lite with multi-key pool rotation.
+- **Local Reflex Layer**: Pure TS Dijkstra shortest-path algorithms, Levenshtein fuzzy normalization, 5,000+ JD MVC frequency models.
+- **Database & Security**: Cloud Firestore, AES-256-GCM encrypted payload stores (30-min TTL), Edge rate limiting.
 
 ---
 
-## 📁 8. Codebase Map & File Breakdown
+## 🎤 7. Slide-by-Slide Pitch Presentation Guide
 
-```
-skillpath/
-├── app/
-│   ├── api/
-│   │   ├── analyze/route.ts             <-- Core POST endpoint for analysis pipeline
-│   │   └── results/[id]/enrich/route.ts <-- Async AI Gemini enrichment route
-│   ├── analyze/page.tsx                <-- Input page (Resume upload & JD input)
-│   ├── results/[id]/page.tsx           <-- Main Dashboard (Readiness ring, skill cards)
-│   ├── history/page.tsx                <-- Saved job history
-│   ├── explore/page.tsx                <-- Interactive Skill Taxonomy Explorer
-│   ├── share/[id]/page.tsx              <-- Public Share Preview Page
-│   ├── layout.tsx                      <-- Root Layout & Theme Providers
-│   └── page.tsx                        <-- Landing Page (Hero, Stats, AsciiFire)
-├── components/
-│   ├── landing/                        <-- Hero, HowItWorks, FeaturesGrid, Differentiators
-│   ├── results/                        <-- ReadinessRing, SkillCard, ResourceCard, ConfidenceStrip
-│   └── ui/                             <-- AsciiFire, Preloader, Buttons, TextPath
-├── lib/
-│   ├── mvc-profiler.ts                 <-- Minimum Viable Candidate statistical profiler
-│   ├── role-matcher.ts                 <-- Role detection engine
-│   ├── semantic-skill-matcher.ts       <-- Levenshtein & fuzzy skill normalization
-│   ├── gap-scorer.ts                   <-- Skill gap scoring algorithm
-│   ├── confidence-reweighter.ts        <-- Interactive self-assessment re-scoring
-│   ├── resource-generator.ts           <-- Learning roadmap & link generator
-│   ├── ai-evidence-extractor.ts        <-- Gemini evidence quote extractor
-│   ├── gemini.ts                       <-- Google Gemini API wrapper
-│   ├── pdf-extract.ts                  <-- Node pdf2json buffer parser
-│   └── firebase-admin.ts               <-- Firestore Admin SDK initialization
-├── types/
-│   └── analysis.ts                     <-- Core AnalysisResult, SkillGap, LearningPlan interfaces
-└── firestore.rules                     <-- Security Rules configuration
-```
+### Slide 1: Title & Hook
+- *"Good morning judges. AI is rewriting who gets to work. The question is whether it rewrites the rules fairly. We are Team SkillPath, and we built the Autonomous Inclusive Workforce Orchestrator."*
+
+### Slide 2: Problem & Macro Context
+- *"IDC reports a $5.5T skills gap by 2026. In India, employability is at 56.35%, yet TCS laid off 12,000 citing skill mismatches. The bottleneck is not a lack of people—it is an algorithmic mismatch that excludes women returners, tier-2/3 graduates, and displaced workers."*
+
+### Slide 3: Solution Architecture
+- *"SkillPath solves this with 6 collaborating agents. We translate lived experience through Gap Alchemy, build stepped bridge ladders with Dijkstra graph search, and connect directly to SAP SuccessFactors Talent Intelligence Hub."*
+
+### Slide 4: Unique Innovation & Fairness
+- *"Our Agent 9 enforces 10 fairness dimensions with a zero-gap penalty guarantee. Agent 14 audits employer job descriptions for exclusionary language. We deliver this under 2.5 seconds using DAG parallel execution."*
+
+### Slide 5: SAP Enterprise Bridge
+- *"With one click, candidates and enterprise recruiters can export structured Skills Portfolios into SAP Talent Intelligence Hub and hand off context to SAP Joule Career and HR Service Agents."*
 
 ---
 
-## 🎤 9. Slide-by-Slide Pitch Deck (With Hinglish & English Scripts)
+## 🏆 8. Winning Judge Q&A Cheat Sheet
 
-### 📌 Slide 1: Title & Hook
-* **Visual**: SkillPath Logo, ASCII Fire Canvas visualizer, Tagline: *"Closing the Gap Between Talent and Opportunity"*.
-* **Speaker Script**:
-  > *"Good morning judges! Every day, thousands of talented engineers apply for jobs online, only to receive generic rejection emails like 'We chose to proceed with other candidates.' Unhe kabhi ye nahi bataya jata ki **unke resume mein kya missing tha**. Today we introduce **SkillPath** — an AI-powered Career Intelligence engine that turns job rejection into an exact, actionable roadmap."*
+**Q1: How does SkillPath ensure AI doesn't hallucinate or penalize non-traditional candidates?**  
+> *"We built the 10-Dimension Bias Audit Engine (Agent 9). It strictly decouples skill scoring from break duration and institution prestige. Every recommendation is cross-referenced against our 5,000+ JD frequency model and anti-hallucinated learning resource gates."*
 
----
+**Q2: What is the connection to SAP SuccessFactors?**  
+> *"SAP's 2026 focus is the Talent Intelligence Hub and Joule Agents. SkillPath generates native SAP TIH Skills Portfolio JSON and pre-packages contextual handoffs for Joule Career, HR Service, and People Intelligence Agents."*
 
-### 📌 Slide 2: Problem Statement
-* **Visual**: Diagram showing 100 Resumes ➔ ATS Black Hole ➔ Vague Rejection Email ➔ Confused Candidate.
-* **Speaker Script**:
-  > *"The core problem has 3 layers:  
-  > 1. **ATS Black Hole**: No feedback is provided to candidates.  
-  > 2. **Job Description Noise**: JDs list 30+ requirements. Candidates don't know which 4-5 skills are actual deal-breakers versus optional nice-to-haves.  
-  > 3. **Generic AI Hallucinations**: Standard ChatGPT prompts give vague, unquantified advice."*
-
----
-
-### 📌 Slide 3: The Solution — SkillPath
-* **Visual**: Architecture Diagram highlighting the **Dual-Engine Brain** (Local Fast Engine + AI Gemini Engine).
-* **Speaker Script**:
-  > *"SkillPath solves this with a **Dual-Engine Brain Architecture**:  
-  > - **Instant Local Engine (<200ms)**: Extract skills instantly using fuzzy keyword matching and cross-reference them against our trained dataset of **5,000+ JDs**.  
-  > - **Async AI Enrichment Engine**: Uses Google Gemini to extract exact proof-quotes from the candidate's resume and map them against JD requirements."*
-
----
-
-### 📌 Slide 4: Live Demo Walkthrough
-* **Visual**: Screen Recording or Live Browser Demo of SkillPath in action.
-* **Speaker Script (Demo Walkthrough)**:
-  > *"Let us show you a live demo:  
-  > 1. We upload a PDF Resume and paste a Senior Frontend JD.  
-  > 2. Instantly, SkillPath generates the **Readiness Score (e.g., 68%)**, **Target Date (e.g., 6 Weeks to Ready)**, and **Salary ROI Jump ($85k ➔ $115k)**.  
-  > 3. Notice the **MVC Dealbreakers**: Out of 20 JD requirements, SkillPath isolates the top 4 non-negotiable gaps.  
-  > 4. **Interactive Self-Assessment**: Watch as I adjust my confidence level on 'TypeScript' from 'Heard of it' to 'Comfortable' — the graph and target readiness date automatically recalibrate!"*
-
----
-
-### 📌 Slide 5: Key Value-Added Micro-Tools
-* **Visual**: Grid showing STAR Bullet Generator, LinkedIn Headline Optimizer, and Cover Letter Generator.
-* **Speaker Script**:
-  > *"SkillPath doesn't just identify skill gaps; it actively helps candidates fix them:  
-  > - **Curated AI Learning Roadmap**: Instant YouTube videos, documentation links, and project ideas.  
-  > - **STAR Resume Bullet Generator**: AI writes custom STAR-formatted bullet points targeting missing skills.  
-  > - **LinkedIn Headline & Cover Letter Generator**: Custom-tailored for the candidate's target job."*
-
----
-
-### 📌 Slide 6: Engineering & Privacy Innovation
-* **Visual**: Encryption flowchart (AES-256 Encryption ➔ 30-min TTL Firestore Doc ➔ Auto-Wipe).
-* **Speaker Script**:
-  > *"On the engineering side, SkillPath is built with **Next.js 15, TypeScript, Tailwind, and Firebase Firestore**.  
-  > To address candidate privacy, we engineered a **Privacy-First Payload Pipeline**: Resumes and JDs are stored with a 30-minute AES-256 encrypted TTL and automatically destroyed after processing."*
-
----
-
-### 📌 Slide 7: Business Model & Future Scale
-* **Visual**: B2C Subscription + B2B Ed-Tech Integration Flow.
-* **Speaker Script**:
-  > *"SkillPath operates on a **B2C Premium Model** for job seekers needing detailed career analytics, and a **B2B SaaS API Model** for ed-tech platforms like Coursera or Udemy to recommend targeted course bundles based on candidate skill gaps."*
-
----
-
-### 📌 Slide 8: Conclusion & Q&A
-* **Visual**: Call to Action & Thank You slide with GitHub link / Live URL.
-* **Speaker Script**:
-  > *"Thank you judges! SkillPath bridges the gap between talent and opportunity. We are now open for your questions!"*
-
----
-
-## ❓ 10. Judge Q&A Cheat Sheet & Winning Answers
-
-#### 💬 Judge Q1: *"How does SkillPath differ from just pasting your resume and JD into ChatGPT?"*
-> **Winning Answer**:  
-> *"ChatGPT is a generic unconstrained language model that suffers from hallucinations and lacks structured dataset weights. SkillPath is a **specialized engineering system**:  
-> 1. We trained an **MVC (Minimum Viable Candidate) Dataset** on over 5,000 real-world job descriptions to know exactly which skills are statistical deal-breakers for 60+ job roles.  
-> 2. We use a **Local Deterministic Pipeline** that calculates exact readiness percentage rings and weeks-to-ready timelines.  
-> 3. We enforce strict Zod JSON schemas on Gemini to ensure evidence-backed quote matching."*
-
----
-
-#### 💬 Judge Q2: *"What if a candidate uploads a bad/scanned PDF resume?"*
-> **Winning Answer**:  
-> *"Our backend uses Node's native binary buffer check (`pdf2json`) to verify header signatures (`%PDF-`). If text extraction fails due to scanned image PDFs, our pipeline gracefully catches the exception and prompts the user to paste their raw resume text without breaking the app."*
-
----
-
-#### 💬 Judge Q3: *"How do you calculate the 'Weeks Required' to become job ready?"*
-> **Winning Answer**:  
-> *"Each missing skill has two parameters: **Complexity Index** (weeks required to learn) and **Market Frequency Weight** (from our MVC dataset). When the candidate rates their confidence (`never_used` vs `comfortable`), our `confidence-reweighter.ts` algorithm recalculates the adjusted priority and aggregates the remaining study weeks."*
-
----
-
-#### 💬 Judge Q4: *"How do you handle user data privacy?"*
-> **Winning Answer**:  
-> *"Resumes contain sensitive PII. We designed a short-lived **AES-256 Encrypted Payload Store** in Firestore (`analysis_enrichment_jobs`). Data is encrypted at rest, expires after 30 minutes, and is wiped immediately after AI enrichment completes."*
-
----
-
-> 📄 **Document Generated**: Ready to present for **Nehru Hackathon**.  
-> 🌐 **SkillPath**: *Close Your Skill Gap. Master Any Role.*
+**Q3: How fast does the agent swarm run?**  
+> *"Our DAG Parallel Wave Scheduler runs in < 2.5 seconds with in-memory SHA-256 caching, while our local deterministic reflex layer operates in under 150ms."*
